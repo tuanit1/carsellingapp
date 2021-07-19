@@ -102,4 +102,27 @@
         android:indeterminateTintMode="src_atop"
         android:indeterminateTint="@color/steel_blue"
         android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/ll_empty_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:clickable="true"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_empty_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="empty"/>
+        <Button
+            android:id="@+id/btn_try_home"
+            android:layout_margin="10dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@color/steel_blue"
+            android:textColor="@color/white"
+            android:text="Try again"/>
+    </LinearLayout>
 </RelativeLayout>

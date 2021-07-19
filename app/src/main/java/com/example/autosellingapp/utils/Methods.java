@@ -31,7 +31,7 @@ public class Methods {
         jsObj.addProperty("API_KEY", Constant.API_KEY);
         return new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("data", ToBase64(jsObj.toString()))
+                .addFormDataPart("data", jsObj.toString())
                 .build();
     }
     public String ToBase64(String input){

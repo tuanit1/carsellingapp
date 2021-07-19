@@ -5,5 +5,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Home">Home</string>
-    <string name="manufacturers">Manufacturers</string>
+    <string name="manufacturers">Manufacturer</string>
+    <string name="error_connect_server">Error connecting server</string>
+    <string name="internet_not_connect">Internet Not Connected</string>
+    <string name="model">Model</string>
+    <string name="not_set">Not set</string>
+    <string name="price">Price</string>
+    <string name="body_type">Body type</string>
 </resources>
