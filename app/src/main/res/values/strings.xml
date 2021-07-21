@@ -12,4 +12,24 @@
     <string name="not_set">Not set</string>
     <string name="price">Price</string>
     <string name="body_type">Body type</string>
+    <string name="minimum">Minimum</string>
+    <string name="fuel_type">Fuel type</string>
+    <string name="condition">Condition</string>
+    <string name="year">Year</string>
+    <string name="transmission">Transmission</string>
+    <string name="body_color">Body color</string>
+    <string name="mileage">Mileage</string>
+    <string name="maximum">Maximum</string>
+    <string name="search">Search</string>
+    <string name="advance_filter">Advanced filter</string>
+    <string name="seat_number">Seat number</string>
+    <string name="door_number">Door number</string>
+    <string name="equipment">Equipment</string>
+    <string name="power">Power</string>
+    <string name="previous_users">Previous user number</string>
+    <string name="city">City</string>
+    <string name="any">Any</string>
+    <string name="used">Used</string>
+    <string name="news">New</string>
+    <string name="camera360">360 Camera</string>
 </resources>

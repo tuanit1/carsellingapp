@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.fragments.FragmentHome;
+import com.example.autosellingapp.fragments.FragmentSearch;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -64,26 +65,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (id){
                     case R.id.bottom_nav_home:
                         if(currentFragment != FRAGMENT_HOME){
-                            Toast.makeText(MainActivity.this, "home", Toast.LENGTH_SHORT).show();
+                            ReplaceFragment(new FragmentHome(), getString(R.string.Home));
                             currentFragment = FRAGMENT_HOME;
+                            navigationView.setCheckedItem(R.id.nav_home);
                         }
                         break;
                     case R.id.bottom_nav_search:
                         if(currentFragment != FRAGMENT_SEARCH){
-                            Toast.makeText(MainActivity.this, "search", Toast.LENGTH_SHORT).show();
+                            ReplaceFragment(new FragmentSearch(), getString(R.string.search));
                             currentFragment = FRAGMENT_SEARCH;
+                            navigationView.setCheckedItem(R.id.nav_search);
                         }
                         break;
                     case R.id.bottom_nav_favourite:
                         if(currentFragment != FRAGMENT_FAVOURITE){
                             Toast.makeText(MainActivity.this, "favourite", Toast.LENGTH_SHORT).show();
                             currentFragment = FRAGMENT_FAVOURITE;
+                            navigationView.setCheckedItem(R.id.nav_favourite);
                         }
                         break;
                     case R.id.bottom_nav_selling:
                         if(currentFragment != FRAGMENT_SELLING){
                             Toast.makeText(MainActivity.this, "selling", Toast.LENGTH_SHORT).show();
                             currentFragment = FRAGMENT_SELLING;
+                            navigationView.setCheckedItem(R.id.nav_selling);
                         }
                         break;
                 }
@@ -122,13 +127,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ReplaceFragment(new FragmentHome(), getString(R.string.Home));
                     currentFragment = FRAGMENT_HOME;
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    bottomNavigationView.getMenu().findItem(R.id.bottom_nav_home).setChecked(true);
                 }
                 break;
             case R.id.nav_search:
                 if(FRAGMENT_SEARCH != currentFragment){
-                    //ReplaceFragment(new SearchFragment(), "SEARCH");
+                    ReplaceFragment(new FragmentSearch(), getString(R.string.search));
                     currentFragment = FRAGMENT_SEARCH;
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    bottomNavigationView.getMenu().findItem(R.id.bottom_nav_search).setChecked(true);
                 }
                 break;
             case R.id.nav_selling:
@@ -136,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //ReplaceFragment(new InfoFragment(), "INFO");
                     currentFragment = FRAGMENT_SELLING;
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    bottomNavigationView.getMenu().findItem(R.id.bottom_nav_selling).setChecked(true);
                 }
                 break;
             case R.id.nav_profile:
@@ -150,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //ReplaceFragment(new InfoFragment(), "INFO");
                     currentFragment = FRAGMENT_FAVOURITE;
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    bottomNavigationView.getMenu().findItem(R.id.bottom_nav_favourite).setChecked(true);
                 }
                 break;
             case R.id.nav_logout:
@@ -189,6 +198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void openFragmentHome(){
         ReplaceFragment(new FragmentHome(), getString(R.string.Home));
+        navigationView.setCheckedItem(R.id.nav_home);
+        bottomNavigationView.getMenu().findItem(R.id.bottom_nav_home).setChecked(true);
     }
 
     public void ReplaceFragment(Fragment fragment, String name){

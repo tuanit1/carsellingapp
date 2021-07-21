@@ -121,7 +121,7 @@
             android:layout_margin="10dp"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:background="@color/steel_blue"
+            android:backgroundTint="@color/steel_blue"
             android:textColor="@color/white"
             android:text="Try again"/>
     </LinearLayout>

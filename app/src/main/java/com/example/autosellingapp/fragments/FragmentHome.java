@@ -49,6 +49,7 @@ public class FragmentHome extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         Hook();
 
+
         arrayList_manu = new ArrayList<>();
         methods = new Methods(getContext());
         rv_manu.setLayoutManager(new GridLayoutManager(getContext(), 4));

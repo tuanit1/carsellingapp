@@ -34,4 +34,9 @@ public class ManufacturerItem {
     public void setManu_thumb(String manu_thumb) {
         this.manu_thumb = manu_thumb;
     }
+
+    @Override
+    public String toString() {
+        return manu_name;
+    }
 }
