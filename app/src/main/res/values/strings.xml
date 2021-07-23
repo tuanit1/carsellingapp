@@ -32,4 +32,12 @@
     <string name="used">Used</string>
     <string name="news">New</string>
     <string name="camera360">360 Camera</string>
+    <string name="frag_category">Fragment Category</string>
+    <string name="price_min">Price min</string>
+    <string name="price_max">Price max</string>
+    <string name="power_min">Power min</string>
+    <string name="power_max">Power max</string>
+    <string name="mileage_min">mileage_min</string>
+    <string name="mileage_max">Mileage max</string>
+    <string name="sort">Sort</string>
 </resources>

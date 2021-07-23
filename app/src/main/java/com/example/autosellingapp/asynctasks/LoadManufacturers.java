@@ -34,7 +34,7 @@ public class LoadManufacturers extends AsyncTask<Void, String, String> {
     @Override
     protected String doInBackground(Void... voids) {
         try {
-            String json = JsonUtils.okhttpPost(Constant.SERVER_URL, requestBody);
+            String json = JsonUtils.okhttpPost(Constant.SERVER_URL+"api.php", requestBody);
 
             if(!json.equals("")){
                 JSONObject mainJson = new JSONObject(json);

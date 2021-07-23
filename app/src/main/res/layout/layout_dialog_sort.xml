@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_dialog_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dsadsaasdsa"
+        android:textSize="18dp"
+        android:textColor="@color/text_black"
+        android:layout_margin="15dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <RadioButton
+                android:id="@+id/radio_standard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Standard"/>
+            <RadioButton
+                android:id="@+id/radio_latest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Latest"/>
+            <RadioButton
+                android:id="@+id/radio_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favourite"/>
+            <RadioButton
+                android:id="@+id/radio_priceLowToHigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: Low to High"/>
+            <RadioButton
+                android:id="@+id/radio_priceHighToLow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: High to Low"/>
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

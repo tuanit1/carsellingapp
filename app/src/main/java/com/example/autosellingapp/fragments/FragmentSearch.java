@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -97,6 +98,8 @@ public class FragmentSearch extends Fragment {
     private int SELECTED_MILEAGE_MAX = NOT_SET;
 
     private ArrayList<EquipmentItem> SELECTED_EQUIP_LIST;
+
+    private FragmentTransaction ft;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -870,27 +873,57 @@ public class FragmentSearch extends Fragment {
     }
 
     private void openCatFragment(){
-        String equip = "";
-        for(EquipmentItem item : SELECTED_EQUIP_LIST){
-            equip += item.getEquip_name() + " ";
-        }
+//        String equip = "";
+//        for(EquipmentItem item : SELECTED_EQUIP_LIST){
+//            equip += item.getEquip_name() + " ";
+//        }
+//
+//        String text = "Manufacturer: " + SELECTED_MANU_ID + "\n" +
+//                "Model: " +SELECTED_MODEL_ID + "\n"+
+//                "Price: " +SELECTED_PRICE_MIN + " - "+ SELECTED_PRICE_MAX + "\n"+
+//                "Power: " +SELECTED_POWER_MIN + " - "+ SELECTED_POWER_MAX + "\n"+
+//                "Mileage: " +SELECTED_MILEAGE_MIN + " - "+ SELECTED_MILEAGE_MAX + "\n"+
+//                "Body type: " +SELECTED_BODY_TYPE_ID + "\n"+
+//                "Fuel type: " +SELECTED_FUEL_TYPE_ID + "\n"+
+//                "Year: " +SELECTED_YEAR + "\n"+
+//                "Transmission: " +SELECTED_TRANS_ID + "\n"+
+//                "Condition: " +SELECTED_CONDITION + "\n"+
+//                "Color: " +SELECTED_COLOR + "\n"+
+//                "City: " +SELECTED_CITY_ID + "\n"+
+//                "Seat: " +SELECTED_SEAT + "\n"+
+//                "Door: " +SELECTED_DOOR + "\n"+
+//                "Pre users: " +SELECTED_PREUSER + "\n"+
+//                "City: " +equip+ "\n";
+//        Toast.makeText(this.getContext(), text, Toast.LENGTH_LONG).show();
+        Bundle bundle = new Bundle();
+        bundle.putInt(getString(R.string.manufacturers), SELECTED_MANU_ID);
+        bundle.putInt(getString(R.string.model), SELECTED_MODEL_ID);
+        bundle.putInt(getString(R.string.price_min), SELECTED_PRICE_MIN);
+        bundle.putInt(getString(R.string.price_max), SELECTED_PRICE_MAX);
+        bundle.putInt(getString(R.string.power_min), SELECTED_POWER_MIN);
+        bundle.putInt(getString(R.string.power_max), SELECTED_POWER_MAX);
+        bundle.putInt(getString(R.string.mileage_min), SELECTED_MILEAGE_MIN);
+        bundle.putInt(getString(R.string.mileage_max), SELECTED_MILEAGE_MAX);
+        bundle.putInt(getString(R.string.body_type), SELECTED_BODY_TYPE_ID);
+        bundle.putInt(getString(R.string.fuel_type), SELECTED_FUEL_TYPE_ID);
+        bundle.putInt(getString(R.string.year), SELECTED_YEAR);
+        bundle.putInt(getString(R.string.transmission), SELECTED_TRANS_ID);
+        bundle.putInt(getString(R.string.condition), SELECTED_CONDITION);
+        bundle.putInt(getString(R.string.body_color), SELECTED_COLOR);
+        bundle.putInt(getString(R.string.city), SELECTED_CITY_ID);
+        bundle.putInt(getString(R.string.seat_number), SELECTED_SEAT);
+        bundle.putInt(getString(R.string.door_number), SELECTED_DOOR);
+        bundle.putInt(getString(R.string.previous_users), SELECTED_PREUSER);
+        bundle.putSerializable(getString(R.string.equipment), SELECTED_EQUIP_LIST);
+        FragmentCategory fragment = new FragmentCategory();
+        fragment.setArguments(bundle);
+        ReplaceFragment(fragment, getString(R.string.frag_category));
+    }
 
-        String text = "Manufacturer: " + SELECTED_MANU_ID + "\n" +
-                "Model: " +SELECTED_MODEL_ID + "\n"+
-                "Price: " +SELECTED_PRICE_MIN + " - "+ SELECTED_PRICE_MAX + "\n"+
-                "Power: " +SELECTED_POWER_MIN + " - "+ SELECTED_POWER_MAX + "\n"+
-                "Mileage: " +SELECTED_MILEAGE_MIN + " - "+ SELECTED_MILEAGE_MAX + "\n"+
-                "Body type: " +SELECTED_BODY_TYPE_ID + "\n"+
-                "Fuel type: " +SELECTED_FUEL_TYPE_ID + "\n"+
-                "Year: " +SELECTED_YEAR + "\n"+
-                "Transmission: " +SELECTED_TRANS_ID + "\n"+
-                "Condition: " +SELECTED_CONDITION + "\n"+
-                "Color: " +SELECTED_COLOR + "\n"+
-                "City: " +SELECTED_CITY_ID + "\n"+
-                "Seat: " +SELECTED_SEAT + "\n"+
-                "Door: " +SELECTED_DOOR + "\n"+
-                "Pre users: " +SELECTED_PREUSER + "\n"+
-                "City: " +equip+ "\n";
-        Toast.makeText(this.getContext(), text, Toast.LENGTH_LONG).show();
+    public void ReplaceFragment(Fragment fragment, String name){
+        ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.main_content, fragment, name);
+        ft.addToBackStack(name);
+        ft.commit();
     }
 }

@@ -1,9 +1,10 @@
 package com.example.autosellingapp.utils;
 
 public class Constant {
+    public static String USERNAME = "";
     public static final String API_KEY = "dothanhtuan";
     public static final String TAG_ROOT = "ADS_CAR";
-    public static final String SERVER_URL = "http://192.168.94.120/autobuy/api.php";
+    public static final String SERVER_URL = "http://192.168.1.6/autobuy/";
     public static final String TAG_MANU_ID = "manu_id";
     public static final String TAG_MANU_NAME = "manu_name";
     public static final String TAG_MANU_THUMB = "manu_thumb";
@@ -49,4 +50,39 @@ public class Constant {
     public static final String TAG_EQUIP_ID = "equip_id";
     public static final String TAG_EQUIP_NAME = "equip_name";
     public static final String TEXT_EQUIPMENT = "Equipment";
+    public static final String TAG_ADS = "ads";
+    public static final String TAG_CAR = "car";
+    public static final String TAG_ADS_ID = "ads_id";
+    public static final String TAG_CAR_ID = "car_id";
+    public static final String TAG_USERNAME = "user_username";
+    public static final String TAG_ADS_PRICE = "ads_price";
+    public static final String TAG_ADS_MILEAGE = "ads_mileage";
+    public static final String TAG_ADS_LOCATION = "ads_location";
+    public static final String TAG_ADS_DESCRIPTION = "ads_description";
+    public static final String TAG_ADS_POST_TIME = "ads_posttime";
+    public static final String TAG_ADS_LIKE = "ads_likes";
+    public static final String TAG_CAR_NAME = "car_name" ;
+    public static final String TAG_CAR_IMAGELIST = "car_imagelist";
+    public static final String TAG_CAR_YEAR ="car_year" ;
+    public static final String TAG_CAR_CONDITION = "car_condition";
+    public static final String TAG_CAR_POWER = "car_power";
+    public static final String TAG_CAR_DOORS = "car_doors";
+    public static final String TAG_CAR_SEATS = "car_seats";
+    public static final String TAG_CAR_EQUIP = "car_equipments";
+    public static final String TAG_CAR_PREOWNER = "car_previousowner";
+    public static final String TAG_CAR_GEARS = "car_gears";
+    public static final String TAG_CAR_ENGINESIZE = "car_enginesize";
+    public static final String TAG_CAR_CYLINDER = "car_cylinder";
+    public static final String TAG_CAR_KERBWEIGHT = "car_kerbweight";
+    public static final String TAG_CAR_FUELCONSUMP = "car_fuelconsump";
+    public static final String TAG_CAR_CO2EMISSION = "car_co2emission";
+    public static final String METHOD_CATEGORY = "category_method";
+    public static final String TAG_USER = "user";
+    public static final String TAG_PASSWORD = "user_password";
+    public static final String TAG_ADDRESS = "user_address";
+    public static final String TAG_PHONE = "user_phone";
+    public static final String TAG_FULLNAME = "user_fullname";
+    public static final String TAG_EMAIL = "user_email";
+    public static final String TAG_FAVLIST = "user_favlist";
+    public static final String TAG_USER_IMAGE = "user_image";
 }

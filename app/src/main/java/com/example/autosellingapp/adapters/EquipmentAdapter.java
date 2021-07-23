@@ -34,7 +34,6 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.MyVi
         this.listener = listener;
     }
 
-
     @NonNull
     @NotNull
     @Override
@@ -52,6 +51,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.MyVi
         holder.ckb_equip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                arrayList.get(holder.getAdapterPosition()).setChecked(isChecked);
                 listener.onClick(arrayList.get(holder.getAdapterPosition()).getEquip_id(), isChecked);
             }
         });
