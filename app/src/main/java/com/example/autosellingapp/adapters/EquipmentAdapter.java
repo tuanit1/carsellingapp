@@ -28,10 +28,12 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.MyVi
     private ArrayList<EquipmentItem> arrayList;
     private Context context;
     private EquipmentListener listener;
+    private String type;
 
-    public EquipmentAdapter(ArrayList<EquipmentItem> arrayList, EquipmentListener listener) {
+    public EquipmentAdapter(ArrayList<EquipmentItem> arrayList, String type, EquipmentListener listener) {
         this.arrayList = arrayList;
         this.listener = listener;
+        this.type = type;
     }
 
     @NonNull
@@ -40,21 +42,28 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.MyVi
     public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_equipment, parent, false);
+        View view;
+        if(type.equals(context.getString(R.string.dialog))){
+            view = inflater.inflate(R.layout.item_equipment, parent, false);
+        }else{
+            view = inflater.inflate(R.layout.item_equipment_2, parent, false);
+        }
         return new EquipmentAdapter.MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
         holder.tv_equip_name.setText(arrayList.get(position).getEquip_name());
-        holder.ckb_equip.setChecked(arrayList.get(position).isChecked());
-        holder.ckb_equip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                arrayList.get(holder.getAdapterPosition()).setChecked(isChecked);
-                listener.onClick(arrayList.get(holder.getAdapterPosition()).getEquip_id(), isChecked);
-            }
-        });
+        if(type.equals(context.getString(R.string.dialog))){
+            holder.ckb_equip.setChecked(arrayList.get(position).isChecked());
+            holder.ckb_equip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    arrayList.get(holder.getAdapterPosition()).setChecked(isChecked);
+                    listener.onClick(arrayList.get(holder.getAdapterPosition()).getEquip_id(), isChecked);
+                }
+            });
+        }
     }
 
     @Override

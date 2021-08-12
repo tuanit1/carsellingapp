@@ -27,26 +27,31 @@
                 android:id="@+id/radio_standard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/steel_blue"
                 android:text="Standard"/>
             <RadioButton
                 android:id="@+id/radio_latest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/steel_blue"
                 android:text="Latest"/>
             <RadioButton
                 android:id="@+id/radio_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/steel_blue"
                 android:text="Favourite"/>
             <RadioButton
                 android:id="@+id/radio_priceLowToHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/steel_blue"
                 android:text="Price: Low to High"/>
             <RadioButton
                 android:id="@+id/radio_priceHighToLow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/steel_blue"
                 android:text="Price: High to Low"/>
         </RadioGroup>
     </LinearLayout>

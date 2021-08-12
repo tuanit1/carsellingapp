@@ -1,8 +1,9 @@
 package com.example.autosellingapp.items;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CarItem {
+public class CarItem implements Serializable {
     private int car_id;
     private String car_name;
     private int model_id;

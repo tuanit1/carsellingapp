@@ -1,5 +1,7 @@
 package com.example.autosellingapp.utils;
 
+import android.util.Log;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -43,7 +45,8 @@ public class JsonUtils {
             return response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            Log.e("Error", e.getMessage());
+            return e.getMessage();
         }
     }
 }

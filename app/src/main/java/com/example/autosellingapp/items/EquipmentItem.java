@@ -40,4 +40,9 @@ public class EquipmentItem {
         this.equip_name = equip_name;
         this.isChecked = isChecked;
     }
+
+    @Override
+    public String toString() {
+        return  equip_name;
+    }
 }

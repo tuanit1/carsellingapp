@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    <RelativeLayout
+        android:id="@+id/rl_msg"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:background="@drawable/message_right"
+            android:layout_alignParentRight="true"
+            android:text="Hello"/>
+        <ImageView
+            android:id="@+id/iv_msg_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/home_thumbnail_cut"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:scaleType="fitXY"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/rl_msg"/>
+</RelativeLayout>

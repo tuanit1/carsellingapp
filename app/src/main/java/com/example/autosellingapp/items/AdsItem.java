@@ -1,11 +1,12 @@
 package com.example.autosellingapp.items;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AdsItem {
+public class AdsItem implements Serializable {
     private int ads_id;
     private int car_id;
-    private String username;
+    private String uid;
     private double ads_price;
     private int ads_mileage;
     private int city_id;
@@ -13,11 +14,12 @@ public class AdsItem {
     private String ads_description;
     private Date ads_posttime;
     private int ads_likes;
+    private boolean ads_isAvailable;
 
-    public AdsItem(int ads_id, int car_id, String username, double ads_price, int ads_mileage, int city_id, String ads_location, String ads_description, Date ads_posttime, int ads_likes) {
+    public AdsItem(int ads_id, int car_id, String uid, double ads_price, int ads_mileage, int city_id, String ads_location, String ads_description, Date ads_posttime, int ads_likes, boolean ads_isAvailable) {
         this.ads_id = ads_id;
         this.car_id = car_id;
-        this.username = username;
+        this.uid = uid;
         this.ads_price = ads_price;
         this.ads_mileage = ads_mileage;
         this.city_id = city_id;
@@ -25,6 +27,15 @@ public class AdsItem {
         this.ads_description = ads_description;
         this.ads_posttime = ads_posttime;
         this.ads_likes = ads_likes;
+        this.ads_isAvailable = ads_isAvailable;
+    }
+
+    public boolean isAds_isAvailable() {
+        return ads_isAvailable;
+    }
+
+    public void setAds_isAvailable(boolean ads_isAvailable) {
+        this.ads_isAvailable = ads_isAvailable;
     }
 
     public int getAds_id() {
@@ -43,12 +54,12 @@ public class AdsItem {
         this.car_id = car_id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public double getAds_price() {

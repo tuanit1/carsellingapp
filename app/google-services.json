@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "177711746671",
+    "project_id": "authcarapp",
+    "storage_bucket": "authcarapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177711746671:android:f3f159488ccef145f9479a",
+        "android_client_info": {
+          "package_name": "com.example.autosellingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177711746671-9q85afha754d3p2911fn29g1hrftvnjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQtpdxyHsIONXqAYKDgXuSecHA4KqzkCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177711746671-9q85afha754d3p2911fn29g1hrftvnjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

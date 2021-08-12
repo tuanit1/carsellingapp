@@ -14,13 +14,13 @@ import java.util.ArrayList;
 
 import okhttp3.RequestBody;
 
-public class LoadManufacturers extends AsyncTask<Void, String, String> {
+public class LoadHome extends AsyncTask<Void, String, String> {
 
     private RequestBody requestBody;
     private ArrayList<ManufacturerItem> arrayList = new ArrayList<>();
     private LoadManuListener listener;
 
-    public LoadManufacturers(LoadManuListener listener, RequestBody requestBody){
+    public LoadHome(LoadManuListener listener, RequestBody requestBody){
         this.requestBody = requestBody;
         this.listener = listener;
     }

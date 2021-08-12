@@ -6,11 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -26,16 +24,16 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.adapters.AdsAdapter;
 import com.example.autosellingapp.asynctasks.LoadCategory;
+import com.example.autosellingapp.interfaces.AdsDetailListener;
 import com.example.autosellingapp.interfaces.LoadCategoryListener;
+import com.example.autosellingapp.interfaces.ReloadFragmentListener;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
 import com.example.autosellingapp.items.EquipmentItem;
-import com.example.autosellingapp.items.ManufacturerItem;
 import com.example.autosellingapp.items.ModelItem;
 import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.UserItem;
@@ -66,6 +64,7 @@ public class FragmentCategory extends Fragment {
     private AdsAdapter adsAdapter;
     private CardView cv_no_found;
     private Button btn_no_found;
+    private FragmentTransaction ft;
 
     private final int RADIO_STANDARD = 3;
     private final int RADIO_LATEST = 4;
@@ -99,6 +98,7 @@ public class FragmentCategory extends Fragment {
     private int SELECTED_MILEAGE_MAX = NOT_SET;
 
     private ArrayList<EquipmentItem> SELECTED_EQUIP_LIST;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -171,7 +171,9 @@ public class FragmentCategory extends Fragment {
         int id = item.getItemId();
         switch (id){
             case R.id.menu_sort:
-                openDialogSort();
+                if(filteredAdsArray.size() != 0){
+                    openDialogSort();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -213,7 +215,49 @@ public class FragmentCategory extends Fragment {
                             rv_ads.setHasFixedSize(true);
                             filteredAdsArray = getFilteredAdsArray(arrayList_ads);
                             if(filteredAdsArray.size() != 0){
-                                adsAdapter = new AdsAdapter(methods, filteredAdsArray, arrayList_car, arrayList_user, arrayList_city);
+                                adsAdapter = new AdsAdapter(methods, filteredAdsArray, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                                    @Override
+                                    public void onClick(AdsItem adsItem, CarItem carItem) {
+                                        FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {
+                                            @Override
+                                            public void reload() {
+                                                LoadCategory();
+                                            }
+                                        });
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable(getString(R.string.adsItem), adsItem);
+                                        bundle.putSerializable(getString(R.string.carItem), carItem);
+                                        fragment.setArguments(bundle);
+                                        ReplaceFragment(fragment, getString(R.string.detailFragment));
+                                    }
+
+                                    @Override
+                                    public void onUserClick(String uid) {
+                                        if(methods.isLogged()){
+                                            if(Constant.UID.equals(uid)){
+                                                Bundle bundle = new Bundle();
+                                                bundle.putInt(Constant.PROFILE_MODE, Constant.MY_PROFILE);
+                                                FragmentProfile f = new FragmentProfile();
+                                                f.setArguments(bundle);
+                                                ReplaceFragment(f, getString(R.string.frag_profile));
+                                            }else {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putInt(Constant.PROFILE_MODE, Constant.USER_PROFILE);
+                                                bundle.putString(Constant.TAG_UID, uid);
+                                                FragmentProfile f = new FragmentProfile();
+                                                f.setArguments(bundle);
+                                                ReplaceFragment(f, getString(R.string.frag_profile));
+                                            }
+                                        }else{
+                                            Bundle bundle = new Bundle();
+                                            bundle.putInt(Constant.PROFILE_MODE, Constant.USER_PROFILE);
+                                            bundle.putString(Constant.TAG_UID, uid);
+                                            FragmentProfile f = new FragmentProfile();
+                                            f.setArguments(bundle);
+                                            ReplaceFragment(f, getString(R.string.frag_profile));
+                                        }
+                                    }
+                                });
                                 rv_ads.setAdapter(adsAdapter);
                             }
                         }else{
@@ -223,7 +267,7 @@ public class FragmentCategory extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_CATEGORY));
+            }, methods.getAPIRequest(Constant.METHOD_CATEGORY, null, null));
             loadCategory.execute();
         }else {
             errorMsg = getString(R.string.internet_not_connect);
@@ -351,8 +395,6 @@ public class FragmentCategory extends Fragment {
         return filtered_array;
     }
 
-
-
     private void openDialogSort(){
 
         Dialog dialog_sort = new Dialog(getContext());
@@ -424,7 +466,7 @@ public class FragmentCategory extends Fragment {
     private void LoadFilterSortAds(){
         ArrayList<AdsItem> tempArray = new ArrayList<>();
         for(AdsItem x : filteredAdsArray){
-            tempArray.add(new AdsItem(x.getAds_id(), x.getCar_id(), x.getUsername(), x.getAds_price(), x.getAds_mileage(), x.getCity_id(), x.getAds_location(), x.getAds_description(), x.getAds_posttime(), x.getAds_likes()));
+            tempArray.add(new AdsItem(x.getAds_id(), x.getCar_id(), x.getUid(), x.getAds_price(), x.getAds_mileage(), x.getCity_id(), x.getAds_location(), x.getAds_description(), x.getAds_posttime(), x.getAds_likes(), x.isAds_isAvailable()));
         }
 
         switch (RADIO_CURRENT){
@@ -509,5 +551,12 @@ public class FragmentCategory extends Fragment {
             arr.set(pos, arr.get(i));
             arr.set(i, min);
         }
+    }
+
+    public void ReplaceFragment(Fragment fragment, String name){
+        ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.main_content, fragment, name);
+        ft.addToBackStack(name);
+        ft.commit();
     }
 }

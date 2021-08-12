@@ -39,6 +39,7 @@ import com.example.autosellingapp.items.EquipmentItem;
 import com.example.autosellingapp.items.ManufacturerItem;
 import com.example.autosellingapp.items.ModelItem;
 import com.example.autosellingapp.items.MyItem;
+import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
 
@@ -283,7 +284,7 @@ public class FragmentSearch extends Fragment {
                 }
 
                 @Override
-                public void onEnd(String success, ArrayList<ManufacturerItem> arrayList_manu, ArrayList<ModelItem> arrayList_model, ArrayList<MyItem> arrayList_city, ArrayList<MyItem> arrayList_bodytype, ArrayList<MyItem> arrayList_fueltype, ArrayList<MyItem> arrayList_trans, ArrayList<ColorItem> arrayList_color, ArrayList<EquipmentItem> arrayList_equip) {
+                public void onEnd(String success, ArrayList<ManufacturerItem> arrayList_manu, ArrayList<ModelItem> arrayList_model, ArrayList<MyItem> arrayList_city, ArrayList<MyItem> arrayList_bodytype, ArrayList<MyItem> arrayList_fueltype, ArrayList<MyItem> arrayList_trans, ArrayList<ColorItem> arrayList_color, ArrayList<EquipmentItem> arrayList_equip, ArrayList<UserItem> userItemArrayList) {
                     if(getActivity() != null){
                         if(success.equals("1")){
                             array_manu.clear();
@@ -319,7 +320,7 @@ public class FragmentSearch extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_SEARCH));
+            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null));
             loadSearch.execute();
         }else{
             errorMsg = getString(R.string.internet_not_connect);
@@ -780,7 +781,6 @@ public class FragmentSearch extends Fragment {
     private void openDialogEquipment(){
         Dialog dialog = new Dialog(this.getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //dialog.setCancelable(false);
         dialog.setContentView(R.layout.layout_dialog_equipment);
 
         TextView tv_dialog = dialog.findViewById(R.id.tv_dialog_equip);
@@ -796,7 +796,7 @@ public class FragmentSearch extends Fragment {
             arrayList_temp.add(new EquipmentItem(item.getEquip_id(), item.getEquip_name(), item.isChecked()));
         }
 
-        EquipmentAdapter adapter = new EquipmentAdapter(array_equip, new EquipmentListener() {
+        EquipmentAdapter adapter = new EquipmentAdapter(array_equip, getString(R.string.dialog), new EquipmentListener() {
             @Override
             public void onClick(int equip_id, boolean isChecked) {
                 for (EquipmentItem item : arrayList_temp){

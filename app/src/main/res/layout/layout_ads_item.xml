@@ -6,7 +6,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_item_ads"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_margin="5dp"
         android:clickable="true"
@@ -41,6 +41,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:layout_toRightOf="@+id/cv_seller_pic"
                     android:text="Seller Name"
                     android:textSize="15dp" />
@@ -55,12 +57,26 @@
                     android:text="post time"
                     android:textSize="13dp"/>
             </RelativeLayout>
-            <ImageView
-                android:id="@+id/iv_car_pic"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:scaleType="fitXY"
-                android:layout_margin="5dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="160dp">
+                <ImageView
+                    android:id="@+id/iv_car_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:scaleType="centerCrop" />
+                <TextView
+                    android:id="@+id/tv_my_ads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:textColor="@color/white"
+                    android:background="@color/steel_blue"
+                    android:visibility="gone"
+                    android:text="My ads"/>
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/tv_car_name"
                 android:layout_width="wrap_content"
@@ -75,7 +91,7 @@
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="18dp"
                 android:textColor="@color/text_black"
                 android:layout_marginLeft="10dp"
                 android:text="$ 40000"/>

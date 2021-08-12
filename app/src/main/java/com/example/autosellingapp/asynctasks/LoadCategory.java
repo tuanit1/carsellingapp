@@ -3,15 +3,9 @@ package com.example.autosellingapp.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import androidx.dynamicanimation.animation.SpringAnimation;
-
 import com.example.autosellingapp.interfaces.LoadCategoryListener;
-import com.example.autosellingapp.interfaces.LoadSearchListener;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
-import com.example.autosellingapp.items.ColorItem;
-import com.example.autosellingapp.items.EquipmentItem;
-import com.example.autosellingapp.items.ManufacturerItem;
 import com.example.autosellingapp.items.ModelItem;
 import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.UserItem;
@@ -77,7 +71,7 @@ public class LoadCategory  extends AsyncTask<Void, String, String> {
                     JSONObject obj = data_ads.getJSONObject(i);
                     int ads_id = obj.getInt(Constant.TAG_ADS_ID);
                     int car_id = obj.getInt(Constant.TAG_CAR_ID);
-                    String username = obj.getString(Constant.TAG_USERNAME);
+                    String username = obj.getString(Constant.TAG_UID);
                     double ads_price = obj.getInt(Constant.TAG_ADS_PRICE);
                     int ads_mileage = obj.getInt(Constant.TAG_ADS_MILEAGE);
                     int city_id = obj.getInt(Constant.TAG_CITY_ID);
@@ -87,8 +81,9 @@ public class LoadCategory  extends AsyncTask<Void, String, String> {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date ads_posttime = sdf.parse(ads_posttime_str);
                     int ads_likes = obj.getInt(Constant.TAG_ADS_LIKE);
+                    boolean ads_isAvailable = obj.getInt(Constant.TAG_ADS_ISAVAILABLE) == 1;
 
-                    AdsItem objItem = new AdsItem(ads_id, car_id, username, ads_price, ads_mileage, city_id, ads_location, ads_description, ads_posttime, ads_likes);
+                    AdsItem objItem = new AdsItem(ads_id, car_id, username, ads_price, ads_mileage, city_id, ads_location, ads_description, ads_posttime, ads_likes, ads_isAvailable);
                     arrayList_ads.add(objItem);
                 }
 
@@ -107,7 +102,7 @@ public class LoadCategory  extends AsyncTask<Void, String, String> {
                     }
 
                     int car_year = obj.getInt(Constant.TAG_CAR_YEAR);
-                    boolean isNew = (obj.getInt(Constant.TAG_CAR_CONDITION) == 1)?true:false;
+                    boolean isNew = obj.getInt(Constant.TAG_CAR_CONDITION) == 1;
                     int car_power = obj.getInt(Constant.TAG_CAR_POWER);
                     int trans_id = obj.getInt(Constant.TAG_TRANS_ID);
                     int car_doors = obj.getInt(Constant.TAG_CAR_DOORS);
@@ -144,8 +139,7 @@ public class LoadCategory  extends AsyncTask<Void, String, String> {
                 for (int i = 0; i < data_user.length(); i++){
                     JSONObject obj = data_user.getJSONObject(i);
 
-                    String username = obj.getString(Constant.TAG_USERNAME);
-                    String password = obj.getString(Constant.TAG_PASSWORD);
+                    String uid = obj.getString(Constant.TAG_UID);
                     String address = obj.getString(Constant.TAG_ADDRESS);
                     String phoneNumber = obj.getString(Constant.TAG_PHONE);
                     String fullName = obj.getString(Constant.TAG_FULLNAME);
@@ -155,8 +149,20 @@ public class LoadCategory  extends AsyncTask<Void, String, String> {
                     if(!obj.getString(Constant.TAG_FAVLIST).equals("")){
                         favourite_ads = gson.fromJson(obj.getString(Constant.TAG_FAVLIST), ArrayList.class);
                     }
+                    ArrayList<String> chatlist = new ArrayList<>();
+                    if(!obj.getString(Constant.TAG_CHATLIST).equals("")){
+                        chatlist = gson.fromJson(obj.getString(Constant.TAG_CHATLIST), ArrayList.class);
+                    }
+                    ArrayList<String> followlist = new ArrayList<>();
+                    if(!obj.getString(Constant.TAG_FOLLOWLIST).equals("")){
+                        followlist = gson.fromJson(obj.getString(Constant.TAG_FOLLOWLIST), ArrayList.class);
+                    }
+                    ArrayList<String> recentAds = new ArrayList<>();
+                    if(!obj.getString(Constant.TAG_RECENTADS).equals("")){
+                        recentAds = gson.fromJson(obj.getString(Constant.TAG_RECENTADS), ArrayList.class);
+                    }
 
-                    UserItem objItem = new UserItem(username, password, address, phoneNumber, fullName, email, image, favourite_ads);
+                    UserItem objItem = new UserItem(uid, address, phoneNumber, fullName, email, image, chatlist, followlist, recentAds, favourite_ads);
                     arrayList_user.add(objItem);
                 }
 

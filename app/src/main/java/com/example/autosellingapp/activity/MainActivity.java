@@ -12,30 +12,41 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.autosellingapp.R;
+import com.example.autosellingapp.fragments.FragmentFavourite;
 import com.example.autosellingapp.fragments.FragmentHome;
+import com.example.autosellingapp.fragments.FragmentMessage;
+import com.example.autosellingapp.fragments.FragmentProfile;
 import com.example.autosellingapp.fragments.FragmentSearch;
+import com.example.autosellingapp.fragments.FragmentSelling;
+import com.example.autosellingapp.utils.Constant;
+import com.example.autosellingapp.utils.Methods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Toolbar toolbar;
+    public Toolbar toolbar;
     private DrawerLayout drawerLayout;
     public NavigationView navigationView;
     private FragmentTransaction fragmentTransaction;
     private BottomNavigationView bottomNavigationView;
+    private Methods methods;
 
     public static final int FRAGMENT_HOME = 1;
     public static final int FRAGMENT_SEARCH = 2;
     public static final int FRAGMENT_SELLING = 5;
     public static final int FRAGMENT_PROFILE = 6;
     public static final int FRAGMENT_FAVOURITE = 7;
-    public static final int FRAGMENT_LOGOUT = 8;
+    public static final int FRAGMENT_MESSAGE = 8;
     public static final int FRAGMENT_CONTACT = 9;
     public static final int FRAGMENT_SETTING = 10;
     public static final int FRAGMENT_TERM = 11;
@@ -46,8 +57,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        Constant.verifyStoragePermissions(this);
+
         setContentView(R.layout.activity_main);
+
+        methods = new Methods(this);
         Hook();
         NavigationDrawerMenu();
         openFragmentHome();
@@ -80,14 +97,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         break;
                     case R.id.bottom_nav_favourite:
                         if(currentFragment != FRAGMENT_FAVOURITE){
-                            Toast.makeText(MainActivity.this, "favourite", Toast.LENGTH_SHORT).show();
+                            ReplaceFragment(new FragmentFavourite(), getString(R.string.frag_favourite));
                             currentFragment = FRAGMENT_FAVOURITE;
                             navigationView.setCheckedItem(R.id.nav_favourite);
                         }
                         break;
+                    case R.id.bottom_nav_message:
+                        if(currentFragment != FRAGMENT_MESSAGE){
+                            ReplaceFragment(new FragmentMessage(), getString(R.string.frag_mesage));
+                            currentFragment = FRAGMENT_MESSAGE;
+                            navigationView.setCheckedItem(R.id.nav_message);
+                        }
+                        break;
                     case R.id.bottom_nav_selling:
                         if(currentFragment != FRAGMENT_SELLING){
-                            Toast.makeText(MainActivity.this, "selling", Toast.LENGTH_SHORT).show();
+                            ReplaceFragment(new FragmentSelling(), getString(R.string.selling));
                             currentFragment = FRAGMENT_SELLING;
                             navigationView.setCheckedItem(R.id.nav_selling);
                         }
@@ -103,6 +127,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        if(methods.isLogged()){
+            navigationView.getMenu().getItem(1).getSubMenu().getItem(2).setTitle("Logout");
+        }else{
+            navigationView.getMenu().getItem(1).getSubMenu().getItem(2).setTitle("Login");
+        }
+
     }
 
     @Override
@@ -113,7 +143,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(getSupportFragmentManager().getBackStackEntryCount() != 0){
                 super.onBackPressed();
             }else{
-                openQuitDialog();
+                if(methods.isLogged()){
+                    openQuitDialog();
+                }else{
+                    super.onBackPressed();
+                }
             }
         }
     }
@@ -138,9 +172,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     bottomNavigationView.getMenu().findItem(R.id.bottom_nav_search).setChecked(true);
                 }
                 break;
+            case R.id.nav_message:
+                if(FRAGMENT_MESSAGE != currentFragment){
+                    ReplaceFragment(new FragmentMessage(), getString(R.string.frag_mesage));
+                    currentFragment = FRAGMENT_MESSAGE;
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    bottomNavigationView.getMenu().findItem(R.id.bottom_nav_message).setChecked(true);
+                }
+                break;
             case R.id.nav_selling:
                 if(FRAGMENT_SELLING != currentFragment){
-                    //ReplaceFragment(new InfoFragment(), "INFO");
+                    ReplaceFragment(new FragmentSelling(), getString(R.string.selling));
                     currentFragment = FRAGMENT_SELLING;
                     drawerLayout.closeDrawer(GravityCompat.START);
                     bottomNavigationView.getMenu().findItem(R.id.bottom_nav_selling).setChecked(true);
@@ -148,20 +190,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_profile:
                 if(FRAGMENT_PROFILE != currentFragment){
-                    //ReplaceFragment(new InfoFragment(), "INFO");
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.PROFILE_MODE, Constant.MY_PROFILE);
+                    FragmentProfile f = new FragmentProfile();
+                    f.setArguments(bundle);
+                    ReplaceFragment(f, getString(R.string.frag_profile));
                     currentFragment = FRAGMENT_PROFILE;
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
                 break;
             case R.id.nav_favourite:
                 if(FRAGMENT_FAVOURITE != currentFragment){
-                    //ReplaceFragment(new InfoFragment(), "INFO");
+                    ReplaceFragment(new FragmentFavourite(), getString(R.string.frag_favourite));
                     currentFragment = FRAGMENT_FAVOURITE;
                     drawerLayout.closeDrawer(GravityCompat.START);
                     bottomNavigationView.getMenu().findItem(R.id.bottom_nav_favourite).setChecked(true);
                 }
                 break;
             case R.id.nav_logout:
+                if(methods.isLogged()){
+                    openQuitDialog();
+                }else{
+                    super.onBackPressed();
+                }
                 break;
             case R.id.nav_contact:
                 if(FRAGMENT_CONTACT != currentFragment){
@@ -229,5 +280,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         alert.show();
+    }
+
+    private void status(String status){
+        if(methods.isLogged()){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(Constant.UID);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("status", status);
+
+            reference.updateChildren(hashMap);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("AAA", "resume");
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("AAA", "pause");
+        status("offline");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("AAA", "stop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        status("offline");
+        Constant.isLogged = false;
+        Constant.UID = "";
+        FirebaseAuth.getInstance().signOut();
+        super.onDestroy();
     }
 }

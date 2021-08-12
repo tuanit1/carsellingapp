@@ -13,4 +13,8 @@
     <color name="white90_dark">#90FFFFFF</color>
     <color name="text_black">#000000</color>
     <color name="default_text">#808080</color>
+    <color name="light_orange">#CE4216</color>
+    <color name="heart_pink">#EF5252</color>
+    <color name="whiteAA">#AAFFFFFF</color>
+    <color name="red">#FF0000</color>
 </resources>

@@ -43,7 +43,7 @@ public class ManufacturerAdapter extends RecyclerView.Adapter<ManufacturerAdapte
         holder.tv_manu_name.setText(arrayList.get(position).getManu_name());
         Picasso.get()
                 .load(arrayList.get(position).getManu_thumb())
-                .placeholder(R.drawable.item_manu_placeholder)
+                .placeholder(R.drawable.placeholder_rec)
                 .into(holder.iv_manu_thumb);
     }
 

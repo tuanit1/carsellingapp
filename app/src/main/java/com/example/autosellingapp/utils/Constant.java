@@ -1,10 +1,58 @@
 package com.example.autosellingapp.utils;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+
+import androidx.core.app.ActivityCompat;
+
+import com.example.autosellingapp.items.UserItem;
+
 public class Constant {
-    public static String USERNAME = "";
+    public static final String METHOD_UPDATELIKE = "method_updatelike";
+    public static final String METHOD_LOGIN = "method_login";
+    public static final String ERROR_CON_SERVER = "Error Connecting Server";
+    public static final String SUCCESS = "Success";
+    public static final String WRONG_LOGIN = "Username or Password wrong!";
+    public static final String TEXT_ENGINESIZE= "Engine size";
+    public static final String TEXT_GEARS = "Gears";
+    public static final String TEXT_CYNLINDER = "Cylinder";
+    public static final String TEXT_WEIGHT = "Car weight";
+    public static final String TEXT_FUELCONSUMP = "Fuel consumption";
+    public static final String TEXT_CO2EMISSTION = "CO2 emission";
+    public static final String TEXT_CAR_NAME = "Car name";
+    public static final String TEXT_DESCRIPTION = "Description";
+    public static final String TEXT_ADDRESS = "Address";
+    public static final String METHOD_POST_ADS = "method_post_ads";
+    public static final String FAIL = "fail";
+    public static final String NO_INTERNET = "No Internet Connection";
+    public static final String NO_LOGIN = "You need to login to continue";
+    public static final String METHOD_SELLING = "method_selling";
+    public static final String METHOD_EDIT_SELLING = "method_edit_selling";
+    public static final String METHOD_DELETE_SELLING = "method_delete_selling";
+    public static final String TAG_ADS_ISAVAILABLE = "ads_isAvailable";
+    public static final String METHOD_MARK_AVAILABLE = "method_mark_available";
+    public static final String METHOD_USER_FAVOURITE = "method_user_favourite";
+    public static final String MEDTHOD_SIGNUP = "method_signup";
+    public static final String METHOD_USER = "method_user";
+    public static final String TAG_RECEIVER_UID = "receiver_uid";
+    public static final String TAG_CHATLIST = "user_chatlist";
+    public static final String METHOD_UPDATE_CHATLIST = "method_update_chatlist";
+    public static final String METHOD_PROFILE = "method_profile";
+    public static final String PROFILE_MODE = "profile_mode";
+    public static final String TAG_FOLLOWLIST = "user_followlist";
+    public static final String METHOD_UPDATEFOLLOW = "method_updatefollow";
+    public static final String TEXT_FULL_NAME = "Full name";
+    public static final String TEXT_PHONE = "Phone";
+    public static final String METHOD_UPDATE_USER = "method_update_user";
+    public static final String TAG_RECENTADS = "user_recentads";
+    public static final String METHOD_HOME = "method_home";
+    public static final String METHOD_RECENT = "method_recent_ads";
+    public static boolean isLogged = false;
+    public static String UID;
     public static final String API_KEY = "dothanhtuan";
     public static final String TAG_ROOT = "ADS_CAR";
-    public static final String SERVER_URL = "http://192.168.1.6/autobuy/";
+    public static final String SERVER_URL = "http://192.168.1.9/autobuy/";
     public static final String TAG_MANU_ID = "manu_id";
     public static final String TAG_MANU_NAME = "manu_name";
     public static final String TAG_MANU_THUMB = "manu_thumb";
@@ -54,7 +102,7 @@ public class Constant {
     public static final String TAG_CAR = "car";
     public static final String TAG_ADS_ID = "ads_id";
     public static final String TAG_CAR_ID = "car_id";
-    public static final String TAG_USERNAME = "user_username";
+    public static final String TAG_UID = "user_id";
     public static final String TAG_ADS_PRICE = "ads_price";
     public static final String TAG_ADS_MILEAGE = "ads_mileage";
     public static final String TAG_ADS_LOCATION = "ads_location";
@@ -85,4 +133,34 @@ public class Constant {
     public static final String TAG_EMAIL = "user_email";
     public static final String TAG_FAVLIST = "user_favlist";
     public static final String TAG_USER_IMAGE = "user_image";
+    public static final int MY_PROFILE = 96;
+    public static final int USER_PROFILE = 445;
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 }

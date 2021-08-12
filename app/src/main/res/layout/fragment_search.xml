@@ -745,6 +745,8 @@
             android:id="@+id/tv_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/text_black"
             android:text="empty"/>
         <Button
             android:id="@+id/btn_try"

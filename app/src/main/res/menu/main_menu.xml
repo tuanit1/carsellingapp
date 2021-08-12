@@ -12,6 +12,10 @@
                     android:title="Search"
                     android:icon="@drawable/search_ic"/>
                 <item
+                    android:id="@+id/nav_message"
+                    android:icon="@drawable/message_ic"
+                    android:title="Message" />
+                <item
                     android:id="@+id/nav_selling"
                     android:title="Selling"
                     android:icon="@drawable/selling_ic"/>
