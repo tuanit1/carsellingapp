@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="350dp"
+    android:background="@color/main_color"
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/tv_dialog_list"
@@ -9,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="dsadsaasdsa"
         android:textSize="18dp"
-        android:textColor="@color/text_black"
+        android:textColor="@color/text_color"
         android:layout_margin="15dp" />
     <ListView
         android:id="@+id/lv_dialog_list"

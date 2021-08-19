@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -203,6 +204,7 @@ public class FragmentMessage extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
     private void openLoginActivity(){
         Intent intent = new Intent(getContext(), ActivityLogin.class);

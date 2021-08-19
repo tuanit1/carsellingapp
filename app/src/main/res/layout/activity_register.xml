@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:text="@string/signup"
-                android:textColor="@color/white"
+                android:textColor="#ffffff"
                 android:textSize="28sp" />
 
             <TextView
@@ -58,13 +58,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="@android:color/white"
-                        app:backgroundTint="@color/white">
+                        app:backgroundTint="@color/main_color">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@color/main_color"
                             android:background="@android:color/transparent"
                             android:hint="@string/email"
                             android:inputType="textEmailAddress"
@@ -87,18 +87,18 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_weight="1"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                 </LinearLayout>
 
@@ -128,13 +128,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="@android:color/white"
-                        app:backgroundTint="@color/white">
+                        app:backgroundTint="@color/main_color">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@color/main_color"
                             android:background="@android:color/transparent"
                             android:hint="@string/password"
                             android:inputType="textPassword"
@@ -157,18 +157,18 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_weight="1"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                 </LinearLayout>
 
@@ -200,13 +200,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="@android:color/white"
-                        app:backgroundTint="@color/white">
+                        app:backgroundTint="@color/main_color">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_fullname"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@color/main_color"
                             android:background="@android:color/transparent"
                             android:hint="@string/full_name"
                             android:inputType="text"
@@ -229,18 +229,18 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_weight="1"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                 </LinearLayout>
 
@@ -272,13 +272,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="@android:color/white"
-                        app:backgroundTint="@color/white">
+                        app:backgroundTint="@color/main_color">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@color/main_color"
                             android:background="@android:color/transparent"
                             android:hint="@string/phone"
                             android:inputType="phone"
@@ -301,18 +301,18 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_weight="1"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                 </LinearLayout>
 
@@ -345,13 +345,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="@android:color/white"
-                        app:backgroundTint="@color/white">
+                        app:backgroundTint="@color/main_color">
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@color/main_color"
                             android:background="@android:color/transparent"
                             android:hint="@string/address"
                             android:inputType="text"
@@ -374,18 +374,18 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_weight="1"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="5dp"
-                        android:background="@color/white" />
+                        android:background="@color/main_color" />
 
                 </LinearLayout>
 
@@ -409,7 +409,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:text="@string/signup"
-                    android:textColor="@color/white"/>
+                    android:textColor="#ffffff"/>
 
 
             </LinearLayout>
@@ -423,7 +423,7 @@
             android:layout_centerInParent="true"
             android:indeterminate="true"
             android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/white"
+            android:indeterminateTint="@color/main_color"
             android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

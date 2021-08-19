@@ -405,7 +405,7 @@ public class Methods {
         }
 
         if(method.equals(Constant.METHOD_RECENT)){
-            jsObj.addProperty(Constant.TAG_UID, Constant.UID);
+            jsObj.addProperty(Constant.TAG_RECENTADS, bundle.getString(Constant.TAG_RECENTADS));
         }
 
         if(method.equals(Constant.METHOD_POST_ADS)){

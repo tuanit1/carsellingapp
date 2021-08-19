@@ -16,7 +16,8 @@ public class SharedPref {
     private Context context;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private String TAG_RECENT_ADS = "recent_ads";
+    private static String TAG_RECENT_ADS = "recent_ads", SHARED_PREF_AUTOLOGIN = "autologin", PASSWORD = "password", EMAIL = "email", IS_REMEMBER = "isRemember",
+    IS_DARK_MODE = "is_dark_mode";
 
     public SharedPref(Context context){
         this.context = context;
@@ -24,80 +25,90 @@ public class SharedPref {
         this.editor = sharedPreferences.edit();
     }
 
-    public void addRecentAds(AdsItem ads, CarItem car, UserItem user, MyItem city){
+    public String getRecentAds(){
+        return sharedPreferences.getString(TAG_RECENT_ADS, "");
+    }
 
-        if(isExistInRecent(ads)){
-            return;
-        }
-
-        String ads_json = new Gson().toJson(ads);
-        String car_json = new Gson().toJson(car);
-        String user_json = new Gson().toJson(user);
-        String city_json = new Gson().toJson(city);
-
-        ArrayList<String> arrayList_set = new ArrayList<>();
-        arrayList_set.add(ads_json);
-        arrayList_set.add(car_json);
-        arrayList_set.add(user_json);
-        arrayList_set.add(city_json);
+    public void addRecentAds(int ads_id){
 
         String array_recent_json = sharedPreferences.getString(TAG_RECENT_ADS, "");
 
         ArrayList<String> array_recent;
 
-        if(array_recent_json.isEmpty()){
+        if(array_recent_json.equals("")){
             array_recent = new ArrayList<>();
         }else {
             array_recent = new Gson().fromJson(array_recent_json, ArrayList.class);
         }
 
-        if(array_recent.size() >= 4){
-            array_recent.remove(0);
-        }
-
-        array_recent.add(new Gson().toJson(arrayList_set));
-
-        editor.putString(TAG_RECENT_ADS, new Gson().toJson(array_recent));
-        editor.clear();
-    }
-
-    public ArrayList<String> getRecentAds(){
-        String array_recent_json = sharedPreferences.getString(TAG_RECENT_ADS, "");
-
-        ArrayList<String> array_recent;
-
-        if(array_recent_json.isEmpty()){
-            array_recent = new ArrayList<>();
-        }else {
-            array_recent = new Gson().fromJson(array_recent_json, ArrayList.class);
-        }
-
-        return array_recent;
-    }
-
-    private boolean isExistInRecent(AdsItem ads){
-        int ads_id = ads.getAds_id();
-
-        String array_recent_json = sharedPreferences.getString(TAG_RECENT_ADS, "");
-
-        ArrayList<String> array_recent;
-
-        if(array_recent_json.isEmpty()){
-            return false;
-        }else {
-            array_recent = new Gson().fromJson(array_recent_json, ArrayList.class);
-
-            for(String arrayList_set_json : array_recent){
-                ArrayList<String> arrayList_set = new Gson().fromJson(arrayList_set_json, ArrayList.class);
-                String ads_json = arrayList_set.get(0);
-                AdsItem ads_item = new Gson().fromJson(ads_json, AdsItem.class);
-
-                if(ads_id == ads_item.getAds_id()){
-                    return true;
+        if(isAdsInArray(ads_id, array_recent)){
+            for (int i = 0; i < array_recent.size(); i++){
+                if(ads_id == Integer.parseInt(array_recent.get(i))){
+                    String temp_id = array_recent.get(i);
+                    array_recent.remove(i--);
+                    array_recent.add(temp_id);
+                    break;
                 }
             }
-
-            return false;
+        }else {
+            array_recent.add(String.valueOf(ads_id));
         }
+
+        editor.putString(TAG_RECENT_ADS, new Gson().toJson(array_recent));
+        editor.commit();
+    }
+
+    private Boolean isAdsInArray(int ads_id, ArrayList<String> arrayList){
+        for(String id : arrayList){
+            if(ads_id == Integer.parseInt(id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Boolean getIsAutoLogin() {
+        return sharedPreferences.getBoolean(SHARED_PREF_AUTOLOGIN, false);
+    }
+
+    public void setIsAutoLogin(Boolean isAutoLogin) {
+        editor.putBoolean(SHARED_PREF_AUTOLOGIN, isAutoLogin);
+        editor.apply();
+    }
+
+    public void setPassword(String password){
+        editor.putString(PASSWORD, password);
+        editor.apply();
+    }
+
+    public String getPassword() {
+        return sharedPreferences.getString(PASSWORD, "");
+    }
+
+    public void setEmail(String email){
+        editor.putString(EMAIL, email);
+        editor.apply();
+    }
+
+    public String getEmail() {
+        return sharedPreferences.getString(EMAIL, "");
+    }
+
+    public Boolean isRemember(){
+        return sharedPreferences.getBoolean(IS_REMEMBER, false);
+    }
+
+    public void setRemember(Boolean isRemember){
+        editor.putBoolean(IS_REMEMBER, isRemember);
+        editor.apply();
+    }
+
+    public void setDarkMode(boolean isDarkMode){
+        editor.putBoolean(IS_DARK_MODE, isDarkMode);
+        editor.apply();
+    }
+
+    public boolean isDarkMode(){
+        return sharedPreferences.getBoolean(IS_DARK_MODE, false);
     }
 }

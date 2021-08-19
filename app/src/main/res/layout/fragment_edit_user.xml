@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/gray"
+    android:background="@color/sub_color"
     tools:context=".fragments.FragmentEditUser">
     <RelativeLayout
         android:id="@+id/rl_scroll_view"
@@ -41,10 +41,10 @@
                             android:padding="3dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
+                            android:background="@color/main_color"
                             android:backgroundTint="@color/default_text"
                             android:src="@drawable/edit_ic"
-                            app:tint="@color/white" />
+                            app:tint="@color/main_color" />
                     </androidx.cardview.widget.CardView>
                 </RelativeLayout>
 
@@ -55,7 +55,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/email"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -64,7 +64,7 @@
                         android:id="@+id/cv_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -78,6 +78,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
+                                android:textColor="@color/text_color_sub"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
                         </RelativeLayout>
@@ -90,7 +91,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/full_name"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -99,7 +100,7 @@
                         android:id="@+id/cv_fullname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -112,7 +113,7 @@
                                 android:id="@+id/tv_fullname"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -126,7 +127,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/phone"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -135,7 +136,7 @@
                         android:id="@+id/cv_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -148,7 +149,7 @@
                                 android:id="@+id/tv_phone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -162,7 +163,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/address"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -171,7 +172,7 @@
                         android:id="@+id/cv_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -184,7 +185,7 @@
                                 android:id="@+id/tv_address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -200,7 +201,7 @@
                         android:id="@+id/btn_save"
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
+                        android:textColor="#ffffff"
                         android:textSize="15dp"
                         android:padding="10dp"
                         android:backgroundTint="@color/steel_blue"
@@ -212,7 +213,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
                         android:padding="10dp"
-                        android:textColor="@color/white"
+                        android:textColor="#ffffff"
                         android:backgroundTint="@color/steel_blue"
                         android:text="CHANGE PASSWORD"/>
 
@@ -228,7 +229,7 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/steel_blue"
+        android:indeterminateTint="@color/progressbar_color"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/ll_empty"
@@ -236,7 +237,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/main_color"
         android:clickable="true"
         android:visibility="gone">
         <TextView
@@ -245,7 +246,7 @@
             android:layout_height="wrap_content"
             android:text="empty"
             android:textSize="20dp"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_color"
             android:gravity="center_horizontal" />
         <Button
             android:id="@+id/btn_try"
@@ -253,7 +254,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:backgroundTint="@color/steel_blue"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:text="Try again"/>
     </LinearLayout>
 </RelativeLayout>

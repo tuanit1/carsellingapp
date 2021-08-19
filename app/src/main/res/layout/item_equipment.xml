@@ -7,10 +7,11 @@
         android:id="@+id/tv_equip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:text="equip name"
         android:textSize="16dp"
         android:layout_margin="15dp"
-        android:textColor="@color/text_black"/>
+        android:textColor="@color/text_color"/>
     <CheckBox
         android:id="@+id/ckb_equip"
         android:layout_width="30dp"

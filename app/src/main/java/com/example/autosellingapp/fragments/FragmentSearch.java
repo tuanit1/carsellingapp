@@ -1,8 +1,12 @@
 package com.example.autosellingapp.fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,7 +29,6 @@ import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.adapters.ColorListAdapter;
@@ -365,7 +368,19 @@ public class FragmentSearch extends Fragment {
             case Constant.TEXT_MANU_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_manu);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_manu){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -378,7 +393,7 @@ public class FragmentSearch extends Fragment {
                             tv_manu.setTextColor(getResources().getColor(R.color.default_text));
                         }else {
                             cv_model.setEnabled(true);
-                            tv_manu.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_manu.setTextColor(getResources().getColor(R.color.selected_color));
                         }
 
                         SELECTED_MODEL_ID = NOT_SET;
@@ -390,7 +405,19 @@ public class FragmentSearch extends Fragment {
             case Constant.TEXT_MODEL_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 ArrayList<ModelItem> arrayList = new ArrayList<>();
 
                 if(SELECTED_MANU_ID != NOT_SET){
@@ -410,7 +437,7 @@ public class FragmentSearch extends Fragment {
                             if(SELECTED_MODEL_ID == NOT_SET){
                                 tv_model.setTextColor(getResources().getColor(R.color.default_text));
                             }else{
-                                tv_model.setTextColor(getResources().getColor(R.color.dark_blue));
+                                tv_model.setTextColor(getResources().getColor(R.color.selected_color));
                             }
 
                             dialog.dismiss();
@@ -421,7 +448,19 @@ public class FragmentSearch extends Fragment {
             case Constant.TEXT_BODY_TYPE_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_bodytype);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_bodytype){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -432,7 +471,7 @@ public class FragmentSearch extends Fragment {
                         if(SELECTED_BODY_TYPE_ID == NOT_SET){
                             tv_bodyType.setTextColor(getResources().getColor(R.color.default_text));
                         }else{
-                            tv_bodyType.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_bodyType.setTextColor(getResources().getColor(R.color.selected_color));
                         }
 
                         dialog.dismiss();
@@ -442,7 +481,19 @@ public class FragmentSearch extends Fragment {
             case Constant.TEXT_FUEL_TYPE_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_fueltype);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_fueltype){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -453,7 +504,7 @@ public class FragmentSearch extends Fragment {
                         if(SELECTED_FUEL_TYPE_ID == NOT_SET){
                             tv_fuelType.setTextColor(getResources().getColor(R.color.default_text));
                         }else{
-                            tv_fuelType.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_fuelType.setTextColor(getResources().getColor(R.color.selected_color));
                         }
 
                         dialog.dismiss();
@@ -463,7 +514,19 @@ public class FragmentSearch extends Fragment {
             case Constant.TEXT_CITY_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_city);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_city){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -474,7 +537,7 @@ public class FragmentSearch extends Fragment {
                         if(SELECTED_CITY_ID == NOT_SET){
                             tv_city.setTextColor(getResources().getColor(R.color.default_text));
                         }else{
-                            tv_city.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_city.setTextColor(getResources().getColor(R.color.selected_color));
                         }
 
                         dialog.dismiss();
@@ -489,7 +552,19 @@ public class FragmentSearch extends Fragment {
                 list.add(getString(R.string.used));
                 list.add(getString(R.string.news));
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, list);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, list){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -501,10 +576,10 @@ public class FragmentSearch extends Fragment {
                             tv_condition.setTextColor(getResources().getColor(R.color.default_text));
                         }else if(list.get(position).equals(getString(R.string.used))){
                             SELECTED_CONDITION = CONDITION_USED;
-                            tv_condition.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_condition.setTextColor(getResources().getColor(R.color.selected_color));
                         }else{
                             SELECTED_CONDITION = CONDITION_NEW;
-                            tv_condition.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_condition.setTextColor(getResources().getColor(R.color.selected_color));
                         }
                         dialog.dismiss();
                     }
@@ -513,7 +588,19 @@ public class FragmentSearch extends Fragment {
             case Constant.TEXT_TRANS:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_trans);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_trans){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -524,7 +611,7 @@ public class FragmentSearch extends Fragment {
                         if(SELECTED_TRANS_ID == NOT_SET){
                             tv_transmission.setTextColor(getResources().getColor(R.color.default_text));
                         }else{
-                            tv_transmission.setTextColor(getResources().getColor(R.color.dark_blue));
+                            tv_transmission.setTextColor(getResources().getColor(R.color.selected_color));
                         }
 
                         dialog.dismiss();
@@ -554,7 +641,7 @@ public class FragmentSearch extends Fragment {
                 if(SELECTED_COLOR == NOT_SET){
                     tv_bodyColor.setTextColor(getResources().getColor(R.color.default_text));
                 }else{
-                    tv_bodyColor.setTextColor(getResources().getColor(R.color.dark_blue));
+                    tv_bodyColor.setTextColor(getResources().getColor(R.color.selected_color));
                 }
 
                 dialog1.dismiss();
@@ -636,22 +723,22 @@ public class FragmentSearch extends Fragment {
                     case Constant.TEXT_YEAR:
                         SELECTED_YEAR = numberPicker.getValue();
                         tv_year.setText(String.valueOf(SELECTED_YEAR));
-                        tv_year.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_year.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_SEAT:
                         SELECTED_SEAT = numberPicker.getValue();
                         tv_seatNumber.setText(String.valueOf(SELECTED_SEAT));
-                        tv_seatNumber.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_seatNumber.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_DOOR:
                         SELECTED_DOOR = numberPicker.getValue();
                         tv_doorNumber.setText(String.valueOf(SELECTED_DOOR));
-                        tv_doorNumber.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_doorNumber.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_PREUSER:
                         SELECTED_PREUSER = numberPicker.getValue();
                         tv_previousUser.setText("< "+String.valueOf(SELECTED_PREUSER));
-                        tv_previousUser.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_previousUser.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                 }
                 dialog.dismiss();
@@ -756,19 +843,19 @@ public class FragmentSearch extends Fragment {
                         SELECTED_PRICE_MIN = numberPicker_min.getValue();
                         SELECTED_PRICE_MAX = numberPicker_max.getValue();
                         tv_price.setText(String.valueOf(SELECTED_PRICE_MIN+" - "+SELECTED_PRICE_MAX));
-                        tv_price.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_price.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_POWER:
                         SELECTED_POWER_MIN = numberPicker_min.getValue();
                         SELECTED_POWER_MAX = numberPicker_max.getValue();
                         tv_power.setText(String.valueOf(SELECTED_POWER_MIN+" - "+SELECTED_POWER_MAX));
-                        tv_power.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_power.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_MILEAGE:
                         SELECTED_MILEAGE_MIN = numberPicker_min.getValue();
                         SELECTED_MILEAGE_MAX = numberPicker_max.getValue();
                         tv_mileage.setText(String.valueOf(SELECTED_MILEAGE_MIN+" - "+SELECTED_MILEAGE_MAX));
-                        tv_mileage.setTextColor(getResources().getColor(R.color.dark_blue));
+                        tv_mileage.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                 }
                 dialog.dismiss();
@@ -849,7 +936,7 @@ public class FragmentSearch extends Fragment {
                     tv_equipment.setTextColor(getResources().getColor(R.color.default_text));
                 }else{
                     tv_equipment.setText(SELECTED_EQUIP_LIST.size() +" equipments is selected");
-                    tv_equipment.setTextColor(getResources().getColor(R.color.dark_blue));
+                    tv_equipment.setTextColor(getResources().getColor(R.color.selected_color));
                 }
 
                 dialog.dismiss();
@@ -873,28 +960,6 @@ public class FragmentSearch extends Fragment {
     }
 
     private void openCatFragment(){
-//        String equip = "";
-//        for(EquipmentItem item : SELECTED_EQUIP_LIST){
-//            equip += item.getEquip_name() + " ";
-//        }
-//
-//        String text = "Manufacturer: " + SELECTED_MANU_ID + "\n" +
-//                "Model: " +SELECTED_MODEL_ID + "\n"+
-//                "Price: " +SELECTED_PRICE_MIN + " - "+ SELECTED_PRICE_MAX + "\n"+
-//                "Power: " +SELECTED_POWER_MIN + " - "+ SELECTED_POWER_MAX + "\n"+
-//                "Mileage: " +SELECTED_MILEAGE_MIN + " - "+ SELECTED_MILEAGE_MAX + "\n"+
-//                "Body type: " +SELECTED_BODY_TYPE_ID + "\n"+
-//                "Fuel type: " +SELECTED_FUEL_TYPE_ID + "\n"+
-//                "Year: " +SELECTED_YEAR + "\n"+
-//                "Transmission: " +SELECTED_TRANS_ID + "\n"+
-//                "Condition: " +SELECTED_CONDITION + "\n"+
-//                "Color: " +SELECTED_COLOR + "\n"+
-//                "City: " +SELECTED_CITY_ID + "\n"+
-//                "Seat: " +SELECTED_SEAT + "\n"+
-//                "Door: " +SELECTED_DOOR + "\n"+
-//                "Pre users: " +SELECTED_PREUSER + "\n"+
-//                "City: " +equip+ "\n";
-//        Toast.makeText(this.getContext(), text, Toast.LENGTH_LONG).show();
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.manufacturers), SELECTED_MANU_ID);
         bundle.putInt(getString(R.string.model), SELECTED_MODEL_ID);
@@ -925,5 +990,6 @@ public class FragmentSearch extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
 }

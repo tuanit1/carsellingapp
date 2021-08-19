@@ -3,6 +3,7 @@ package com.example.autosellingapp.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +32,11 @@ import com.example.autosellingapp.asynctasks.LoadRecent;
 import com.example.autosellingapp.interfaces.AdsDetailListener;
 import com.example.autosellingapp.interfaces.LoadCategoryListener;
 import com.example.autosellingapp.interfaces.LoadManuListener;
+import com.example.autosellingapp.interfaces.ManuListener;
 import com.example.autosellingapp.interfaces.ReloadFragmentListener;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
+import com.example.autosellingapp.items.EquipmentItem;
 import com.example.autosellingapp.items.ManufacturerItem;
 import com.example.autosellingapp.items.ModelItem;
 import com.example.autosellingapp.items.MyItem;
@@ -40,6 +44,7 @@ import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
 import com.example.autosellingapp.utils.SharedPref;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,16 +57,23 @@ public class FragmentHome extends Fragment {
     private View rootView;
     private ManufacturerAdapter manufacturerAdapter;
     private ArrayList<ManufacturerItem> arrayList_manu;
+    private ArrayList<AdsItem> arrayList_ads;
+    private ArrayList<CarItem> arrayList_car;
+    private ArrayList<UserItem> arrayList_user;
+    private ArrayList<MyItem> arrayList_city;
     private RecyclerView rv_manu, rv_recent;
     private CardView cv_search;
     private NestedScrollView scrollView;
     private ProgressBar progressBar;
     private Methods methods;
     private LinearLayout ll_empty_home, ll_manu, ll_recent;
+    private RelativeLayout rl_manu, rl_recent;
     private String errorMsg;
     private Button btn_try;
     private TextView tv_empty;
     private FragmentTransaction ft;
+
+    private int NOT_SET = -1;
 
     private SharedPref sharedPref;
 
@@ -74,9 +86,28 @@ public class FragmentHome extends Fragment {
         sharedPref = new SharedPref(getContext());
 
         arrayList_manu = new ArrayList<>();
+        arrayList_ads = new ArrayList<>();
+        arrayList_car = new ArrayList<>();
+        arrayList_user = new ArrayList<>();
+        arrayList_city = new ArrayList<>();
+
         methods = new Methods(getContext());
         rv_manu.setLayoutManager(new GridLayoutManager(getContext(), 4));
         rv_manu.setHasFixedSize(true);
+
+        rl_manu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("TYPE", "type_manu");
+                bundle.putSerializable(Constant.TAG_MANU, arrayList_manu);
+
+                FragmentViewMore f = new FragmentViewMore();
+                f.setArguments(bundle);
+
+                ReplaceFragment(f, "All Manufacturer");
+            }
+        });
 
         LoadManufacturers();
 
@@ -98,6 +129,8 @@ public class FragmentHome extends Fragment {
         ll_empty_home = rootView.findViewById(R.id.ll_empty_home);
         ll_manu = rootView.findViewById(R.id.ll_manu);
         ll_recent = rootView.findViewById(R.id.ll_recent);
+        rl_manu = rootView.findViewById(R.id.rl_manu);
+        rl_recent = rootView.findViewById(R.id.rl_recent);
         btn_try = rootView.findViewById(R.id.btn_try_home);
         tv_empty = rootView.findViewById(R.id.tv_empty_home);
     }
@@ -121,11 +154,25 @@ public class FragmentHome extends Fragment {
                         if(success.equals("1")){
                             arrayList_manu.clear();
                             arrayList_manu.addAll(manuList);
-                            manufacturerAdapter = new ManufacturerAdapter(arrayList_manu);
-                            rv_manu.setAdapter(manufacturerAdapter);
-                            if(methods.isLogged()){
-                                setRecent();
+
+                            ArrayList<ManufacturerItem> arrayList_manu1 = new ArrayList<>();
+
+                            if(arrayList_ads.size() > 12){
+                                for(int i = 0; i < 12; i++){
+                                    arrayList_manu1.add(arrayList_manu.get(i));
+                                }
+                            }else {
+                                arrayList_manu1.addAll(arrayList_manu);
                             }
+
+                            manufacturerAdapter = new ManufacturerAdapter("home" ,arrayList_manu1, new ManuListener() {
+                                @Override
+                                public void onClick(int manu_id) {
+                                    openCatFragment(manu_id);
+                                }
+                            });
+                            rv_manu.setAdapter(manufacturerAdapter);
+                            setRecent();
                         }else{
                             errorMsg = getString(R.string.error_connect_server);
                         }
@@ -142,9 +189,18 @@ public class FragmentHome extends Fragment {
     }
 
     private void setRecent() {
+
+        Bundle bundle = new Bundle();
+        String array_ads_json = sharedPref.getRecentAds();
+        bundle.putString(Constant.TAG_RECENTADS, array_ads_json);
+
         LoadRecent loadRecent = new LoadRecent(new LoadCategoryListener() {
             @Override
             public void onStart() {
+                arrayList_ads.clear();
+                arrayList_car.clear();
+                arrayList_user.clear();
+                arrayList_city.clear();
                 ll_recent.setVisibility(View.GONE);
             }
 
@@ -157,9 +213,37 @@ public class FragmentHome extends Fragment {
                             rv_recent.setLayoutManager(llm);
                             rv_recent.setHasFixedSize(true);
 
-                            Collections.reverse(adsItemArrayList);
+                            if (methods.isLogged()){
+                                for(AdsItem adsItem : adsItemArrayList){
+                                    if(!adsItem.getUid().equals(Constant.UID)){
+                                        arrayList_ads.add(adsItem);
+                                    }
+                                }
+                            }else {
+                                arrayList_ads.addAll(adsItemArrayList);
+                            }
 
-                            AdsAdapter adsAdapter = new AdsAdapter(methods, adsItemArrayList, carItemArrayList, userItemArrayList, cityItemArrayList, new AdsDetailListener() {
+                            if(arrayList_ads.size() < 3){
+                                return;
+                            }
+
+                            arrayList_car.addAll(carItemArrayList);
+                            arrayList_user.addAll(userItemArrayList);
+                            arrayList_city.addAll(cityItemArrayList);
+
+                            ArrayList<AdsItem> arrayList_ads1 = new ArrayList<>();
+
+                            Collections.reverse(arrayList_ads);
+
+                            if(arrayList_ads.size() > 15){
+                                for(int i = 0; i < 15; i++){
+                                    arrayList_ads1.add(arrayList_ads.get(i));
+                                }
+                            }else {
+                                arrayList_ads1.addAll(arrayList_ads);
+                            }
+
+                            AdsAdapter adsAdapter = new AdsAdapter("horizontal", methods, arrayList_ads1, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                                 @Override
                                 public void onClick(AdsItem adsItem, CarItem carItem) {
                                     FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {
@@ -213,9 +297,28 @@ public class FragmentHome extends Fragment {
                     setEmpty();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_RECENT, null, null));
+        }, methods.getAPIRequest(Constant.METHOD_RECENT, bundle, null));
 
-        loadRecent.execute();
+        if(!array_ads_json.equals("")){
+            loadRecent.execute();
+
+            rl_recent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("TYPE", "type_ads");
+                    bundle.putSerializable(Constant.TAG_ADS, arrayList_ads);
+                    bundle.putSerializable(Constant.TAG_CAR, arrayList_car);
+                    bundle.putSerializable(Constant.TAG_USER, arrayList_user);
+                    bundle.putSerializable(Constant.TAG_CITY, arrayList_city);
+
+                    FragmentViewMore f = new FragmentViewMore();
+                    f.setArguments(bundle);
+
+                    ReplaceFragment(f, "Recent Ads");
+                }
+            });
+        }
     }
 
     private void setEmpty() {
@@ -236,10 +339,37 @@ public class FragmentHome extends Fragment {
         }
     }
 
+    private void openCatFragment(int SELECTED_MANU_ID){
+        Bundle bundle = new Bundle();
+        bundle.putInt(getString(R.string.manufacturers), SELECTED_MANU_ID);
+        bundle.putInt(getString(R.string.model), NOT_SET);
+        bundle.putInt(getString(R.string.price_min), NOT_SET);
+        bundle.putInt(getString(R.string.price_max), NOT_SET);
+        bundle.putInt(getString(R.string.power_min), NOT_SET);
+        bundle.putInt(getString(R.string.power_max), NOT_SET);
+        bundle.putInt(getString(R.string.mileage_min), NOT_SET);
+        bundle.putInt(getString(R.string.mileage_max), NOT_SET);
+        bundle.putInt(getString(R.string.body_type), NOT_SET);
+        bundle.putInt(getString(R.string.fuel_type), NOT_SET);
+        bundle.putInt(getString(R.string.year), NOT_SET);
+        bundle.putInt(getString(R.string.transmission), NOT_SET);
+        bundle.putInt(getString(R.string.condition), NOT_SET);
+        bundle.putInt(getString(R.string.body_color), NOT_SET);
+        bundle.putInt(getString(R.string.city), NOT_SET);
+        bundle.putInt(getString(R.string.seat_number), NOT_SET);
+        bundle.putInt(getString(R.string.door_number), NOT_SET);
+        bundle.putInt(getString(R.string.previous_users), NOT_SET);
+        bundle.putSerializable(getString(R.string.equipment), new ArrayList<EquipmentItem>());
+        FragmentCategory fragment = new FragmentCategory();
+        fragment.setArguments(bundle);
+        ReplaceFragment(fragment, getString(R.string.frag_category));
+    }
+
     public void ReplaceFragment(Fragment fragment, String name){
         ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
 }

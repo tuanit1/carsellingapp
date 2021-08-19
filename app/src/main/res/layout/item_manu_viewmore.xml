@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item_manu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:background="@color/main_color"
+    android:padding="5dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_marginBottom="3dp"
+    android:weightSum="10"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/iv_manu_thumb"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="7"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv_manu_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:textColor="@color/text_color"
+            android:text="manu name"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -203,7 +204,7 @@ public class FragmentAdsDetail extends Fragment {
         }
 
         if(IS_FAVORITE){
-            btn_like.setImageResource(R.drawable.heart_check_ic);
+            btn_like.setImageResource(R.drawable.heart2_checked_ic);
         }
 
         btn_like.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +260,6 @@ public class FragmentAdsDetail extends Fragment {
         long diffInYear = TimeUnit.MILLISECONDS.toDays(diffInTime)/365l;
         long diffInMonth = TimeUnit.MILLISECONDS.toDays(diffInTime)/30l;
         long diffInDay = TimeUnit.MILLISECONDS.toDays(diffInTime);
-
 
         if(diffInYear < 1){
             if(diffInMonth < 1){
@@ -430,12 +430,12 @@ public class FragmentAdsDetail extends Fragment {
                     if(IS_FAVORITE){
                         //un favorite
                         IS_FAVORITE = false;
-                        btn_like.setImageResource(R.drawable.heart_uncheck_ic);
+                        btn_like.setImageResource(R.drawable.heart2_ic);
                         methods.removeFavorite(USER_LOGIN.getFavourite_ads(), ADS.getAds_id());
                     }else{
                         // set favorite
                         IS_FAVORITE = true;
-                        btn_like.setImageResource(R.drawable.heart_check_ic);
+                        btn_like.setImageResource(R.drawable.heart2_checked_ic);
                         methods.addFavorite(USER_LOGIN.getFavourite_ads(), ADS.getAds_id());
                     }
                     reloadListener.reload();
@@ -457,6 +457,7 @@ public class FragmentAdsDetail extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
 
     private void addToChatList(UserItem addUser){

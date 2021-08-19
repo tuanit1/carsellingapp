@@ -12,12 +12,11 @@ public class UserItem implements Serializable {
     private String image;
     private ArrayList<String> chatlist;
     private ArrayList<String> followlist;
-    private ArrayList<String> recentAds;
     private String status;
 
     private ArrayList<String> favourite_ads;
 
-    public UserItem(String uid, String address, String phoneNumber, String fullName, String email, String image, ArrayList<String> chatlist, ArrayList<String> followlist, ArrayList<String> recentAds, ArrayList<String> favourite_ads) {
+    public UserItem(String uid, String address, String phoneNumber, String fullName, String email, String image, ArrayList<String> chatlist, ArrayList<String> followlist, ArrayList<String> favourite_ads) {
         this.uid = uid;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -26,18 +25,10 @@ public class UserItem implements Serializable {
         this.image = image;
         this.chatlist = chatlist;
         this.followlist = followlist;
-        this.recentAds = recentAds;
         this.favourite_ads = favourite_ads;
         this.status = "offline";
     }
 
-    public ArrayList<String> getRecentAds() {
-        return recentAds;
-    }
-
-    public void setRecentAds(ArrayList<String> recentAds) {
-        this.recentAds = recentAds;
-    }
 
     public ArrayList<String> getFollowlist() {
         return followlist;

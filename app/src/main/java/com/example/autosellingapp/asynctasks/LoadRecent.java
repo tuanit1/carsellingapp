@@ -153,12 +153,8 @@ public class LoadRecent extends AsyncTask<Void, String, String> {
                     if(!obj.getString(Constant.TAG_FOLLOWLIST).equals("")){
                         followlist = gson.fromJson(obj.getString(Constant.TAG_FOLLOWLIST), ArrayList.class);
                     }
-                    ArrayList<String> recentAds = new ArrayList<>();
-                    if(!obj.getString(Constant.TAG_RECENTADS).equals("")){
-                        recentAds = gson.fromJson(obj.getString(Constant.TAG_RECENTADS), ArrayList.class);
-                    }
 
-                    UserItem objItem = new UserItem(uid, address, phoneNumber, fullName, email, image, chatlist, followlist, recentAds, favourite_ads);
+                    UserItem objItem = new UserItem(uid, address, phoneNumber, fullName, email, image, chatlist, followlist, favourite_ads);
                     arrayList_user.add(objItem);
                 }
 

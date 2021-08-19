@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/sub_color"
     tools:context=".fragments.FragmentProfile">
     <RelativeLayout
         android:id="@+id/rl_scroll_view"
@@ -17,11 +18,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/gray"
                 android:orientation="vertical">
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/sub_color">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -29,7 +30,8 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/border_layout">
+                            android:background="@color/main_color"
+                            android:layout_marginBottom="3dp">
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/iv_user"
                                 android:layout_width="90dp"
@@ -49,7 +51,7 @@
                                     android:id="@+id/tv_name"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginTop="7dp"
                                     android:textSize="22dp"
@@ -68,6 +70,7 @@
                                         android:id="@+id/tv_rating_score"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color"
                                         android:layout_marginRight="5dp"
                                         android:textSize="16dp" />
                                     <RatingBar
@@ -83,6 +86,7 @@
                                         android:id="@+id/tv_rating_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color"
                                         android:layout_marginLeft="5dp"
                                         android:textSize="16dp"
                                         android:text="(0)"/>
@@ -117,22 +121,23 @@
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:orientation="horizontal"
-                            android:background="@drawable/border_layout"
+                            android:layout_marginBottom="3dp"
                             android:weightSum="2">
                             <LinearLayout
                                 android:id="@+id/btn_follower"
                                 android:layout_weight="1"
                                 android:layout_width="0dp"
+                                android:layout_marginRight="1.5dp"
                                 android:clickable="true"
                                 android:foreground="?attr/selectableItemBackground"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/border_layout"
+                                android:background="@color/main_color"
                                 android:gravity="center">
                                 <TextView
                                     android:id="@+id/tv_follower_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:text="Followers (0)"/>
                             </LinearLayout>
@@ -140,16 +145,17 @@
                                 android:id="@+id/btn_following"
                                 android:layout_weight="1"
                                 android:layout_width="0dp"
+                                android:layout_marginLeft="1.5dp"
                                 android:clickable="true"
                                 android:foreground="?attr/selectableItemBackground"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/border_layout"
+                                android:background="@color/main_color"
                                 android:gravity="center">
                                 <TextView
                                     android:id="@+id/tv_following_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:text="Following (0)"/>
                             </LinearLayout>
@@ -160,19 +166,21 @@
                             android:layout_height="50dp"
                             android:orientation="horizontal"
                             android:visibility="gone"
-                            android:background="@drawable/border_layout"
+                            android:layout_marginBottom="3dp"
                             android:clickable="true"
+                            android:background="@color/main_color"
                             android:foreground="?attr/selectableItemBackground"
                             android:gravity="center">
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="10dp"
-                                android:src="@drawable/edit_ic"/>
+                                android:background="@drawable/edit_ic"
+                                android:backgroundTint="@color/text_color"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:textSize="17dp"
                                 android:text="Edit profile"/>
                         </LinearLayout>
@@ -181,11 +189,12 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="10dp"
-                            android:background="@drawable/border_layout">
+                            android:background="@color/main_color"
+                            android:layout_marginBottom="3dp">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:textSize="20dp"
                                 android:layout_margin="5dp"
                                 android:text="Contact"/>
@@ -193,7 +202,7 @@
                                 android:id="@+id/tv_email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:textSize="15dp"
                                 android:layout_margin="5dp"
                                 android:text="Email: "/>
@@ -201,7 +210,7 @@
                                 android:id="@+id/tv_phone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:textSize="15dp"
                                 android:layout_margin="5dp"
                                 android:text="Phone: "/>
@@ -209,21 +218,17 @@
                         <RelativeLayout
                             android:id="@+id/btn_viewall"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:background="@drawable/border_layout">
+                            android:background="@color/main_color"
+                            android:layout_height="50dp">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_marginLeft="15dp"
                                 android:layout_centerVertical="true"
                                 android:textSize="20dp"
                                 android:text="Listing"/>
                         </RelativeLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0.7dp"
-                            android:background="@color/default_text"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -234,8 +239,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_ads"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"/>
+                        android:layout_height="wrap_content"/>
 
                     <TextView
                         android:id="@+id/tv_ads_empty"
@@ -256,7 +260,7 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/steel_blue"
+        android:indeterminateTint="@color/progressbar_color"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/ll_empty"
@@ -264,7 +268,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/main_color"
         android:clickable="true"
         android:visibility="gone">
         <TextView
@@ -273,7 +277,7 @@
             android:layout_height="wrap_content"
             android:text="empty"
             android:textSize="20dp"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_color"
             android:gravity="center_horizontal" />
         <Button
             android:id="@+id/btn_try"
@@ -281,7 +285,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:backgroundTint="@color/steel_blue"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:text="Try again"/>
     </LinearLayout>
 </RelativeLayout>

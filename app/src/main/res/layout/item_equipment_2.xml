@@ -8,7 +8,8 @@
         android:layout_height="40dp"
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
-        android:background="@drawable/arrow_right_ic"/>
+        android:background="@drawable/arrow_right_ic"
+        android:backgroundTint="@color/text_color_sub"/>
     <TextView
         android:layout_toRightOf="@+id/iv_arrow"
         android:id="@+id/tv_equip"
@@ -16,6 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16dp"
-        android:textColor="@color/text_black"
+        android:textColor="@color/text_color"
         android:text="asdasd"/>
 </RelativeLayout>

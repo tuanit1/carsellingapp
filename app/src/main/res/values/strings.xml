@@ -32,7 +32,7 @@
     <string name="used">Used</string>
     <string name="news">New</string>
     <string name="camera360">360 Camera</string>
-    <string name="frag_category">Fragment Category</string>
+    <string name="frag_category">Filtered Ads</string>
     <string name="price_min">Price min</string>
     <string name="price_max">Price max</string>
     <string name="power_min">Power min</string>
@@ -42,7 +42,7 @@
     <string name="sort">Sort</string>
     <string name="adsItem">Ads Item</string>
     <string name="carItem">Car Item</string>
-    <string name="detailFragment">Detail Fragment</string>
+    <string name="detailFragment">Ads Detail</string>
     <string name="gears">Gears</string>
     <string name="cylinder">Cylinder</string>
     <string name="weight">Car weight</string>
@@ -76,11 +76,11 @@
     <string name="car_name">Car name</string>
     <string name="tv_images">Images</string>
     <string name="address">Address</string>
-    <string name="frag_postads">FragmentPostAds</string>
+    <string name="frag_postads">Post Ads</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="array_selling_empty">It looks like you\'ve not had any ads yet\nCreate your first ads</string>
-    <string name="frag_favourite">FragmentFavourite</string>
+    <string name="frag_favourite">My Favourites</string>
     <string name="favourite_list_empty">It looks like you have\'ve not liked any ads yet</string>
     <string name="full_name">Full name</string>
     <string name="fill_all_info">Please fill all infomation</string>
@@ -88,13 +88,17 @@
     <string name="invalid_email">Email is invalid</string>
     <string name="reset_password">Reset password</string>
     <string name="fill_email">Please fill your email</string>
-    <string name="frag_mesage">FragmentMessage</string>
+    <string name="frag_mesage">Messages</string>
     <string name="frag_chat">FragmentChat</string>
     <string name="chatlist_empty">You don\'t have any recent contact</string>
-    <string name="frag_profile">FragmentProfile</string>
+    <string name="frag_profile">Profile</string>
     <string name="ads_list_empty">This user don\'t have any ads!</string>
-    <string name="frag_edituser">FragmentEditUser</string>
+    <string name="frag_edituser">User Editing</string>
     <string name="follower">Followers</string>
     <string name="following">Following</string>
     <string name="recent">Recent Ads</string>
+    <string name="frag_viewmore">FragmentViewMore</string>
+    <string name="frag_setting">Settings</string>
+    <string name="intro">Connect with our community</string>
+    <string name="your_location">Your location</string>
 </resources>

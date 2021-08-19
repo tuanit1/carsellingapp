@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,12 +23,10 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.activity.ActivityLogin;
 import com.example.autosellingapp.adapters.AdsAdapter;
-import com.example.autosellingapp.adapters.MessageAdapter;
 import com.example.autosellingapp.adapters.UserFollowAdapter;
 import com.example.autosellingapp.asynctasks.LoadProfile;
 import com.example.autosellingapp.asynctasks.UpdateFavouriteAsync;
@@ -39,7 +38,6 @@ import com.example.autosellingapp.interfaces.UpdateFavListener;
 import com.example.autosellingapp.interfaces.UserListener;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
-import com.example.autosellingapp.items.ChatItem;
 import com.example.autosellingapp.items.ModelItem;
 import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.RateItem;
@@ -209,7 +207,7 @@ public class FragmentProfile extends Fragment {
                     if(IS_FOLLOWING){
                         binding.cvFollow.setCardBackgroundColor(getResources().getColor(R.color.steel_blue));
                         binding.tvCvFollow.setText("Following");
-                        binding.tvCvFollow.setTextColor(getResources().getColor(R.color.white));
+                        binding.tvCvFollow.setTextColor(getResources().getColor(R.color.main_color));
                     }
                 }
 
@@ -353,7 +351,7 @@ public class FragmentProfile extends Fragment {
                         //un follow
                         IS_FOLLOWING = false;
 
-                        binding.cvFollow.setCardBackgroundColor(getResources().getColor(R.color.white));
+                        binding.cvFollow.setCardBackgroundColor(getResources().getColor(R.color.main_color));
                         binding.tvCvFollow.setText("Follow");
                         binding.tvCvFollow.setTextColor(getResources().getColor(R.color.steel_blue));
 
@@ -366,7 +364,7 @@ public class FragmentProfile extends Fragment {
 
                         binding.cvFollow.setCardBackgroundColor(getResources().getColor(R.color.steel_blue));
                         binding.tvCvFollow.setText("Following");
-                        binding.tvCvFollow.setTextColor(getResources().getColor(R.color.white));
+                        binding.tvCvFollow.setTextColor(getResources().getColor(R.color.main_color));
 
                         binding.tvFollowerCount.setText("Followers (" + ++FOLLOWERS_COUNT +")");
 
@@ -450,7 +448,7 @@ public class FragmentProfile extends Fragment {
                 binding.rvAds.setLayoutManager(new GridLayoutManager(getContext(),2));
                 binding.rvAds.setHasFixedSize(true);
 
-                adsAdapter = new AdsAdapter(methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                adsAdapter = new AdsAdapter("grid", methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                     @Override
                     public void onClick(AdsItem adsItem, CarItem carItem) {
                         FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {
@@ -616,6 +614,7 @@ public class FragmentProfile extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
 
     private void openLoginActivity(){

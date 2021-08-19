@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.FragmentSearch"
-    android:background="@color/gray">
+    android:background="@color/sub_color">
     <RelativeLayout
         android:id="@+id/scroll_view_search"
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/manufacturers"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -34,7 +34,7 @@
                         android:id="@+id/cv_search_manu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -48,6 +48,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -67,7 +68,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/model"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -76,7 +77,7 @@
                         android:id="@+id/cv_search_model"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -90,6 +91,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -109,7 +111,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/price"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -118,7 +120,7 @@
                         android:id="@+id/cv_search_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -132,6 +134,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:layout_alignParentLeft="true"
                                 android:textSize="16dp"
@@ -152,7 +155,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/power"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -161,7 +164,7 @@
                         android:id="@+id/cv_search_power"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -175,6 +178,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:layout_alignParentLeft="true"
                                 android:textSize="16dp"
@@ -196,7 +200,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/mileage"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -205,7 +209,7 @@
                         android:id="@+id/cv_search_mileage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -219,6 +223,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:layout_alignParentLeft="true"
                                 android:textSize="16dp"
@@ -240,7 +245,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/body_type"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -249,7 +254,7 @@
                         android:id="@+id/cv_search_bodytype"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -263,6 +268,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -282,7 +288,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/fuel_type"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -291,7 +297,7 @@
                         android:id="@+id/cv_search_fueltype"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -305,6 +311,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -324,7 +331,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/condition"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -333,7 +340,7 @@
                         android:id="@+id/cv_search_condition"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -347,6 +354,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -366,7 +374,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/year"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -375,7 +383,7 @@
                         android:id="@+id/cv_search_year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -389,6 +397,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -408,7 +417,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/transmission"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -417,7 +426,7 @@
                         android:id="@+id/cv_search_transmission"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -431,6 +440,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -450,7 +460,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/body_color"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -459,7 +469,7 @@
                         android:id="@+id/cv_search_bodycolor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -473,6 +483,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -494,6 +505,7 @@
                         android:id="@+id/tv_advance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
                         android:textSize="18dp"
                         android:layout_marginRight="10dp"
                         android:text="@string/advance_filter"/>
@@ -505,7 +517,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/city"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -514,7 +526,7 @@
                         android:id="@+id/cv_search_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -528,6 +540,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -547,7 +560,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/seat_number"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -556,7 +569,7 @@
                         android:id="@+id/cv_search_seat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -570,6 +583,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -589,7 +603,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/door_number"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -598,7 +612,7 @@
                         android:id="@+id/cv_search_door"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -612,6 +626,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -631,7 +646,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/equipment"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -640,7 +655,7 @@
                         android:id="@+id/cv_search_equipment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -654,6 +669,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -674,7 +690,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="@string/previous_users"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -683,7 +699,7 @@
                         android:id="@+id/cv_search_preuser"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="@color/main_color"
                         app:cardCornerRadius="5dp"
                         android:layout_margin="15dp"
                         android:clickable="true"
@@ -697,6 +713,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/not_set"
+                                android:textColor="@color/text_color_sub"
                                 android:layout_margin="10dp"
                                 android:textSize="16dp"
                                 android:layout_centerVertical="true"/>
@@ -716,7 +733,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/steel_blue"
-            android:textColor="@color/white"
+            android:textColor="#FFFFFF"
             android:layout_margin="10dp"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -730,7 +747,7 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/steel_blue"
+        android:indeterminateTint="@color/progressbar_color"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/ll_empty"
@@ -738,7 +755,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/main_color"
         android:clickable="true"
         android:visibility="gone">
         <TextView
@@ -746,7 +763,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_color"
             android:text="empty"/>
         <Button
             android:id="@+id/btn_try"
@@ -754,7 +771,7 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/steel_blue"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:text="Try again"/>
     </LinearLayout>
 </RelativeLayout>

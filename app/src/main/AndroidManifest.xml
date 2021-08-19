@@ -18,9 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ForgotPasswordActivity"></activity>
+        <activity android:name=".activity.ActivityLogin"/>
+        <activity android:name=".activity.ForgotPasswordActivity" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.ActivityLogin">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

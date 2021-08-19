@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
+import com.example.autosellingapp.utils.SharedPref;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,6 +35,7 @@ public class ActivityLogin extends AppCompatActivity {
     private TextView tv_forgotPass, tv_signUp;
     private ProgressBar progressBar;
     private Methods methods;
+    private SharedPref sharedPref;
     private String from = "";
     private FirebaseAuth auth;
 
@@ -42,9 +45,18 @@ public class ActivityLogin extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         methods = new Methods(this);
+        sharedPref = new SharedPref(this);
 
         auth = FirebaseAuth.getInstance();
         Hook();
+
+        if(sharedPref.isRemember()){
+            edt_email.setText(sharedPref.getEmail());
+            edt_password.setText(sharedPref.getPassword());
+            ckb_remember.setChecked(true);
+        }else {
+            ckb_remember.setChecked(false);
+        }
     }
 
 
@@ -136,16 +148,24 @@ public class ActivityLogin extends AppCompatActivity {
                 public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                     progressBar.setVisibility(View.GONE);
                     if(task.isSuccessful()){
-                        Constant.isLogged = true;
-                        Constant.UID = auth.getCurrentUser().getUid();
-                        openMainActivity();
-//                        if(auth.getCurrentUser().isEmailVerified()){
-//                            Constant.isLogged = true;
-//                            Constant.UID = auth.getCurrentUser().getUid();
-//                            openMainActivity();
-//                        }else{
-//                            Toast.makeText(ActivityLogin.this, "Your email is not verified! Please verify your email!", Toast.LENGTH_SHORT).show();
-//                        }
+                        if(auth.getCurrentUser().isEmailVerified()){
+                            Constant.isLogged = true;
+                            Log.e("AAA", "Log in");
+                            Constant.UID = auth.getCurrentUser().getUid();
+                            sharedPref.setIsAutoLogin(true);
+                            sharedPref.setEmail(email);
+                            sharedPref.setPassword(password);
+
+                            if(ckb_remember.isChecked()){
+                                sharedPref.setRemember(true);
+                            }else {
+                                sharedPref.setRemember(false);
+                            }
+
+                            openMainActivity();
+                        }else{
+                            Toast.makeText(ActivityLogin.this, "Your email is not verified! Please verify your email!", Toast.LENGTH_SHORT).show();
+                        }
                     }else {
                         Toast.makeText(ActivityLogin.this, "Failed to sign in! Make sure your email or password is correct!", Toast.LENGTH_SHORT).show();
                     }

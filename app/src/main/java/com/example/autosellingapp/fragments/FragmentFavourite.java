@@ -3,6 +3,7 @@ package com.example.autosellingapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -135,7 +136,7 @@ public class FragmentFavourite extends Fragment {
             binding.llEmpty.setVisibility(View.VISIBLE);
         }else{
 
-            adsAdapter = new AdsAdapter(methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+            adsAdapter = new AdsAdapter("grid", methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                 @Override
                 public void onClick(AdsItem adsItem, CarItem carItem) {
                     FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {
@@ -188,6 +189,7 @@ public class FragmentFavourite extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
     private void openLoginActivity(){
         Intent intent = new Intent(getContext(), ActivityLogin.class);

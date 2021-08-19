@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.FragmentAdsDetail"
-    android:background="@color/gray"
+    android:background="@color/sub_color"
     android:clickable="true">
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
@@ -37,7 +37,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="22dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/main_color"
                         android:text="SOLD"/>
                 </LinearLayout>
 
@@ -50,19 +50,22 @@
                     android:visibility="gone"
                     android:background="#80000000">
                     <TextView
+                        android:id="@+id/tv_my_ads"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:textColor="@color/white"
-                        android:text="My Ads"
-                        android:textSize="16dp"/>
+                        android:padding="3dp"
+                        android:textColor="#ffffff"
+                        android:background="@color/steel_blue"
+                        android:text="My ads"/>
                 </LinearLayout>
+
             </RelativeLayout>
 
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/main_color"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginRight="15dp"
@@ -83,7 +86,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="15dp"
                             android:text="price"
-                            android:textColor="@color/light_orange"
+                            android:textColor="@color/price_color"
                             android:textSize="26dp" />
 
                         <TextView
@@ -94,13 +97,13 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:text="condition"
-                            android:textColor="@color/text_black"
+                            android:textColor="@color/text_color"
                             android:textSize="15dp" />
                     </RelativeLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/gray"/>
+                        android:background="@color/sub_color"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -111,7 +114,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="15dp"
                             android:text="Car name"
-                            android:textColor="@color/text_black"
+                            android:textColor="@color/text_color"
                             android:textSize="22dp" />
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -122,6 +125,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
+                                android:textColor="@color/text_color_sub"
                                 android:textSize="17dp"
                                 android:text="post time"/>
                             <TextView
@@ -129,7 +133,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
-                                android:textColor="@color/light_orange"
+                                android:textColor="@color/price_color"
                                 android:textSize="17dp"
                                 android:text="seller name"/>
                         </LinearLayout>
@@ -154,10 +158,12 @@
                                     <ImageView
                                         android:layout_width="50dp"
                                         android:layout_height="50dp"
-                                        android:background="@drawable/mileage_ic"/>
+                                        android:background="@drawable/mileage_ic"
+                                        android:backgroundTint="@color/text_color"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color_sub"
                                         android:text="Mileage"/>
                                 </LinearLayout>
 
@@ -166,7 +172,7 @@
                                     android:layout_weight="4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:text="value"
                                     android:gravity="center" />
@@ -186,10 +192,12 @@
                                     <ImageView
                                         android:layout_width="50dp"
                                         android:layout_height="50dp"
-                                        android:background="@drawable/enginepower_ic"/>
+                                        android:background="@drawable/enginepower_ic"
+                                        android:backgroundTint="@color/text_color"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color_sub"
                                         android:text="Engine Size"/>
                                 </LinearLayout>
                                 <TextView
@@ -197,7 +205,7 @@
                                     android:id="@+id/tv_enginepower_value"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:gravity="center"
                                     android:text="value"/>
@@ -217,10 +225,12 @@
                                     <ImageView
                                         android:layout_width="50dp"
                                         android:layout_height="50dp"
-                                        android:background="@drawable/transmission_ic"/>
+                                        android:background="@drawable/transmission_ic"
+                                        android:backgroundTint="@color/text_color"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color_sub"
                                         android:text="Transmission"/>
                                 </LinearLayout>
                                 <TextView
@@ -228,7 +238,7 @@
                                     android:id="@+id/tv_trans_value"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:gravity="center"
                                     android:text="value"/>
@@ -256,10 +266,12 @@
                                     <ImageView
                                         android:layout_width="50dp"
                                         android:layout_height="50dp"
-                                        android:background="@drawable/bodytype_ic"/>
+                                        android:background="@drawable/bodytype_ic"
+                                        android:backgroundTint="@color/text_color"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color_sub"
                                         android:text="Body type"/>
                                 </LinearLayout>
 
@@ -268,7 +280,7 @@
                                     android:layout_weight="4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:gravity="center"
                                     android:text="value"/>
@@ -288,10 +300,12 @@
                                     <ImageView
                                         android:layout_width="50dp"
                                         android:layout_height="50dp"
-                                        android:background="@drawable/fuetype_ic"/>
+                                        android:background="@drawable/fuetype_ic"
+                                        android:backgroundTint="@color/text_color"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color_sub"
                                         android:text="Fuel type"/>
                                 </LinearLayout>
                                 <TextView
@@ -299,7 +313,7 @@
                                     android:layout_weight="4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:gravity="center"
                                     android:text="value"/>
@@ -319,10 +333,12 @@
                                     <ImageView
                                         android:layout_width="50dp"
                                         android:layout_height="50dp"
-                                        android:background="@drawable/year_ic"/>
+                                        android:background="@drawable/year_ic"
+                                        android:backgroundTint="@color/text_color"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:textColor="@color/text_color_sub"
                                         android:text="Year"/>
                                 </LinearLayout>
                                 <TextView
@@ -330,7 +346,7 @@
                                     android:layout_weight="4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
-                                    android:textColor="@color/text_black"
+                                    android:textColor="@color/text_color"
                                     android:textSize="17dp"
                                     android:gravity="center"
                                     android:text="value"/>
@@ -341,11 +357,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/gray"/>
+                        android:background="@color/sub_color"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_black"
+                        android:textColor="@color/text_color"
                         android:layout_margin="15dp"
                         android:textSize="22dp"
                         android:text="Car Details"/>
@@ -359,7 +375,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -371,14 +388,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/manufacturers"/>
                             <TextView
                                 android:id="@+id/tv_manu_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -395,7 +412,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -407,14 +425,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/model"/>
                             <TextView
                                 android:id="@+id/tv_model_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -431,7 +449,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -443,14 +462,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/power"/>
                             <TextView
                                 android:id="@+id/tv_power_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -467,7 +486,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -479,14 +499,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/previous_users"/>
                             <TextView
                                 android:id="@+id/tv_preowner_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -503,7 +523,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -515,14 +536,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/door_number"/>
                             <TextView
                                 android:id="@+id/tv_door_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -539,7 +560,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -551,14 +573,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/seat_number"/>
                             <TextView
                                 android:id="@+id/tv_seat_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -575,7 +597,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -587,14 +610,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/body_color"/>
                             <TextView
                                 android:id="@+id/tv_color_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -611,7 +634,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -623,14 +647,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/gears"/>
                             <TextView
                                 android:id="@+id/tv_gears_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -647,7 +671,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -659,14 +684,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/cylinder"/>
                             <TextView
                                 android:id="@+id/tv_cylinder_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -683,7 +708,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -695,14 +721,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/weight"/>
                             <TextView
                                 android:id="@+id/tv_weight_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -719,7 +745,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -731,14 +758,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_margin="5dp"
                                 android:text="@string/fuel_consump"/>
                             <TextView
                                 android:id="@+id/tv_fuelconsump_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -755,7 +782,8 @@
                             android:layout_height="40dp"
                             android:layout_marginLeft="10dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/enter_ic"/>
+                            android:background="@drawable/enter_ic"
+                            android:backgroundTint="@color/text_color_sub"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -767,7 +795,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="24dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:layout_marginTop="5dp"
@@ -776,7 +804,7 @@
                                 android:id="@+id/tv_emission_value"
                                 android:layout_margin="5dp"
                                 android:textSize="16dp"
-                                android:textColor="@color/text_black"
+                                android:textColor="@color/text_color"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="value"/>
@@ -785,13 +813,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/gray"/>
+                        android:background="@color/sub_color"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="22dp"
                         android:layout_margin="15dp"
-                        android:textColor="@color/text_black"
+                        android:textColor="@color/text_color"
                         android:text="@string/equipment"/>
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_equipments"
@@ -801,49 +829,51 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/gray"/>
+                        android:background="@color/sub_color"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="22dp"
                         android:layout_margin="15dp"
-                        android:textColor="@color/text_black"
+                        android:textColor="@color/text_color"
                         android:text="@string/address"/>
                     <TextView
                         android:id="@+id/tv_address_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="15dp"
+                        android:textColor="@color/text_color"
                         android:textSize="16dp"
                         android:maxLines="3"
                         android:text="value"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/gray"/>
+                        android:background="@color/sub_color"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="22dp"
                         android:layout_margin="15dp"
-                        android:textColor="@color/text_black"
+                        android:textColor="@color/text_color"
                         android:text="@string/description"/>
                     <TextView
                         android:id="@+id/tv_description_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="15dp"
+                        android:textColor="@color/text_color"
                         android:textSize="16dp"
                         android:maxLines="3"
                         android:text="value"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/gray"/>
+                        android:background="@color/sub_color"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_black"
+                        android:textColor="@color/text_color"
                         android:textSize="22dp"
                         android:text="@string/seller_contact"
                         android:layout_margin="15dp"/>
@@ -856,7 +886,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16dp"
-                            android:textColor="@color/text_black"
+                            android:textColor="@color/text_color"
                             android:layout_marginBottom="5dp"
                             android:text="@string/email"/>
                         <TextView
@@ -864,12 +894,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="15dp"
+                            android:textColor="@color/text_color"
                             android:textSize="16dp"
                             android:text="value"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_black"
+                            android:textColor="@color/text_color"
                             android:layout_marginBottom="5dp"
                             android:textSize="16dp"
                             android:text="@string/phone"/>
@@ -877,6 +908,7 @@
                             android:id="@+id/tv_phone_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/text_color"
                             android:textSize="16dp"
                             android:text="value"/>
                     </LinearLayout>
@@ -892,7 +924,7 @@
         android:weightSum="10"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/btn_like"
@@ -900,6 +932,7 @@
             android:layout_width="0dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/heart_uncheck_ic"
+            android:backgroundTint="@color/heart_pink"
             android:scaleType="fitCenter"
             android:layout_height="match_parent"/>
         <Button
@@ -907,7 +940,7 @@
             android:layout_weight="4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:backgroundTint="@color/steel_blue"
             android:text="call"/>
         <Button
@@ -915,7 +948,7 @@
             android:layout_weight="4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:layout_marginRight="5dp"
             android:backgroundTint="@color/steel_blue"
             android:text="chat"/>
@@ -927,7 +960,7 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/steel_blue"
+        android:indeterminateTint="@color/progressbar_color"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/ll_empty"
@@ -935,7 +968,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/main_color"
         android:clickable="true"
         android:visibility="gone">
         <TextView
@@ -943,7 +976,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_color"
             android:text="empty"/>
         <Button
             android:id="@+id/btn_try"
@@ -951,7 +984,7 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/steel_blue"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:text="Try again"/>
     </LinearLayout>
 </RelativeLayout>

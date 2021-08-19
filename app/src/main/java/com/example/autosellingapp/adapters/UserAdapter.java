@@ -1,16 +1,13 @@
 package com.example.autosellingapp.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +17,6 @@ import com.example.autosellingapp.interfaces.UserListener;
 import com.example.autosellingapp.items.ChatItem;
 import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -132,17 +128,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                                 break;
                             case "image":
                                 if(chat.getSender_uid().equals(Constant.UID)){
-                                    theLastMessage = "You sent a image";
+                                    theLastMessage = "You sent an image";
                                 }else {
-                                    theLastMessage = user.getFullName() + " sent you a image";
+                                    theLastMessage = user.getFullName() + " sent you an image";
                                 }
                                 break;
                         }
 
                         if(chat.getIsseen().equals("false") && chat.getSender_uid().equals(user.getUid())){
-                            last_msg.setTextColor(context.getResources().getColor(R.color.text_black));
+                            last_msg.setTextColor(context.getResources().getColor(R.color.text_color));
                         }else{
-                            last_msg.setTextColor(context.getResources().getColor(R.color.default_text));
+                            last_msg.setTextColor(context.getResources().getColor(R.color.text_color_sub));
                         }
                     }
                 }
@@ -150,7 +146,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                 switch (theLastMessage){
                     case "default":
                         last_msg.setText("No Message");
-                        last_msg.setTextColor(context.getResources().getColor(R.color.default_text));
+                        last_msg.setTextColor(context.getResources().getColor(R.color.text_color_sub));
                         break;
                     default:
                         last_msg.setText(theLastMessage);

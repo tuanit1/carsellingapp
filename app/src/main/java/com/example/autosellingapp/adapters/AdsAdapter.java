@@ -6,11 +6,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.autosellingapp.R;
@@ -21,6 +23,7 @@ import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
+import com.example.autosellingapp.utils.SharedPref;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,14 +40,16 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
     private ArrayList<MyItem> arrayList_city;
     private Methods methods;
     private AdsDetailListener listener;
+    private String item_type;
 
-    public AdsAdapter(Methods methods, ArrayList<AdsItem> arrayList_ads, ArrayList<CarItem> arrayList_car, ArrayList<UserItem> arrayList_user, ArrayList<MyItem> arrayList_city, AdsDetailListener listener) {
+    public AdsAdapter(String item_type, Methods methods, ArrayList<AdsItem> arrayList_ads, ArrayList<CarItem> arrayList_car, ArrayList<UserItem> arrayList_user, ArrayList<MyItem> arrayList_city, AdsDetailListener listener) {
         this.methods = methods;
         this.arrayList_ads = arrayList_ads;
         this.arrayList_car = arrayList_car;
         this.arrayList_user = arrayList_user;
         this.arrayList_city = arrayList_city;
         this.listener = listener;
+        this.item_type = item_type;
     }
 
     @NonNull
@@ -53,7 +58,15 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
     public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.layout_ads_item, parent, false);
+
+        View view;
+
+        if(item_type.equals("grid")){
+            view = inflater.inflate(R.layout.layout_ads_item_grid, parent, false);
+        }else {
+            view = inflater.inflate(R.layout.layout_ads_item_horizontal, parent, false);
+        }
+
         return new MyViewHolder(view);
     }
 
@@ -116,14 +129,12 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
 
 
         if (methods.isFavourite(arrayList_user, arrayList_ads.get(position).getAds_id())) {
-            Picasso.get()
-                    .load(R.drawable.heart_check_ic)
-                    .into(holder.iv_likes);
+            holder.iv_likes.setImageDrawable(context.getResources().getDrawable(R.drawable.heart2_checked_ic));
         } else {
-            Picasso.get()
-                    .load(R.drawable.heart_uncheck_ic)
-                    .into(holder.iv_likes);
+            holder.iv_likes.setImageDrawable(context.getResources().getDrawable(R.drawable.heart2_ic));
         }
+
+        holder.iv_likes.setColorFilter(ContextCompat.getColor(context, R.color.text_color), android.graphics.PorterDuff.Mode.MULTIPLY);
 
         holder.cv_item_ads.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +155,12 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
                 holder.tv_my_ads.setVisibility(View.VISIBLE);
             }
         }
+
+        if(arrayList_ads.get(position).isAds_isAvailable()){
+            holder.ll_sold.setVisibility(View.GONE);
+        }else {
+            holder.ll_sold.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -163,6 +180,7 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
         TextView tv_seller_name, tv_post_time, tv_car_name, tv_price, tv_city, tv_likes, tv_my_ads;
         ImageView iv_seller_pic, iv_car_pic, iv_likes;
         CardView cv_item_ads;
+        LinearLayout ll_sold;
 
         public MyViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -180,6 +198,7 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
             iv_likes = itemView.findViewById(R.id.iv_likes);
 
             cv_item_ads = itemView.findViewById(R.id.cv_item_ads);
+            ll_sold = itemView.findViewById(R.id.ll_sold);
 
         }
     }

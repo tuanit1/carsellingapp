@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_color"
             android:visibility="gone"
             android:padding="10dp"
             android:background="@drawable/message_left"
@@ -45,6 +45,7 @@
         android:id="@+id/tv_seen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color_sub"
         android:visibility="gone"
         android:layout_below="@+id/rl_msg"/>
 </RelativeLayout>

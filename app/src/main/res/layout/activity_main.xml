@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@color/steel_blue"
+            android:background="@color/theme_color"
+            android:elevation="10dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
         <FrameLayout
@@ -33,10 +34,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/menu_bottom_nav"
-            app:backgroundTint="@color/steel_blue"
+            app:backgroundTint="@color/theme_color"
             android:layout_alignParentBottom="true"
-            app:itemIconTint="@color/color_bottom_nav"
-            app:itemTextColor="@color/color_bottom_nav"/>
+            app:itemIconTint="#ffffff"
+            app:itemTextColor="#ffffff"/>
 
     </RelativeLayout>
 
@@ -44,6 +45,9 @@
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@color/main_color"
+        app:itemTextColor="@color/text_color"
+        app:itemIconTint="@color/text_color"
         android:id="@+id/nav_view"
         app:menu="@menu/main_menu"
         android:layout_gravity="start"/>

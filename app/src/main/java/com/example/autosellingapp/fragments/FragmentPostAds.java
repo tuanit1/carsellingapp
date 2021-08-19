@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +56,6 @@ import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class FragmentPostAds extends Fragment {
@@ -377,68 +375,68 @@ public class FragmentPostAds extends Fragment {
             }
 
             binding.tvManu.setText(manu.getManu_name());
-            binding.tvManu.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvManu.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvModel.setText(modelItem.getModel_name());
-            binding.tvModel.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvModel.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvCarName.setText(SELECTED_CARNAME);
-            binding.tvCarName.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvCarName.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvImages.setText(uriImageArrayList.size() + " images is selected");
-            binding.tvImages.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvPrice.setText("$ " + String.format("%1$,d",SELECTED_PRICE));
-            binding.tvPrice.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvPrice.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvCity.setText(city.getName());
-            binding.tvCity.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvCity.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvAddress.setText(SELECTED_ADDRESS);
-            binding.tvAddress.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvAddress.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvPower.setText(String.format("%1$,d",SELECTED_POWER) + " hp");
-            binding.tvPower.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvPower.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvEnginepower.setText(String.format("%1$,d",SELECTED_ENGINESIZE) + " cc");
-            binding.tvEnginepower.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvEnginepower.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvMileage.setText(String.format("%1$,d",SELECTED_MILEAGE) + " km");
-            binding.tvMileage.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvMileage.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvBodytype.setText(bodyType.getName());
-            binding.tvBodytype.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvBodytype.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvFueltype.setText(fuelType.getName());
-            binding.tvFueltype.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvFueltype.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvCondition.setText((SELECTED_CONDITION == 0)?"Used":"New");
-            binding.tvCondition.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvCondition.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvYear.setText(String.valueOf(SELECTED_YEAR));
-            binding.tvYear.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvYear.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvTransmission.setText(trans.getName());
-            binding.tvTransmission.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvTransmission.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvBodycolor.setText(color.getColor_name());
-            binding.tvBodycolor.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvBodycolor.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvSeat.setText(String.valueOf(SELECTED_SEAT));
-            binding.tvSeat.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvSeat.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvDoor.setText(String.valueOf(SELECTED_DOOR));
-            binding.tvDoor.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvDoor.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvEquipment.setText(SELECTED_EQUIP_LIST.size() + " equipments is selected");
-            binding.tvEquipment.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvEquipment.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvPreuser.setText(String.valueOf(SELECTED_PREUSER));
-            binding.tvPreuser.setTextColor(getResources().getColor(R.color.dark_blue));
+            binding.tvPreuser.setTextColor(getResources().getColor(R.color.selected_color));
             if(SELECTED_GEARS != NOT_SET){
                 binding.tvGears.setText(String.valueOf(SELECTED_GEARS));
-                binding.tvGears.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvGears.setTextColor(getResources().getColor(R.color.selected_color));
             }
             if(SELECTED_CYLINDER != NOT_SET){
                 binding.tvCylinder.setText(String.valueOf(SELECTED_CYLINDER));
-                binding.tvCylinder.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvCylinder.setTextColor(getResources().getColor(R.color.selected_color));
             }
             if(SELECTED_WEIGHT != NOT_SET){
                 binding.tvWeight.setText(String.format("%1$,d",SELECTED_WEIGHT) + " kg");
-                binding.tvWeight.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvWeight.setTextColor(getResources().getColor(R.color.selected_color));
             }
             if(SELECTED_FUELCONSUMP != NOT_SET){
                 binding.tvFuelconsump.setText(String.valueOf(SELECTED_FUELCONSUMP) + " liters/100 km");
-                binding.tvFuelconsump.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvFuelconsump.setTextColor(getResources().getColor(R.color.selected_color));
             }
             if(SELECTED_CO2EMISSION != NOT_SET){
                 binding.tvCo2emission.setText(String.valueOf(SELECTED_CO2EMISSION) + " g/km");
-                binding.tvCo2emission.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvCo2emission.setTextColor(getResources().getColor(R.color.selected_color));
             }
             if(!SELECTED_DESCRIPTION.equals("")){
                 binding.tvDescription.setText(SELECTED_DESCRIPTION);
-                binding.tvDescription.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvDescription.setTextColor(getResources().getColor(R.color.selected_color));
             }
         }
     }
@@ -525,7 +523,7 @@ public class FragmentPostAds extends Fragment {
             public void onClick(int color_id, String color_name) {
                 binding.tvBodycolor.setText(color_name);
                 SELECTED_COLOR_ID = color_id;
-                binding.tvBodycolor.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvBodycolor.setTextColor(getResources().getColor(R.color.selected_color));
 
                 dialog1.dismiss();
             }
@@ -705,62 +703,62 @@ public class FragmentPostAds extends Fragment {
                     case Constant.TEXT_YEAR:
                         SELECTED_YEAR = numberPicker.getValue();
                         binding.tvYear.setText(String.valueOf(SELECTED_YEAR));
-                        binding.tvYear.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvYear.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_SEAT:
                         SELECTED_SEAT = numberPicker.getValue();
                         binding.tvSeat.setText(String.valueOf(SELECTED_SEAT));
-                        binding.tvSeat.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvSeat.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_DOOR:
                         SELECTED_DOOR = numberPicker.getValue();
                         binding.tvDoor.setText(String.valueOf(SELECTED_DOOR));
-                        binding.tvDoor.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvDoor.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_PREUSER:
                         SELECTED_PREUSER = numberPicker.getValue();
                         binding.tvPreuser.setText(String.valueOf(SELECTED_PREUSER));
-                        binding.tvPreuser.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvPreuser.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_PRICE:
                         SELECTED_PRICE = numberPicker.getValue();
                         binding.tvPrice.setText("$ " + String.format("%1$,d",SELECTED_PRICE));
-                        binding.tvPrice.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvPrice.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_POWER:
                         SELECTED_POWER = numberPicker.getValue();
                         binding.tvPower.setText(String.valueOf(SELECTED_POWER) + " hp");
-                        binding.tvPower.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvPower.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_ENGINESIZE:
                         SELECTED_ENGINESIZE = numberPicker.getValue();
                         binding.tvEnginepower.setText(String.format("%1$,d",SELECTED_ENGINESIZE)+ " cc");
-                        binding.tvEnginepower.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvEnginepower.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_MILEAGE:
                         SELECTED_MILEAGE = numberPicker.getValue();
                         binding.tvMileage.setText(String.format("%1$,d",SELECTED_MILEAGE) + " km");
-                        binding.tvMileage.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvMileage.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_GEARS:
                         SELECTED_GEARS = numberPicker.getValue();
                         binding.tvGears.setText(String.valueOf(SELECTED_GEARS));
-                        binding.tvGears.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvGears.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_CYNLINDER:
                         SELECTED_CYLINDER = numberPicker.getValue();
                         binding.tvCylinder.setText(String.valueOf(SELECTED_CYLINDER));
-                        binding.tvCylinder.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvCylinder.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_WEIGHT:
                         SELECTED_WEIGHT = numberPicker.getValue();
                         binding.tvWeight.setText(String.format("%1$,d",SELECTED_WEIGHT )+ " kg");
-                        binding.tvWeight.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvWeight.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_CO2EMISSTION:
                         SELECTED_CO2EMISSION = numberPicker.getValue();
                         binding.tvCo2emission.setText(String.valueOf(SELECTED_CO2EMISSION) + " g/km");
-                        binding.tvCo2emission.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvCo2emission.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                 }
                 dialog.dismiss();
@@ -787,7 +785,19 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_MANU_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_manu);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_manu){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -796,7 +806,7 @@ public class FragmentPostAds extends Fragment {
                         SELECTED_MANU_ID = array_manu.get(position).getManu_id();
 
                         binding.cvModel.setEnabled(true);
-                        binding.tvManu.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvManu.setTextColor(getResources().getColor(R.color.selected_color));
 
                         SELECTED_MODEL_ID = NOT_SET;
                         binding.tvModel.setText("");
@@ -807,7 +817,19 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_MODEL_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 ArrayList<ModelItem> arrayList = new ArrayList<>();
 
                 if(SELECTED_MANU_ID != NOT_SET){
@@ -827,7 +849,7 @@ public class FragmentPostAds extends Fragment {
                             if(SELECTED_MODEL_ID == NOT_SET){
                                 binding.tvModel.setTextColor(getResources().getColor(R.color.default_text));
                             }else{
-                                binding.tvModel.setTextColor(getResources().getColor(R.color.dark_blue));
+                                binding.tvModel.setTextColor(getResources().getColor(R.color.selected_color));
                             }
                             dialog.dismiss();
                         }
@@ -837,7 +859,19 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_BODY_TYPE_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_bodytype);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_bodytype){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -845,7 +879,7 @@ public class FragmentPostAds extends Fragment {
                         binding.tvBodytype.setText(array_bodytype.get(position).getName());
                         SELECTED_BODY_TYPE_ID = array_bodytype.get(position).getId();
 
-                        binding.tvBodytype.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvBodytype.setTextColor(getResources().getColor(R.color.selected_color));
 
                         dialog.dismiss();
                     }
@@ -854,7 +888,19 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_FUEL_TYPE_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_fueltype);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_fueltype){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -862,7 +908,7 @@ public class FragmentPostAds extends Fragment {
                         binding.tvFueltype.setText(array_fueltype.get(position).getName());
                         SELECTED_FUEL_TYPE_ID = array_fueltype.get(position).getId();
 
-                        binding.tvFueltype.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvFueltype.setTextColor(getResources().getColor(R.color.selected_color));
 
                         dialog.dismiss();
                     }
@@ -871,7 +917,19 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_CITY_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_city);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_city){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -879,7 +937,7 @@ public class FragmentPostAds extends Fragment {
                         binding.tvCity.setText(array_city.get(position).getName());
                         SELECTED_CITY_ID = array_city.get(position).getId();
 
-                        binding.tvCity.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvCity.setTextColor(getResources().getColor(R.color.selected_color));
 
                         dialog.dismiss();
                     }
@@ -892,7 +950,19 @@ public class FragmentPostAds extends Fragment {
                 list.add(getString(R.string.used));
                 list.add(getString(R.string.news));
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, list);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, list){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -901,10 +971,10 @@ public class FragmentPostAds extends Fragment {
 
                         if(list.get(position).equals(getString(R.string.used))){
                             SELECTED_CONDITION = CONDITION_USED;
-                            binding.tvCondition.setTextColor(getResources().getColor(R.color.dark_blue));
+                            binding.tvCondition.setTextColor(getResources().getColor(R.color.selected_color));
                         }else{
                             SELECTED_CONDITION = CONDITION_NEW;
-                            binding.tvCondition.setTextColor(getResources().getColor(R.color.dark_blue));
+                            binding.tvCondition.setTextColor(getResources().getColor(R.color.selected_color));
                         }
                         dialog.dismiss();
                     }
@@ -913,7 +983,19 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_TRANS:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_trans);
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_trans){
+                    @NonNull
+                    @Override
+                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                        View view =super.getView(position, convertView, parent);
+
+                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                        textView.setTextColor(getResources().getColor(R.color.text_color));
+
+                        return view;
+                    }
+                };
                 lv_dialog_list.setAdapter(lv_Adapter);
                 lv_dialog_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -921,7 +1003,7 @@ public class FragmentPostAds extends Fragment {
                         binding.tvTransmission.setText(array_trans.get(position).getName());
                         SELECTED_TRANS_ID = array_trans.get(position).getId();
 
-                        binding.tvTransmission.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvTransmission.setTextColor(getResources().getColor(R.color.selected_color));
 
                         dialog.dismiss();
                     }
@@ -1000,7 +1082,7 @@ public class FragmentPostAds extends Fragment {
                     }
                 }
                 binding.tvEquipment.setText(SELECTED_EQUIP_LIST.size() +" equipments is selected");
-                binding.tvEquipment.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvEquipment.setTextColor(getResources().getColor(R.color.selected_color));
 
                 dialog.dismiss();
             }
@@ -1069,23 +1151,23 @@ public class FragmentPostAds extends Fragment {
                     case Constant.TEXT_CAR_NAME:
                         SELECTED_CARNAME = edt_dialog.getText().toString();
                         binding.tvCarName.setText(SELECTED_CARNAME);
-                        binding.tvCarName.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvCarName.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_DESCRIPTION:
                         SELECTED_DESCRIPTION = edt_dialog.getText().toString();
                         binding.tvDescription.setText(SELECTED_DESCRIPTION);
-                        binding.tvDescription.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvDescription.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_ADDRESS:
                         SELECTED_ADDRESS = edt_dialog.getText().toString();
                         binding.tvAddress.setText(SELECTED_ADDRESS);
-                        binding.tvAddress.setTextColor(getResources().getColor(R.color.dark_blue));
+                        binding.tvAddress.setTextColor(getResources().getColor(R.color.selected_color));
                         break;
                     case Constant.TEXT_FUELCONSUMP:
                         if(!edt_dialog.getText().toString().equals("") && !edt_dialog.getText().toString().equals(".")){
                             SELECTED_FUELCONSUMP = Double.parseDouble(edt_dialog.getText().toString());
                             binding.tvFuelconsump.setText(String.valueOf(SELECTED_FUELCONSUMP) + " liters/100 km");
-                            binding.tvFuelconsump.setTextColor(getResources().getColor(R.color.dark_blue));
+                            binding.tvFuelconsump.setTextColor(getResources().getColor(R.color.selected_color));
                         }
                         break;
                 }
@@ -1127,7 +1209,7 @@ public class FragmentPostAds extends Fragment {
             @Override
             public void onClick(View v) {
                 binding.tvImages.setText(uriImageArrayList.size() + " images is selected");
-                binding.tvImages.setTextColor(getResources().getColor(R.color.dark_blue));
+                binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
                 dialog.dismiss();
             }
         });

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/gray"
+    android:background="@color/sub_color"
     android:clickable="true"
     tools:context=".fragments.FragmentCategory">
 
@@ -20,8 +20,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_ads"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -31,6 +30,7 @@
         android:layout_height="150dp"
         android:elevation="10dp"
         android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/main_color"
         android:layout_centerInParent="true"
         app:cardCornerRadius="15dp"
         android:visibility="gone">
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No matching result found"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_color"
                 android:textSize="16dp"/>
             <Button
                 android:id="@+id/btn_no_found"
@@ -51,7 +51,7 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/steel_blue"
-                android:textColor="@color/white"
+                android:textColor="#ffffff"
                 android:text="Change filter"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -63,7 +63,7 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/steel_blue"
+        android:indeterminateTint="@color/progressbar_color"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/ll_empty"
@@ -71,7 +71,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/main_color"
         android:clickable="true"
         android:visibility="gone">
         <TextView
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_color"
             android:text="empty"/>
         <Button
             android:id="@+id/btn_try"
@@ -87,7 +87,7 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/steel_blue"
-            android:textColor="@color/white"
+            android:textColor="#ffffff"
             android:text="Try again"/>
     </LinearLayout>
 </RelativeLayout>

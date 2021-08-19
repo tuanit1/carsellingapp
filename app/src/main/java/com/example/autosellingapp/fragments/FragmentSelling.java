@@ -3,6 +3,7 @@ package com.example.autosellingapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -200,6 +201,7 @@ public class FragmentSelling extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
 
     private void openLoginActivity(){
@@ -213,7 +215,7 @@ public class FragmentSelling extends Fragment {
         bundle.putSerializable(Constant.TAG_ADS, ads);
         bundle.putSerializable(Constant.TAG_CAR, methods.getCarItemByID(arrayList_car, ads.getCar_id()));
         fragment.setArguments(bundle);
-        ReplaceFragment(fragment, getString(R.string.frag_postads));
+        ReplaceFragment(fragment, "Edit Selling");
     }
 
     private void SellingAction(String type, Bundle bundle){

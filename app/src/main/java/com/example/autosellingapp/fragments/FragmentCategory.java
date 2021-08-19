@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -39,6 +40,7 @@ import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
+import com.example.autosellingapp.utils.SharedPref;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,6 +67,7 @@ public class FragmentCategory extends Fragment {
     private CardView cv_no_found;
     private Button btn_no_found;
     private FragmentTransaction ft;
+    private SharedPref sharedPref;
 
     private final int RADIO_STANDARD = 3;
     private final int RADIO_LATEST = 4;
@@ -106,6 +109,7 @@ public class FragmentCategory extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_category, container, false);
         setHasOptionsMenu(true);
         methods = new Methods(getContext());
+        sharedPref = new SharedPref(getContext());
         Bundle bundle = getArguments();
         if(bundle != null){
             SELECTED_MANU_ID = bundle.getInt(getString(R.string.manufacturers));
@@ -215,9 +219,14 @@ public class FragmentCategory extends Fragment {
                             rv_ads.setHasFixedSize(true);
                             filteredAdsArray = getFilteredAdsArray(arrayList_ads);
                             if(filteredAdsArray.size() != 0){
-                                adsAdapter = new AdsAdapter(methods, filteredAdsArray, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                                adsAdapter = new AdsAdapter("grid", methods, filteredAdsArray, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                                     @Override
                                     public void onClick(AdsItem adsItem, CarItem carItem) {
+
+                                        if(!methods.isMyAds(adsItem)){
+                                            sharedPref.addRecentAds(adsItem.getAds_id());
+                                        }
+
                                         FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {
                                             @Override
                                             public void reload() {
@@ -314,7 +323,7 @@ public class FragmentCategory extends Fragment {
                 }
             }
             if(SELECTED_POWER_MIN != NOT_SET && SELECTED_POWER_MAX != NOT_SET){
-                if(!(SELECTED_POWER_MIN <= ads.getAds_price() && car.getCar_power() <= SELECTED_POWER_MAX)){
+                if(!(SELECTED_POWER_MIN <= car.getCar_power() && car.getCar_power() <= SELECTED_POWER_MAX)){
                     continue;
                 }
             }
@@ -498,13 +507,11 @@ public class FragmentCategory extends Fragment {
     }
     private void sortByPriceLowToHigh(ArrayList<AdsItem> arr){
         for (int i = 0; i < arr.size(); i++) {
-            // find position of smallest num between (i + 1)th element and last element
             int pos = i;
             for (int j = i; j < arr.size(); j++) {
                 if (arr.get(j).getAds_price() < arr.get(pos).getAds_price())
                     pos = j;
             }
-            // Swap min (smallest num) to current position on array
             AdsItem min = arr.get(pos);
             arr.set(pos, arr.get(i));
             arr.set(i, min);
@@ -512,13 +519,11 @@ public class FragmentCategory extends Fragment {
     }
     private void sortByPriceHighToLow(ArrayList<AdsItem> arr){
         for (int i = 0; i < arr.size(); i++) {
-            // find position of smallest num between (i + 1)th element and last element
             int pos = i;
             for (int j = i; j < arr.size(); j++) {
                 if (arr.get(j).getAds_price() > arr.get(pos).getAds_price())
                     pos = j;
             }
-            // Swap min (smallest num) to current position on array
             AdsItem min = arr.get(pos);
             arr.set(pos, arr.get(i));
             arr.set(i, min);
@@ -526,13 +531,11 @@ public class FragmentCategory extends Fragment {
     }
     private void sortByLatest(ArrayList<AdsItem> arr){
         for (int i = 0; i < arr.size(); i++) {
-            // find position of smallest num between (i + 1)th element and last element
             int pos = i;
             for (int j = i; j < arr.size(); j++) {
                 if (arr.get(j).getAds_posttime().compareTo(arr.get(pos).getAds_posttime()) > 0)
                     pos = j;
             }
-            // Swap min (smallest num) to current position on array
             AdsItem min = arr.get(pos);
             arr.set(pos, arr.get(i));
             arr.set(i, min);
@@ -558,5 +561,6 @@ public class FragmentCategory extends Fragment {
         ft.add(R.id.main_content, fragment, name);
         ft.addToBackStack(name);
         ft.commit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(name);
     }
 }

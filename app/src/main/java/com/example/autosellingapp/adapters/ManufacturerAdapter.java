@@ -12,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.autosellingapp.R;
+import com.example.autosellingapp.interfaces.ManuListener;
+import com.example.autosellingapp.items.EquipmentItem;
 import com.example.autosellingapp.items.ManufacturerItem;
+import com.example.autosellingapp.utils.Constant;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +26,13 @@ public class ManufacturerAdapter extends RecyclerView.Adapter<ManufacturerAdapte
 
     private Context context;
     private ArrayList<ManufacturerItem> arrayList;
+    private ManuListener listener;
+    private String type;
 
-    public ManufacturerAdapter(ArrayList<ManufacturerItem> arrayList){
+    public ManufacturerAdapter(String type, ArrayList<ManufacturerItem> arrayList ,ManuListener listener){
         this.arrayList = arrayList;
+        this.listener = listener;
+        this.type = type;
     }
 
     @NonNull
@@ -34,7 +41,12 @@ public class ManufacturerAdapter extends RecyclerView.Adapter<ManufacturerAdapte
     public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_manufactor_home, parent, false);
+        View view;
+        if(type.equals("home")){
+            view = inflater.inflate(R.layout.item_manufactor_home, parent, false);
+        }else {
+            view = inflater.inflate(R.layout.item_manu_viewmore, parent, false);
+        }
         return new MyViewHolder(view);
     }
 
@@ -42,14 +54,24 @@ public class ManufacturerAdapter extends RecyclerView.Adapter<ManufacturerAdapte
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
         holder.tv_manu_name.setText(arrayList.get(position).getManu_name());
         Picasso.get()
-                .load(arrayList.get(position).getManu_thumb())
+                .load(Constant.SERVER_URL + "images/manu_image/" + arrayList.get(position).getManu_thumb())
                 .placeholder(R.drawable.placeholder_rec)
                 .into(holder.iv_manu_thumb);
+        holder.ll_item_manu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(arrayList.get(position).getManu_id());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return arrayList.size();
+    }
+
+    public void setAdapterData(ArrayList<ManufacturerItem> arrayList){
+        this.arrayList = arrayList;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
