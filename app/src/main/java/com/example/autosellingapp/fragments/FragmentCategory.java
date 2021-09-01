@@ -44,7 +44,10 @@ import com.example.autosellingapp.utils.SharedPref;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.CollationElementIterator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class FragmentCategory extends Fragment {
 
@@ -81,6 +84,7 @@ public class FragmentCategory extends Fragment {
     private int CONDITION_NEW = 1;
     private int SELECTED_MANU_ID = NOT_SET;
     private int SELECTED_MODEL_ID = NOT_SET;
+    private String SELECTED_SEARCH_TEXT = "";
     private int SELECTED_BODY_TYPE_ID = NOT_SET;
     private int SELECTED_FUEL_TYPE_ID = NOT_SET;
     private int SELECTED_CITY_ID = NOT_SET;
@@ -114,6 +118,7 @@ public class FragmentCategory extends Fragment {
         if(bundle != null){
             SELECTED_MANU_ID = bundle.getInt(getString(R.string.manufacturers));
             SELECTED_MODEL_ID = bundle.getInt(getString(R.string.model));
+            SELECTED_SEARCH_TEXT = bundle.getString(getString(R.string.search_text), "");
             SELECTED_BODY_TYPE_ID = bundle.getInt(getString(R.string.body_type));
             SELECTED_FUEL_TYPE_ID = bundle.getInt(getString(R.string.fuel_type));
             SELECTED_CITY_ID = bundle.getInt(getString(R.string.city));
@@ -160,6 +165,7 @@ public class FragmentCategory extends Fragment {
             @Override
             public void onClick(View v) {
                 getFragmentManager().popBackStack();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getFragmentManager().getFragments().get(getFragmentManager().getBackStackEntryCount() - 1).getTag());
             }
         });
     }
@@ -186,6 +192,29 @@ public class FragmentCategory extends Fragment {
 
     private void LoadCategory(){
         if(methods.isNetworkAvailable()){
+
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constant.TAG_MANU_ID, SELECTED_MANU_ID);
+            bundle.putInt(Constant.TAG_MODEL_ID, SELECTED_MODEL_ID);
+            bundle.putString(Constant.TAG_SEARCH_TEXT, SELECTED_SEARCH_TEXT);
+            bundle.putInt(Constant.TAG_PRICE_MIN, SELECTED_PRICE_MIN);
+            bundle.putInt(Constant.TAG_PRICE_MAX, SELECTED_PRICE_MAX);
+            bundle.putInt(Constant.TAG_POWER_MIN, SELECTED_POWER_MIN);
+            bundle.putInt(Constant.TAG_POWER_MAX, SELECTED_POWER_MAX);
+            bundle.putInt(Constant.TAG_MILEAGE_MIN, SELECTED_MILEAGE_MIN);
+            bundle.putInt(Constant.TAG_MILEAGE_MAX, SELECTED_MILEAGE_MAX);
+            bundle.putInt(Constant.TAG_BODY_TYPE_ID, SELECTED_BODY_TYPE_ID);
+            bundle.putInt(Constant.TAG_FUEL_TYPE_ID, SELECTED_FUEL_TYPE_ID);
+            bundle.putInt(Constant.TAG_CAR_YEAR, SELECTED_YEAR);
+            bundle.putInt(Constant.TAG_TRANS_ID, SELECTED_TRANS_ID);
+            bundle.putInt(Constant.TAG_CAR_CONDITION, SELECTED_CONDITION);
+            bundle.putInt(Constant.TAG_COLOR_ID, SELECTED_COLOR);
+            bundle.putInt(Constant.TAG_CITY_ID, SELECTED_CITY_ID);
+            bundle.putInt(Constant.TAG_CAR_SEATS, SELECTED_SEAT);
+            bundle.putInt(Constant.TAG_CAR_DOORS, SELECTED_DOOR);
+            bundle.putInt(Constant.TAG_CAR_PREOWNER, SELECTED_PREUSER);
+            bundle.putSerializable(Constant.TAG_CAR_EQUIP, SELECTED_EQUIP_LIST);
+
             LoadCategory loadCategory = new LoadCategory(new LoadCategoryListener() {
                 @Override
                 public void onStart() {
@@ -219,6 +248,7 @@ public class FragmentCategory extends Fragment {
                             rv_ads.setHasFixedSize(true);
                             filteredAdsArray = getFilteredAdsArray(arrayList_ads);
                             if(filteredAdsArray.size() != 0){
+
                                 adsAdapter = new AdsAdapter("grid", methods, filteredAdsArray, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                                     @Override
                                     public void onClick(AdsItem adsItem, CarItem carItem) {
@@ -276,7 +306,7 @@ public class FragmentCategory extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_CATEGORY, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_CATEGORY, bundle, null, null));
             loadCategory.execute();
         }else {
             errorMsg = getString(R.string.internet_not_connect);
@@ -306,82 +336,82 @@ public class FragmentCategory extends Fragment {
 
         for(AdsItem ads : arrayList_ads){
             CarItem car = methods.getCarItemByID(arrayList_car, ads.getCar_id());
-            ModelItem model = methods.getModelItemByID(arrayList_model, car.getModel_id());
-            if(SELECTED_MANU_ID != NOT_SET){
-                if(model.getManu_id() != SELECTED_MANU_ID){
-                    continue;
-                }
-            }
-            if(SELECTED_MODEL_ID != NOT_SET){
-                if(car.getModel_id() != SELECTED_MODEL_ID){
-                    continue;
-                }
-            }
-            if(SELECTED_PRICE_MIN != NOT_SET && SELECTED_PRICE_MAX != NOT_SET){
-                if(!(SELECTED_PRICE_MIN <= ads.getAds_price() && ads.getAds_price() <= SELECTED_PRICE_MAX)){
-                    continue;
-                }
-            }
-            if(SELECTED_POWER_MIN != NOT_SET && SELECTED_POWER_MAX != NOT_SET){
-                if(!(SELECTED_POWER_MIN <= car.getCar_power() && car.getCar_power() <= SELECTED_POWER_MAX)){
-                    continue;
-                }
-            }
-            if(SELECTED_MILEAGE_MIN != NOT_SET && SELECTED_MILEAGE_MAX != NOT_SET){
-                if(!(SELECTED_MILEAGE_MIN <= ads.getAds_price() && ads.getAds_mileage() <= SELECTED_MILEAGE_MAX)){
-                    continue;
-                }
-            }
-            if(SELECTED_BODY_TYPE_ID != NOT_SET){
-                if(car.getBodyType_id() != SELECTED_BODY_TYPE_ID){
-                    continue;
-                }
-            }
-            if(SELECTED_FUEL_TYPE_ID != NOT_SET){
-                if(car.getFuelType_id() != SELECTED_FUEL_TYPE_ID){
-                    continue;
-                }
-            }
-            if(SELECTED_YEAR != NOT_SET){
-                if(car.getCar_year() != SELECTED_YEAR){
-                    continue;
-                }
-            }
-            if(SELECTED_TRANS_ID != NOT_SET){
-                if(car.getTrans_id() != SELECTED_TRANS_ID){
-                    continue;
-                }
-            }
-            if(SELECTED_CONDITION != NOT_SET){
-                if(car.isNew() != (SELECTED_CONDITION == 0)?false:true){
-                    continue;
-                }
-            }
-            if(SELECTED_COLOR != NOT_SET){
-                if(car.getColor_id() != SELECTED_COLOR){
-                    continue;
-                }
-            }
-            if(SELECTED_CITY_ID != NOT_SET){
-                if(ads.getCity_id() != SELECTED_CITY_ID){
-                    continue;
-                }
-            }
-            if(SELECTED_SEAT != NOT_SET){
-                if(car.getCar_seats() != SELECTED_SEAT){
-                    continue;
-                }
-            }
-            if(SELECTED_DOOR != NOT_SET){
-                if(car.getCar_doors() != SELECTED_DOOR){
-                    continue;
-                }
-            }
-            if(SELECTED_PREUSER != NOT_SET){
-                if(car.getCar_previousOwner() >= SELECTED_PREUSER){
-                    continue;
-                }
-            }
+//            ModelItem model = methods.getModelItemByID(arrayList_model, car.getModel_id());
+//            if(SELECTED_MANU_ID != NOT_SET){
+//                if(model.getManu_id() != SELECTED_MANU_ID){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_MODEL_ID != NOT_SET){
+//                if(car.getModel_id() != SELECTED_MODEL_ID){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_PRICE_MIN != NOT_SET && SELECTED_PRICE_MAX != NOT_SET){
+//                if(!(SELECTED_PRICE_MIN <= ads.getAds_price() && ads.getAds_price() <= SELECTED_PRICE_MAX)){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_POWER_MIN != NOT_SET && SELECTED_POWER_MAX != NOT_SET){
+//                if(!(SELECTED_POWER_MIN <= car.getCar_power() && car.getCar_power() <= SELECTED_POWER_MAX)){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_MILEAGE_MIN != NOT_SET && SELECTED_MILEAGE_MAX != NOT_SET){
+//                if(!(SELECTED_MILEAGE_MIN <= ads.getAds_price() && ads.getAds_mileage() <= SELECTED_MILEAGE_MAX)){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_BODY_TYPE_ID != NOT_SET){
+//                if(car.getBodyType_id() != SELECTED_BODY_TYPE_ID){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_FUEL_TYPE_ID != NOT_SET){
+//                if(car.getFuelType_id() != SELECTED_FUEL_TYPE_ID){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_YEAR != NOT_SET){
+//                if(car.getCar_year() != SELECTED_YEAR){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_TRANS_ID != NOT_SET){
+//                if(car.getTrans_id() != SELECTED_TRANS_ID){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_CONDITION != NOT_SET){
+//                if(car.isNew() != (SELECTED_CONDITION == 0)?false:true){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_COLOR != NOT_SET){
+//                if(car.getColor_id() != SELECTED_COLOR){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_CITY_ID != NOT_SET){
+//                if(ads.getCity_id() != SELECTED_CITY_ID){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_SEAT != NOT_SET){
+//                if(car.getCar_seats() != SELECTED_SEAT){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_DOOR != NOT_SET){
+//                if(car.getCar_doors() != SELECTED_DOOR){
+//                    continue;
+//                }
+//            }
+//            if(SELECTED_PREUSER != NOT_SET){
+//                if(car.getCar_previousOwner() >= SELECTED_PREUSER){
+//                    continue;
+//                }
+//            }
             if(SELECTED_EQUIP_LIST.size() != 0){
                 int index = 0;
                 for(EquipmentItem equipmentItem : SELECTED_EQUIP_LIST){

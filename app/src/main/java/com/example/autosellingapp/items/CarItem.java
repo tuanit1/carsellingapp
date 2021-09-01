@@ -9,7 +9,10 @@ public class CarItem implements Serializable {
     private int model_id;
     private int bodyType_id;
     private int fuelType_id;
+    private String car_video;
+    private String video_type;
     private ArrayList<String> car_imageList;
+    private ArrayList<String> car_imagelist_link;
     private int car_year;
     private boolean isNew;
     private int car_power;
@@ -26,13 +29,16 @@ public class CarItem implements Serializable {
     private double car_fuelConsumption;
     private int car_co2emission;
 
-    public CarItem(int car_id, String car_name, int model_id, int bodyType_id, int fuelType_id, ArrayList<String> car_imageList, int car_year, boolean isNew, int car_power, int trans_id, int car_doors, int car_seats, ArrayList<String> car_equipments, int car_previousOwner, int color_id, int car_gears, int car_engineSize, int car_cylinder, int car_kerbWeight, double car_fuelConsumption, int car_co2emission) {
+    public CarItem(int car_id, String car_name, int model_id, int bodyType_id, int fuelType_id, String car_video, String video_type, ArrayList<String> car_imageList, ArrayList<String> car_imagelist_link, int car_year, boolean isNew, int car_power, int trans_id, int car_doors, int car_seats, ArrayList<String> car_equipments, int car_previousOwner, int color_id, int car_gears, int car_engineSize, int car_cylinder, int car_kerbWeight, double car_fuelConsumption, int car_co2emission) {
         this.car_id = car_id;
         this.car_name = car_name;
         this.model_id = model_id;
         this.bodyType_id = bodyType_id;
         this.fuelType_id = fuelType_id;
+        this.car_video = car_video;
+        this.video_type = video_type;
         this.car_imageList = car_imageList;
+        this.car_imagelist_link = car_imagelist_link;
         this.car_year = car_year;
         this.isNew = isNew;
         this.car_power = car_power;
@@ -48,6 +54,22 @@ public class CarItem implements Serializable {
         this.car_kerbWeight = car_kerbWeight;
         this.car_fuelConsumption = car_fuelConsumption;
         this.car_co2emission = car_co2emission;
+    }
+
+    public ArrayList<String> getCar_imagelist_link() {
+        return car_imagelist_link;
+    }
+
+    public void setCar_imagelist_link(ArrayList<String> car_imagelist_link) {
+        this.car_imagelist_link = car_imagelist_link;
+    }
+
+    public String getVideo_type() {
+        return video_type;
+    }
+
+    public void setVideo_type(String video_type) {
+        this.video_type = video_type;
     }
 
     public int getCar_id() {
@@ -88,6 +110,14 @@ public class CarItem implements Serializable {
 
     public void setFuelType_id(int fuelType_id) {
         this.fuelType_id = fuelType_id;
+    }
+
+    public String getCar_video() {
+        return car_video;
+    }
+
+    public void setCar_video(String car_video) {
+        this.car_video = car_video;
     }
 
     public ArrayList<String> getCar_imageList() {

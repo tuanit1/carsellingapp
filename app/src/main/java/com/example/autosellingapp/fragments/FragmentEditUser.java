@@ -257,7 +257,7 @@ public class FragmentEditUser extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.error_connect_server), Toast.LENGTH_SHORT).show();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_UPDATE_USER, bundle, arrayList_file));
+        }, methods.getAPIRequest(Constant.METHOD_UPDATE_USER, bundle, arrayList_file, null));
         updateFavouriteAsync.execute();
     }
 }

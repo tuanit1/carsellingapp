@@ -12,6 +12,10 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Base64;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
+import com.example.autosellingapp.R;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
 import com.example.autosellingapp.items.ColorItem;
@@ -24,16 +28,23 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+
 public class Methods {
     private Context context;
     private boolean IS_CHANGE_IMAGE = false;
+    private boolean IS_CHANGE_VIDEO = false;
 
     public Methods(Context context) {
         this.context = context;
@@ -76,6 +87,16 @@ public class Methods {
         return null;
     }
 
+    public boolean isFilePath(String path){
+        try {
+            File file = new File(path);
+            return file.isFile();
+        }catch (Exception e){
+            return false;
+        }
+
+    }
+
     public ModelItem getModelItemByID(ArrayList<ModelItem> arrayList, int id){
         for(ModelItem item : arrayList){
             if(item.getModel_id() == id){
@@ -100,6 +121,25 @@ public class Methods {
             }
         }
         return false;
+    }
+
+    public boolean isYoutubeUrl(String youTubeURl)
+    {
+        boolean success;
+        String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
+        // Not Valid youtube URL
+        success = !youTubeURl.isEmpty() && youTubeURl.matches(pattern);
+        return success;
+    }
+    public String getVideoId(@NonNull String videoUrl) {
+        String videoId = "";
+        String regex = "http(?:s)?:\\/\\/(?:m.)?(?:www\\.)?youtu(?:\\.be\\/|be\\.com\\/(?:watch\\?(?:feature=youtu.be\\&)?v=|v\\/|embed\\/|user\\/(?:[\\w#]+\\/)+))([^&#?\\n]+)";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(videoUrl);
+        if(matcher.find()){
+            videoId = matcher.group(1);
+        }
+        return videoId;
     }
 
     public boolean isFavourite(ArrayList<UserItem> arrayList_user, int id){
@@ -135,6 +175,24 @@ public class Methods {
         }
         return result;
     }
+
+    public String getPath(Uri uri) {
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+
 
     public String getPathImage(Uri uri) {
         try {
@@ -202,7 +260,7 @@ public class Methods {
         }
     }
 
-    public RequestBody getAPIRequest(String method, Bundle bundle, ArrayList<File> arrayList_file){
+    public RequestBody getAPIRequest(String method, Bundle bundle, ArrayList<File> arrayList_file, File video){
         JsonObject jsObj = new JsonObject();
         jsObj.addProperty("method_name", method);
         jsObj.addProperty("API_KEY", Constant.API_KEY);
@@ -219,9 +277,61 @@ public class Methods {
             jsObj.addProperty("ads_id", ads_id);
         }
 
+        if(method.equals(Constant.METHOD_CATEGORY)){
+
+            String search_text = bundle.getString(Constant.TAG_SEARCH_TEXT);
+            ArrayList<String> array_search_text = new ArrayList<>();
+
+            if(search_text.equals("")){
+                array_search_text.add("");
+            }else {
+                String[] arr_str = search_text.split(" ");
+                array_search_text.addAll(Arrays.asList(arr_str));
+            }
+
+            String json_search_text = new Gson().toJson(array_search_text);
+
+
+            jsObj.addProperty(Constant.TAG_SEARCH_TEXT, json_search_text);
+            jsObj.addProperty(Constant.TAG_UID, Constant.UID);
+            jsObj.addProperty(Constant.TAG_MANU_ID, bundle.getInt(Constant.TAG_MANU_ID));
+            jsObj.addProperty(Constant.TAG_MODEL_ID, bundle.getInt(Constant.TAG_MODEL_ID));
+            jsObj.addProperty(Constant.TAG_PRICE_MIN, bundle.getInt(Constant.TAG_PRICE_MIN));
+            jsObj.addProperty(Constant.TAG_PRICE_MAX, bundle.getInt(Constant.TAG_PRICE_MAX));
+            jsObj.addProperty(Constant.TAG_POWER_MIN, bundle.getInt(Constant.TAG_POWER_MIN));
+            jsObj.addProperty(Constant.TAG_POWER_MAX, bundle.getInt(Constant.TAG_POWER_MAX));
+            jsObj.addProperty(Constant.TAG_MILEAGE_MIN, bundle.getInt(Constant.TAG_MILEAGE_MIN));
+            jsObj.addProperty(Constant.TAG_MILEAGE_MAX, bundle.getInt(Constant.TAG_MILEAGE_MAX));
+            jsObj.addProperty(Constant.TAG_BODY_TYPE_ID, bundle.getInt(Constant.TAG_BODY_TYPE_ID));
+            jsObj.addProperty(Constant.TAG_FUEL_TYPE_ID, bundle.getInt(Constant.TAG_FUEL_TYPE_ID));
+            jsObj.addProperty(Constant.TAG_CAR_YEAR, bundle.getInt(Constant.TAG_CAR_YEAR));
+            jsObj.addProperty(Constant.TAG_TRANS_ID, bundle.getInt(Constant.TAG_TRANS_ID));
+            jsObj.addProperty(Constant.TAG_CAR_CONDITION, bundle.getInt(Constant.TAG_CAR_CONDITION));
+            jsObj.addProperty(Constant.TAG_COLOR_ID, bundle.getInt(Constant.TAG_COLOR_ID));
+            jsObj.addProperty(Constant.TAG_CITY_ID, bundle.getInt(Constant.TAG_CITY_ID));
+            jsObj.addProperty(Constant.TAG_CAR_SEATS, bundle.getInt(Constant.TAG_CAR_SEATS));
+            jsObj.addProperty(Constant.TAG_CAR_DOORS, bundle.getInt(Constant.TAG_CAR_DOORS));
+            jsObj.addProperty(Constant.TAG_CAR_PREOWNER, bundle.getInt(Constant.TAG_CAR_PREOWNER));
+
+            ArrayList<EquipmentItem> arrayList_equip = (ArrayList<EquipmentItem>) bundle.getSerializable(Constant.TAG_CAR_EQUIP);
+            ArrayList<String> arrayList_equip_id = new ArrayList<>();
+            for(EquipmentItem item : arrayList_equip){
+                arrayList_equip_id.add(String.valueOf(item.getEquip_id()));
+            }
+
+            String json_equip = new Gson().toJson(arrayList_equip_id);
+
+            jsObj.addProperty(Constant.TAG_CAR_EQUIP, json_equip);
+        }
+
         if(method.equals(Constant.METHOD_UPDATEFOLLOW)){
             jsObj.addProperty(Constant.TAG_UID, Constant.UID);
             jsObj.addProperty(Constant.TAG_FOLLOWLIST, bundle.getString(Constant.TAG_FOLLOWLIST));
+        }
+
+        if(method.equals(Constant.METHOD_CONTACT)){
+            jsObj.addProperty(Constant.TAG_UID, Constant.UID);
+            jsObj.addProperty(Constant.TAG_FEEDBACK_MESSAGE, bundle.getString(Constant.TAG_FEEDBACK_MESSAGE));
         }
 
         if(method.equals(Constant.METHOD_SELLING)){
@@ -250,9 +360,12 @@ public class Methods {
             int SELECTED_GEARS = bundle.getInt(Constant.TAG_CAR_GEARS);
             int SELECTED_CYLINDER = bundle.getInt(Constant.TAG_CAR_CYLINDER);
             int SELECTED_WEIGHT = bundle.getInt(Constant.TAG_CAR_KERBWEIGHT);
+            String VIDEO_TYPE = bundle.getString(Constant.TAG_VIDEO_TYPE);
             double SELECTED_FUELCONSUMP = bundle.getDouble(Constant.TAG_CAR_FUELCONSUMP);
             int SELECTED_CO2EMISSION = bundle.getInt(Constant.TAG_CAR_CO2EMISSION);
+            String CAR_IMAGE_LINK = bundle.getString(Constant.TAG_CAR_IMAGELIST_LINK);
             String SELECTED_DESCRIPTION = bundle.getString(Constant.TAG_ADS_DESCRIPTION);
+            String SELECTED_VIDEO = bundle.getString(Constant.TAG_CAR_VIDEO);
             ArrayList<EquipmentItem> arrayList_equip = (ArrayList<EquipmentItem>) bundle.getSerializable(Constant.TAG_EQUIP);
             ArrayList<String> arrayList_equip_id = new ArrayList<>();
             for (EquipmentItem item : arrayList_equip){
@@ -284,6 +397,9 @@ public class Methods {
             jsObj.addProperty(Constant.TAG_CAR_FUELCONSUMP, SELECTED_FUELCONSUMP);
             jsObj.addProperty(Constant.TAG_CAR_CO2EMISSION, SELECTED_CO2EMISSION);
             jsObj.addProperty(Constant.TAG_ADS_DESCRIPTION, SELECTED_DESCRIPTION);
+            jsObj.addProperty(Constant.TAG_CAR_VIDEO, SELECTED_VIDEO);
+            jsObj.addProperty(Constant.TAG_VIDEO_TYPE, VIDEO_TYPE);
+            jsObj.addProperty(Constant.TAG_CAR_IMAGELIST_LINK, CAR_IMAGE_LINK);
             jsObj.addProperty(Constant.TAG_CAR_EQUIP, json);
             jsObj.addProperty(Constant.TAG_UID, Constant.UID);
             jsObj.addProperty("image_count", arrayList_file.size());
@@ -292,6 +408,7 @@ public class Methods {
 
         if(method.equals(Constant.METHOD_EDIT_SELLING)){
 
+            IS_CHANGE_VIDEO = bundle.getBoolean("is_change_video");
             IS_CHANGE_IMAGE = bundle.getBoolean("is_change_image");
             int SELECTED_ADS_ID = bundle.getInt(Constant.TAG_ADS_ID);
             int SELECTED_CAR_ID = bundle.getInt(Constant.TAG_CAR_ID);
@@ -307,6 +424,8 @@ public class Methods {
             int SELECTED_BODY_TYPE_ID = bundle.getInt(Constant.TAG_BODY_TYPE_ID);
             int SELECTED_FUEL_TYPE_ID = bundle.getInt(Constant.TAG_FUEL_TYPE_ID);
             int SELECTED_CONDITION = bundle.getInt(Constant.TAG_CAR_CONDITION);
+            String SELECTED_VIDEO = bundle.getString(Constant.TAG_CAR_VIDEO);
+            String VIDEO_TYPE = bundle.getString(Constant.TAG_VIDEO_TYPE);
             int SELECTED_YEAR = bundle.getInt(Constant.TAG_CAR_YEAR);
             int SELECTED_TRANS_ID = bundle.getInt(Constant.TAG_TRANS_ID);
             int SELECTED_COLOR_ID = bundle.getInt(Constant.TAG_COLOR_ID);
@@ -318,6 +437,7 @@ public class Methods {
             int SELECTED_WEIGHT = bundle.getInt(Constant.TAG_CAR_KERBWEIGHT);
             double SELECTED_FUELCONSUMP = bundle.getDouble(Constant.TAG_CAR_FUELCONSUMP);
             int SELECTED_CO2EMISSION = bundle.getInt(Constant.TAG_CAR_CO2EMISSION);
+            String CAR_IMAGE_LINK = bundle.getString(Constant.TAG_CAR_IMAGELIST_LINK);
             String SELECTED_DESCRIPTION = bundle.getString(Constant.TAG_ADS_DESCRIPTION);
             ArrayList<EquipmentItem> arrayList_equip = (ArrayList<EquipmentItem>) bundle.getSerializable(Constant.TAG_EQUIP);
             ArrayList<String> arrayList_equip_id = new ArrayList<>();
@@ -327,6 +447,7 @@ public class Methods {
             String json = new Gson().toJson(arrayList_equip_id);
 
             jsObj.addProperty("is_change_image", (IS_CHANGE_IMAGE)?"true":"false");
+            jsObj.addProperty("is_change_video", (IS_CHANGE_VIDEO)?"true":"false");
             jsObj.addProperty(Constant.TAG_ADS_ID, SELECTED_ADS_ID);
             jsObj.addProperty(Constant.TAG_CAR_ID, SELECTED_CAR_ID);
             jsObj.addProperty(Constant.TAG_MANU_ID, SELECTED_MANU_ID);
@@ -353,7 +474,10 @@ public class Methods {
             jsObj.addProperty(Constant.TAG_CAR_FUELCONSUMP, SELECTED_FUELCONSUMP);
             jsObj.addProperty(Constant.TAG_CAR_CO2EMISSION, SELECTED_CO2EMISSION);
             jsObj.addProperty(Constant.TAG_ADS_DESCRIPTION, SELECTED_DESCRIPTION);
+            jsObj.addProperty(Constant.TAG_CAR_VIDEO, SELECTED_VIDEO);
+            jsObj.addProperty(Constant.TAG_VIDEO_TYPE, VIDEO_TYPE);
             jsObj.addProperty(Constant.TAG_CAR_EQUIP, json);
+            jsObj.addProperty(Constant.TAG_CAR_IMAGELIST_LINK, CAR_IMAGE_LINK);
             jsObj.addProperty(Constant.TAG_UID, Constant.UID);
             jsObj.addProperty("image_count", arrayList_file.size());
         }
@@ -408,8 +532,14 @@ public class Methods {
             jsObj.addProperty(Constant.TAG_RECENTADS, bundle.getString(Constant.TAG_RECENTADS));
         }
 
+        if(method.equals(Constant.METHOD_REPORTADS)){
+            jsObj.addProperty(Constant.TAG_ADS_ID, bundle.getInt(Constant.TAG_ADS_ID));
+            jsObj.addProperty(Constant.TAG_REPORTADS_DESC, bundle.getString(Constant.TAG_REPORTADS_DESC));
+        }
+
         if(method.equals(Constant.METHOD_POST_ADS)){
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
+            final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/*");
 
             MultipartBody.Builder builder = new MultipartBody.Builder();
             builder.setType(MultipartBody.FORM);
@@ -420,8 +550,14 @@ public class Methods {
                 builder.addFormDataPart("car_image"+i, arrayList_file.get(i).getName(), RequestBody.create(MEDIA_TYPE_PNG, arrayList_file.get(i)));
             }
 
+            if (video != null) {
+                builder.addFormDataPart("car_video", video.getName(), RequestBody.create(MEDIA_TYPE_MP4, video));
+            }
+
             return builder.build();
         }else if(method.equals(Constant.METHOD_EDIT_SELLING)){
+            final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/*");
+
             if(IS_CHANGE_IMAGE){
                 final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
 
@@ -434,12 +570,23 @@ public class Methods {
                     builder.addFormDataPart("car_image"+i, arrayList_file.get(i).getName(), RequestBody.create(MEDIA_TYPE_PNG, arrayList_file.get(i)));
                 }
 
+                if (video != null) {
+                    builder.addFormDataPart("car_video", video.getName(), RequestBody.create(MEDIA_TYPE_MP4, video));
+                }
+
                 return builder.build();
             }else{
-                return new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("data", jsObj.toString())
-                        .build();
+                MultipartBody.Builder builder = new MultipartBody.Builder();
+                builder.setType(MultipartBody.FORM);
+
+                builder.addFormDataPart("data", jsObj.toString());
+
+                if (video != null) {
+                    builder.addFormDataPart("car_video", video.getName(), RequestBody.create(MEDIA_TYPE_MP4, video));
+                }
+
+                return builder.build();
+
             }
         }else if(method.equals(Constant.METHOD_UPDATE_USER)){
             if(IS_CHANGE_IMAGE){

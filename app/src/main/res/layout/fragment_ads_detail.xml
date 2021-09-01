@@ -19,7 +19,9 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="250dp"
-                android:layout_margin="15dp">
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp">
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
@@ -41,25 +43,17 @@
                         android:text="SOLD"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_my_ads"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="gone"
-                    android:background="#80000000">
-                    <TextView
-                        android:id="@+id/tv_my_ads"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="3dp"
-                        android:textColor="#ffffff"
-                        android:background="@color/steel_blue"
-                        android:text="My ads"/>
-                </LinearLayout>
+
 
             </RelativeLayout>
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/indicator"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:ci_drawable="@drawable/drawble_indicator"
+                android:layout_marginBottom="10dp"
+                android:layout_height="30dp"/>
 
 
             <androidx.cardview.widget.CardView
@@ -104,10 +98,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:background="@color/sub_color"/>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/tv_car_name"
                             android:layout_width="wrap_content"
@@ -116,6 +112,26 @@
                             android:text="Car name"
                             android:textColor="@color/text_color"
                             android:textSize="22dp" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_my_ads"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:visibility="visible"
+                            android:background="#80000000">
+                            <TextView
+                                android:id="@+id/tv_my_ads"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="3dp"
+                                android:textColor="#ffffff"
+                                android:textSize="15dp"
+                                android:background="@color/steel_blue"
+                                android:text="My ads"/>
+                        </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

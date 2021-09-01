@@ -9,32 +9,38 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.autosellingapp.Notification.APIService;
+import com.example.autosellingapp.Notification.Client;
+import com.example.autosellingapp.Notification.Data;
+import com.example.autosellingapp.Notification.MyResponse;
+import com.example.autosellingapp.Notification.Sender;
+import com.example.autosellingapp.Notification.Token;
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.adapters.MessageAdapter;
-import com.example.autosellingapp.asynctasks.LoadUser;
 import com.example.autosellingapp.databinding.FragmentChatBinding;
-import com.example.autosellingapp.databinding.FragmentMessageBinding;
-import com.example.autosellingapp.interfaces.LoadUserListener;
 import com.example.autosellingapp.items.ChatItem;
 import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -42,9 +48,15 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -53,16 +65,25 @@ public class FragmentChat extends Fragment {
     private FragmentChatBinding binding;
     private Methods methods;
     private UserItem RECEIVER_USER;
+    private UserItem MY_USER;
     private MessageAdapter messageAdapter;
     private ArrayList<ChatItem> arrayList_chat;
     private ValueEventListener seenListener;
     private DatabaseReference reference;
     private static final int GALLERY_PICK = 1;
 
+    private String token;
+    private String useridfortoken;
+    private APIService apiService;
+    private boolean notify = false;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         methods = new Methods(getContext());
+
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         Bundle bundle = getArguments();
 
@@ -70,6 +91,7 @@ public class FragmentChat extends Fragment {
 
         if(bundle != null){
             RECEIVER_USER = (UserItem) bundle.getSerializable(Constant.TAG_USER);
+            MY_USER = (UserItem) bundle.getSerializable("MY_USER");
             Picasso.get().load(Constant.SERVER_URL + "images/user_image/" + RECEIVER_USER.getImage())
                     .placeholder(R.drawable.user_ic)
                     .into(binding.ivUser);
@@ -87,24 +109,43 @@ public class FragmentChat extends Fragment {
         binding.ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(methods.isLogged()){
-                    String msg = binding.edtType.getText().toString();
-                    if(!msg.equals("")){
-                        sendMessage(Constant.UID, RECEIVER_USER.getUid(), msg);
+                if(methods.isNetworkAvailable()){
+                    if(methods.isLogged()){
+                        notify = true;
+                        String msg = binding.edtType.getText().toString();
+                        if(!msg.equals("")){
+                            sendMessage(Constant.UID, RECEIVER_USER.getUid(), msg);
+                        }
+                        binding.edtType.setText("");
                     }
-                    binding.edtType.setText("");
+                }else {
+                    Toast.makeText(getContext(), getString(R.string.internet_not_connect), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
         binding.ivSendPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+                if(methods.isNetworkAvailable()){
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
+                    startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
+                }else {
+                    Toast.makeText(getContext(), getString(R.string.internet_not_connect), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        binding.ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getFragmentManager().getFragments().get(getFragmentManager().getBackStackEntryCount() - 1).getTag());
             }
         });
 
@@ -151,6 +192,10 @@ public class FragmentChat extends Fragment {
                         public void onSuccess(Uri uri) {
                             final String downloadUrl = uri.toString();
 
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                            Date date = new Date(System.currentTimeMillis());
+                            String currentTime = formatter.format(date);
+
                             reference = FirebaseDatabase.getInstance().getReference().child("Chats");
                             HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -158,6 +203,7 @@ public class FragmentChat extends Fragment {
                             hashMap.put("receiver_uid", RECEIVER_USER.getUid());
                             hashMap.put("type", "image");
                             hashMap.put("message", downloadUrl);
+                            hashMap.put("time", currentTime);
                             hashMap.put("isseen", "false");
 
                             reference.push().setValue(hashMap);
@@ -167,6 +213,7 @@ public class FragmentChat extends Fragment {
             });
         }
     }
+
 
     private void seenMessage(){
         reference = FirebaseDatabase.getInstance().getReference("Chats");
@@ -191,17 +238,66 @@ public class FragmentChat extends Fragment {
     }
 
     private void sendMessage(String sender_uid, String receiver_uid, String message){
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference().child("Chats");
         HashMap<String, Object> hashMap = new HashMap<>();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        String currentTime = formatter.format(date);
 
         hashMap.put("sender_uid", sender_uid);
         hashMap.put("receiver_uid", receiver_uid);
         hashMap.put("type", "message");
         hashMap.put("message", message);
         hashMap.put("isseen", "false");
+        hashMap.put("time", currentTime);
+
 
         reference.push().setValue(hashMap);
+
+        if(notify){
+            sendNotification(RECEIVER_USER.getUid(), MY_USER.getFullName(), message);
+        }
+        notify = false;
     }
+
+    private void sendNotification(String receiver_uid, String sender_name, String message) {
+        useridfortoken = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("Tokens").document(receiver_uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
+
+                assert value != null;
+                Token objecttoken = value.toObject(Token.class);
+                token = objecttoken.getToken();
+
+                Data data = new Data(useridfortoken, R.mipmap.ic_launcher, message, "New Message From "+ sender_name, receiver_uid);
+
+                Sender sender = new Sender(data, token);
+
+                apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                    @Override
+                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                        if(response.code() == 200){
+                            if(response.body().success != 1){
+                                Toast.makeText(getContext(), "Failed to Send Notification", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+    }
+
 
     private void readMessage(String sender_uid, String receiver_uid){
         reference = FirebaseDatabase.getInstance().getReference("Chats");

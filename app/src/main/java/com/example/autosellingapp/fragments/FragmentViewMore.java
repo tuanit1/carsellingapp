@@ -170,6 +170,7 @@ public class FragmentViewMore extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.manufacturers), SELECTED_MANU_ID);
         bundle.putInt(getString(R.string.model), NOT_SET);
+        bundle.putString(getString(R.string.search_text), "");
         bundle.putInt(getString(R.string.price_min), NOT_SET);
         bundle.putInt(getString(R.string.price_max), NOT_SET);
         bundle.putInt(getString(R.string.power_min), NOT_SET);

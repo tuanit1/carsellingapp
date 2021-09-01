@@ -1,10 +1,16 @@
 package com.example.autosellingapp.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,12 +18,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -25,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.autosellingapp.R;
+import com.example.autosellingapp.activity.MainActivity;
 import com.example.autosellingapp.adapters.AdsAdapter;
 import com.example.autosellingapp.adapters.ManufacturerAdapter;
 import com.example.autosellingapp.asynctasks.LoadHome;
@@ -44,13 +54,20 @@ import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
 import com.example.autosellingapp.utils.SharedPref;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 public class FragmentHome extends Fragment {
 
@@ -66,11 +83,14 @@ public class FragmentHome extends Fragment {
     private NestedScrollView scrollView;
     private ProgressBar progressBar;
     private Methods methods;
-    private LinearLayout ll_empty_home, ll_manu, ll_recent;
+    private LinearLayout ll_empty_home, ll_manu, ll_recent, ll_location;
     private RelativeLayout rl_manu, rl_recent;
     private String errorMsg;
     private Button btn_try;
-    private TextView tv_empty;
+    private TextView tv_empty, tv_mylocation;
+    private ImageView iv_search;
+    private EditText edt_search;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private FragmentTransaction ft;
 
     private int NOT_SET = -1;
@@ -133,6 +153,43 @@ public class FragmentHome extends Fragment {
         rl_recent = rootView.findViewById(R.id.rl_recent);
         btn_try = rootView.findViewById(R.id.btn_try_home);
         tv_empty = rootView.findViewById(R.id.tv_empty_home);
+        iv_search = rootView.findViewById(R.id.iv_search);
+        edt_search = rootView.findViewById(R.id.edt_search);
+        iv_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!edt_search.getText().toString().isEmpty()){
+                    SearchCategory();
+                }
+            }
+        });
+    }
+
+    private void SearchCategory(){
+        Bundle bundle = new Bundle();
+        bundle.putInt(getString(R.string.manufacturers), NOT_SET);
+        bundle.putInt(getString(R.string.model), NOT_SET);
+        bundle.putString(getString(R.string.search_text), edt_search.getText().toString());
+        bundle.putInt(getString(R.string.price_min), NOT_SET);
+        bundle.putInt(getString(R.string.price_max), NOT_SET);
+        bundle.putInt(getString(R.string.power_min), NOT_SET);
+        bundle.putInt(getString(R.string.power_max), NOT_SET);
+        bundle.putInt(getString(R.string.mileage_min), NOT_SET);
+        bundle.putInt(getString(R.string.mileage_max), NOT_SET);
+        bundle.putInt(getString(R.string.body_type), NOT_SET);
+        bundle.putInt(getString(R.string.fuel_type), NOT_SET);
+        bundle.putInt(getString(R.string.year), NOT_SET);
+        bundle.putInt(getString(R.string.transmission), NOT_SET);
+        bundle.putInt(getString(R.string.condition), NOT_SET);
+        bundle.putInt(getString(R.string.body_color), NOT_SET);
+        bundle.putInt(getString(R.string.city), NOT_SET);
+        bundle.putInt(getString(R.string.seat_number), NOT_SET);
+        bundle.putInt(getString(R.string.door_number), NOT_SET);
+        bundle.putInt(getString(R.string.previous_users), NOT_SET);
+        bundle.putSerializable(getString(R.string.equipment), new ArrayList<EquipmentItem>());
+        FragmentCategory fragment = new FragmentCategory();
+        fragment.setArguments(bundle);
+        ReplaceFragment(fragment, getString(R.string.frag_category));
     }
 
     private void LoadManufacturers(){
@@ -180,7 +237,7 @@ public class FragmentHome extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_HOME, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_HOME, null, null, null));
             loadHome.execute();
         }else{
             errorMsg = getString(R.string.internet_not_connect);
@@ -297,7 +354,7 @@ public class FragmentHome extends Fragment {
                     setEmpty();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_RECENT, bundle, null));
+        }, methods.getAPIRequest(Constant.METHOD_RECENT, bundle, null, null));
 
         if(!array_ads_json.equals("")){
             loadRecent.execute();
@@ -343,6 +400,7 @@ public class FragmentHome extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.manufacturers), SELECTED_MANU_ID);
         bundle.putInt(getString(R.string.model), NOT_SET);
+        bundle.putString(getString(R.string.search_text), "");
         bundle.putInt(getString(R.string.price_min), NOT_SET);
         bundle.putInt(getString(R.string.price_max), NOT_SET);
         bundle.putInt(getString(R.string.power_min), NOT_SET);

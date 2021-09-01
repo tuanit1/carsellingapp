@@ -1,7 +1,9 @@
 package com.example.autosellingapp.fragments;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,9 +19,12 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,8 +35,10 @@ import com.example.autosellingapp.R;
 import com.example.autosellingapp.activity.ActivityLogin;
 import com.example.autosellingapp.adapters.EquipmentAdapter;
 import com.example.autosellingapp.asynctasks.LoadSearch;
+import com.example.autosellingapp.asynctasks.PostAdsAsync;
 import com.example.autosellingapp.asynctasks.UpdateFavouriteAsync;
 import com.example.autosellingapp.interfaces.LoadSearchListener;
+import com.example.autosellingapp.interfaces.PostAdsListener;
 import com.example.autosellingapp.interfaces.ReloadFragmentListener;
 import com.example.autosellingapp.interfaces.UpdateFavListener;
 import com.example.autosellingapp.items.AdsItem;
@@ -53,6 +60,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import me.relex.circleindicator.CircleIndicator;
+
 
 public class FragmentAdsDetail extends Fragment {
 
@@ -72,6 +81,7 @@ public class FragmentAdsDetail extends Fragment {
     private ReloadFragmentListener reloadListener;
     private LinearLayout ll_buyer_function, ll_my_ads, ll_sold;
     private FragmentTransaction ft;
+    private CircleIndicator circleIndicator;
 
     private ArrayList<ManufacturerItem> array_manu;
     private ArrayList<ModelItem> array_model;
@@ -98,13 +108,16 @@ public class FragmentAdsDetail extends Fragment {
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+        if(!methods.isMyAds(ADS)){
+            inflater.inflate(R.menu.menu_option, menu);
+        }
+        menu.removeItem(R.id.menu_sort);
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
     }
 
     @Override
@@ -112,12 +125,13 @@ public class FragmentAdsDetail extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_ads_detail, container, false);
 
         methods = new Methods(getContext());
-
         Bundle bundle = getArguments();
         if(bundle != null){
             ADS = (AdsItem) bundle.getSerializable(getString(R.string.adsItem));
             CAR = (CarItem) bundle.getSerializable(getString(R.string.carItem));
         }
+
+        setHasOptionsMenu(true);
 
         array_manu = new ArrayList<>();
         array_model= new ArrayList<>();
@@ -134,6 +148,18 @@ public class FragmentAdsDetail extends Fragment {
 
         LoadData();
         return rootView;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.menu_option:
+                openReportDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void Hook(){
@@ -177,7 +203,7 @@ public class FragmentAdsDetail extends Fragment {
         ll_buyer_function = rootView.findViewById(R.id.ll_buyer_function);
         ll_my_ads = rootView.findViewById(R.id.ll_my_ads);
         ll_sold = rootView.findViewById(R.id.ll_sold);
-
+        circleIndicator = rootView.findViewById(R.id.indicator);
     }
 
     private void BindData(){
@@ -207,36 +233,56 @@ public class FragmentAdsDetail extends Fragment {
             btn_like.setImageResource(R.drawable.heart2_checked_ic);
         }
 
+        btn_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+userItem.getPhoneNumber()));
+                startActivity(intent);
+            }
+        });
+
         btn_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(methods.isLogged()){
-                    if(!methods.isMyAds(ADS)){
-                        UpdateFavorite();
+                if(methods.isNetworkAvailable()){
+                    if(methods.isLogged()){
+                        if(!methods.isMyAds(ADS)){
+                            UpdateFavorite();
+                        }
+                    }else{
+                        openLoginActivity();
+                        Toast.makeText(getContext(), Constant.NO_LOGIN, Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    openLoginActivity();
-                    Toast.makeText(getContext(), Constant.NO_LOGIN, Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getContext(), getString(R.string.internet_not_connect), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
         btn_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(methods.isLogged()){
+                if(methods.isNetworkAvailable()){
+                    if(methods.isLogged()){
 
-                    addToChatList(userItem);
+                        addToChatList(userItem);
 
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(Constant.TAG_USER, userItem);
-                    FragmentChat f = new FragmentChat();
-                    f.setArguments(bundle);
-                    ReplaceFragment(f, getString(R.string.frag_chat));
-                }else{
-                    openLoginActivity();
-                    Toast.makeText(getContext(), Constant.NO_LOGIN, Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(Constant.TAG_USER, userItem);
+                        bundle.putSerializable("MY_USER", methods.getUserItemByUsername(array_user, Constant.UID));
+                        FragmentChat f = new FragmentChat();
+                        f.setArguments(bundle);
+                        ReplaceFragment(f, getString(R.string.frag_chat));
+                    }else{
+                        openLoginActivity();
+                        Toast.makeText(getContext(), Constant.NO_LOGIN, Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(getContext(), getString(R.string.internet_not_connect), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -244,8 +290,19 @@ public class FragmentAdsDetail extends Fragment {
             ll_sold.setVisibility(View.VISIBLE);
         }
 
-        carImageAdapter = new CarImageAdapter(getContext(), CAR.getCar_imageList());
+        if(CAR.getCar_imageList().isEmpty()){
+            carImageAdapter = new CarImageAdapter(getContext(), CAR.getCar_imagelist_link(), CAR.getCar_video(), CAR.getVideo_type());
+        }else{
+            ArrayList<String> arrayList_img = new ArrayList<>();
+            for(String str : CAR.getCar_imageList()){
+                arrayList_img.add(Constant.SERVER_URL+"images/car_image/"+str);
+            }
+            carImageAdapter = new CarImageAdapter(getContext(), arrayList_img, CAR.getCar_video(), CAR.getVideo_type());
+        }
+
         viewPager.setAdapter(carImageAdapter);
+        circleIndicator.setViewPager(viewPager);
+        carImageAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
 
         tv_price.setText("$ "+String.format("%1$,.0f", ADS.getAds_price()));
         tv_condition.setText((CAR.isNew())?"New":"Used");
@@ -382,7 +439,7 @@ public class FragmentAdsDetail extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null, null));
             loadSearch.execute();
         }else{
             errorMsg = getString(R.string.internet_not_connect);
@@ -443,7 +500,7 @@ public class FragmentAdsDetail extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.error_connect_server), Toast.LENGTH_SHORT).show();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_UPDATELIKE, bundleUpdateFav, null));
+        }, methods.getAPIRequest(Constant.METHOD_UPDATELIKE, bundleUpdateFav, null, null));
         updateFavouriteAsync.execute();
     }
 
@@ -501,9 +558,62 @@ public class FragmentAdsDetail extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.error_connect_server), Toast.LENGTH_SHORT).show();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_UPDATE_CHATLIST, bundle, null));
+        }, methods.getAPIRequest(Constant.METHOD_UPDATE_CHATLIST, bundle, null, null));
         updateFavouriteAsync.execute();
 
+    }
+
+    private void openReportDialog(){
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_report_ads);
+
+        TextView tv_dialog = dialog.findViewById(R.id.tv_dialog);
+        EditText edt_dialog = dialog.findViewById(R.id.edt_dialog);
+        Button btn_ok = dialog.findViewById(R.id.btn_ok);
+
+        tv_dialog.setText("What's wrong with "+CAR.getCar_name() +" ?");
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edt_dialog.getText().toString().isEmpty()){
+                    edt_dialog.setError(getString(R.string.cannot_empty));
+                    return;
+                }
+
+                if(methods.isNetworkAvailable()){
+                    loadReportAds(edt_dialog.getText().toString());
+                    dialog.dismiss();
+                }else {
+                    Toast.makeText(getContext(), getString(R.string.internet_not_connect), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        dialog.show();
+
+
+    }
+
+    private void loadReportAds(String desc){
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.TAG_ADS_ID, ADS.getAds_id());
+        bundle.putString(Constant.TAG_REPORTADS_DESC, desc);
+
+        UpdateFavouriteAsync async = new UpdateFavouriteAsync(new UpdateFavListener() {
+            @Override
+            public void onEnd(String success) {
+                if(success.equals("1")){
+                    Toast.makeText(getContext(), "Thanks for your report !", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), getString(R.string.error_connect_server), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, methods.getAPIRequest(Constant.METHOD_REPORTADS, bundle, null, null));
+
+        async.execute();
     }
 
 

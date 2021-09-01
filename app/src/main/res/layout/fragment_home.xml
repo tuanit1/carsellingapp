@@ -31,9 +31,9 @@
                     android:layout_height="100dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="70dp"
-                    android:weightSum="10">
+                    android:weightSum="1">
                     <LinearLayout
-                        android:layout_weight="6"
+                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -52,50 +52,41 @@
                             android:layout_margin="5dp"
                             android:textColor="#ffffff" />
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_weight="4"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/your_location"
-                            android:textColor="#ffffff"/>
-                        <TextView
-                            android:id="@+id/mylocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="location"
-                            android:textSize="20dp"
-                            android:textColor="#ffffff"/>
-                    </LinearLayout>
                 </LinearLayout>
 
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_search"
                     android:layout_width="match_parent"
-                    android:layout_height="33dp"
+                    android:layout_height="wrap_content"
                     app:cardCornerRadius="5dp"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="15dp"
                     app:cardElevation="10dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="#ffffff">
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
+                        <EditText
+                            android:id="@+id/edt_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:hint="Search anything..."
+                            android:textColor="@color/black"
+                            android:layout_toLeftOf="@+id/iv_search"
+                            android:background="@null"/>
                         <ImageView
+                            android:id="@+id/iv_search"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:background="@drawable/search_ic"
-                            android:layout_centerInParent="true"/>
+                            android:layout_marginRight="10dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/search_ic"/>
                     </RelativeLayout>
 
                 </androidx.cardview.widget.CardView>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.SharedPref;
+import com.google.firebase.FirebaseApp;
 
 public class MyApplication extends Application {
 
@@ -14,7 +15,11 @@ public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
+
+
         super.onCreate();
+
+        FirebaseApp.initializeApp(this);
 
         sharedPref = new SharedPref(this);
 
@@ -23,5 +28,6 @@ public class MyApplication extends Application {
         }else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
     }
 }

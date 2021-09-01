@@ -93,10 +93,18 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
                     int bodyType_id = obj.getInt(Constant.TAG_BODY_TYPE_ID);
                     int fuelType_id = obj.getInt(Constant.TAG_FUEL_TYPE_ID);
 
+                    String car_video = obj.getString(Constant.TAG_CAR_VIDEO);
+
                     ArrayList<String> car_imageList = new ArrayList<>();
 
                     if(!obj.getString(Constant.TAG_CAR_IMAGELIST).equals("")){
                         car_imageList =  gson.fromJson(obj.getString(Constant.TAG_CAR_IMAGELIST), ArrayList.class);
+                    }
+
+                    ArrayList<String> car_imagelist_link = new ArrayList<>();
+
+                    if(!obj.getString(Constant.TAG_CAR_IMAGELIST).equals("")){
+                        car_imagelist_link =  gson.fromJson(obj.getString(Constant.TAG_CAR_IMAGELIST_LINK), ArrayList.class);
                     }
 
                     int car_year = obj.getInt(Constant.TAG_CAR_YEAR);
@@ -111,6 +119,8 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
                         car_equipments = gson.fromJson(obj.getString(Constant.TAG_CAR_EQUIP), ArrayList.class);
                     }
 
+                    String video_type = obj.getString(Constant.TAG_VIDEO_TYPE);
+
                     int car_previousOwner = obj.getInt(Constant.TAG_CAR_PREOWNER);
                     int color_id = obj.getInt(Constant.TAG_COLOR_ID);
                     int car_gears = obj.getInt(Constant.TAG_CAR_GEARS);
@@ -120,7 +130,7 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
                     double car_fuelConsumption = obj.getInt(Constant.TAG_CAR_FUELCONSUMP);
                     int car_co2emission = obj.getInt(Constant.TAG_CAR_CO2EMISSION);
 
-                    CarItem objItem = new CarItem(car_id, car_name, model_id, bodyType_id, fuelType_id, car_imageList, car_year, isNew, car_power, trans_id, car_doors, car_seats, car_equipments, car_previousOwner, color_id, car_gears, car_engineSize, car_cylinder, car_kerbWeight, car_fuelConsumption, car_co2emission);
+                    CarItem objItem = new CarItem(car_id, car_name, model_id, bodyType_id, fuelType_id, car_video, video_type, car_imageList, car_imagelist_link, car_year, isNew, car_power, trans_id, car_doors, car_seats, car_equipments, car_previousOwner, color_id, car_gears, car_engineSize, car_cylinder, car_kerbWeight, car_fuelConsumption, car_co2emission);
                     arrayList_car.add(objItem);
                 }
 

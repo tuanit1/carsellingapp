@@ -1,8 +1,10 @@
 package com.example.autosellingapp.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +42,11 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if(sharedPref.getIsAutoLogin()) {
-                    loadLogin();
+                    if(methods.isNetworkAvailable()){
+                        loadLogin();
+                    }else {
+                        openDialog(getString(R.string.internet_not_connect));
+                    }
                 } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -72,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Your email is not verified! Please verify your email!", Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(getApplicationContext(), "Unauthorized Access", Toast.LENGTH_SHORT).show();
+                    openDialog(getString(R.string.unauthorized_access));
                 }
             }
         });
@@ -81,5 +87,19 @@ public class SplashActivity extends AppCompatActivity {
     private void openMainActivity(){
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void openDialog(String message) {
+        AlertDialog.Builder alert;
+        alert = new AlertDialog.Builder(this);
+        alert.setTitle("Message");
+        alert.setMessage(message);
+
+        alert.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                finishAffinity();
+            }
+        });
+        alert.show();
     }
 }

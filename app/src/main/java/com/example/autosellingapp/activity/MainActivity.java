@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.view.View;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.fragments.FragmentAdsDetail;
+import com.example.autosellingapp.fragments.FragmentContact;
 import com.example.autosellingapp.fragments.FragmentFavourite;
 import com.example.autosellingapp.fragments.FragmentHome;
 import com.example.autosellingapp.fragments.FragmentMessage;
@@ -82,7 +84,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Hook();
         NavigationDrawerMenu();
         displayHomeUpOrHamburger();
+
         openFragmentHome();
+
     }
 
     private void Hook(){
@@ -233,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_contact:
                 if(FRAGMENT_CONTACT != currentFragment){
-                    //ReplaceFragment(new InfoFragment(), "INFO");
+                    ReplaceFragment(new FragmentContact(), getString(R.string.frag_contact));
                     currentFragment = FRAGMENT_CONTACT;
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
@@ -254,8 +258,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_rate:
                 if(FRAGMENT_RATE != currentFragment){
-                    //ReplaceFragment(new InfoFragment(), "INFO");
-                    currentFragment = FRAGMENT_RATE;
+                    final String appName = getPackageName();//your application package name i.e play store application url
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id="
+                                        + appName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("http://play.google.com/store/apps/details?id="
+                                        + appName)));
+                    }
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
                 break;

@@ -1,6 +1,8 @@
 package com.example.autosellingapp.items;
 
-public class UserFirebase {
+import java.io.Serializable;
+
+public class UserFirebase implements Serializable {
     private String uid;
     private String status;
 

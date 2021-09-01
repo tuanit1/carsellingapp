@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="200dp"
+    android:layout_width="350dp"
     android:background="@color/main_color"
     android:layout_height="wrap_content">
     <TextView
@@ -28,6 +28,9 @@
                 android:id="@+id/radio_standard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="20dp"
                 android:buttonTint="@color/steel_blue"
                 android:textColor="@color/text_color"
                 android:text="Standard"/>
@@ -35,6 +38,8 @@
                 android:id="@+id/radio_latest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/text_color"
                 android:buttonTint="@color/steel_blue"
                 android:text="Latest"/>
@@ -42,6 +47,8 @@
                 android:id="@+id/radio_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/text_color"
                 android:buttonTint="@color/steel_blue"
                 android:text="Favourite"/>
@@ -49,6 +56,8 @@
                 android:id="@+id/radio_priceLowToHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/text_color"
                 android:buttonTint="@color/steel_blue"
                 android:text="Price: Low to High"/>
@@ -57,6 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
+                android:textSize="20dp"
+                android:layout_marginBottom="10dp"
                 android:buttonTint="@color/steel_blue"
                 android:text="Price: High to Low"/>
         </RadioGroup>

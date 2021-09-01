@@ -172,7 +172,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Failed to sign up! Try again!", Toast.LENGTH_SHORT).show();
                 }
             }
-        }, methods.getAPIRequest(Constant.MEDTHOD_SIGNUP, bundle, null));
+        }, methods.getAPIRequest(Constant.MEDTHOD_SIGNUP, bundle, null , null));
 
         loadSignUp.execute();
     }

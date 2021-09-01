@@ -2,6 +2,7 @@ package com.example.autosellingapp.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
@@ -11,13 +12,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +31,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.adapters.ColorListAdapter;
@@ -42,6 +49,7 @@ import com.example.autosellingapp.databinding.FragmentPostadsBinding;
 import com.example.autosellingapp.interfaces.ColorListener;
 import com.example.autosellingapp.interfaces.EquipmentListener;
 import com.example.autosellingapp.interfaces.LoadSearchListener;
+import com.example.autosellingapp.interfaces.MyListener;
 import com.example.autosellingapp.interfaces.PostAdsListener;
 import com.example.autosellingapp.interfaces.ReloadFragmentListener;
 import com.example.autosellingapp.items.AdsItem;
@@ -54,9 +62,25 @@ import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
+import com.example.autosellingapp.utils.PathUtil;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.gson.Gson;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import me.relex.circleindicator.CircleIndicator;
 
 public class FragmentPostAds extends Fragment {
 
@@ -65,8 +89,18 @@ public class FragmentPostAds extends Fragment {
     private String errorMsg;
     private int MODE = POST_MODE;
     private boolean isChangeImage = false;
+    private boolean isChangeVideo = false;
     private static final int EDIT_MODE = 886;
     private static final int POST_MODE = 699;
+    private static final int UPLOAD_IMAGE = 394;
+    private static final int ATTACH_IMAGE = 356;
+    private int IMAGE_MODE = 0;
+    private int VIDEO_MODE = 0;
+    private static final int UPLOAD_VIDEO = 699;
+    private static final int ATTACH_VIDEO = 812;
+    private PlayerView playerView;
+    private SimpleExoPlayer player;
+    private YouTubePlayerView youTubePlayerView;
     private ArrayList<ManufacturerItem> array_manu;
     private ArrayList<ModelItem> array_model;
     private ArrayList<MyItem> array_city;
@@ -75,7 +109,8 @@ public class FragmentPostAds extends Fragment {
     private ArrayList<MyItem> array_trans;
     private ArrayList<ColorItem> array_color;
     private ArrayList<EquipmentItem> array_equip;
-    private ArrayList<Uri> uriImageArrayList;
+    private ArrayList<String> ImageArrayList;
+
 
     private PickImageAdapter pickImageAdapter;
 
@@ -95,6 +130,7 @@ public class FragmentPostAds extends Fragment {
     private String SELECTED_CARNAME = "";
     private String SELECTED_DESCRIPTION = "";
     private String SELECTED_ADDRESS = "";
+    private String SELECTED_VIDEO = "";
     private double SELECTED_FUELCONSUMP = NOT_SET;
 
     private int SELECTED_YEAR = NOT_SET;
@@ -112,6 +148,7 @@ public class FragmentPostAds extends Fragment {
     private int SELECTED_MILEAGE = NOT_SET;
 
     private static final int PICK_IMAGE_CODE = 622;
+    private static final int PICK_VIDEO_CODE = 131;
 
     private ArrayList<EquipmentItem> SELECTED_EQUIP_LIST;
 
@@ -136,9 +173,20 @@ public class FragmentPostAds extends Fragment {
         array_color = new ArrayList<>();
         array_equip = new ArrayList<>();
         SELECTED_EQUIP_LIST = new ArrayList<>();
-        uriImageArrayList = new ArrayList<>();
+        ImageArrayList = new ArrayList<>();
 
-        pickImageAdapter = new PickImageAdapter(uriImageArrayList);
+        pickImageAdapter = new PickImageAdapter(ImageArrayList, new MyListener() {
+            @Override
+            public void onClick() {
+                if(ImageArrayList.size() == 0){
+                    binding.tvImages.setText("");
+                    binding.tvImages.setTextColor(getResources().getColor(R.color.text_color_sub));
+                }else {
+                    binding.tvImages.setText(ImageArrayList.size() + " images is selected");
+                    binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
+                }
+            }
+        });
 
         binding.cvModel.setEnabled(false);
         binding.cvManu.setOnClickListener(new View.OnClickListener() {
@@ -291,6 +339,16 @@ public class FragmentPostAds extends Fragment {
                 openDialogText(Constant.TEXT_FUELCONSUMP);
             }
         });
+        binding.cvVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    openDialogPickVideo();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         binding.cvImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,6 +366,7 @@ public class FragmentPostAds extends Fragment {
                 }
             }
         });
+
 
         LoadData();
 
@@ -358,7 +417,13 @@ public class FragmentPostAds extends Fragment {
             SELECTED_PRICE = (int) EDIT_ADS.getAds_price();
             SELECTED_POWER = car.getCar_power();
             SELECTED_MILEAGE = EDIT_ADS.getAds_mileage();
+            SELECTED_VIDEO = car.getCar_video();
 
+            if(car.getVideo_type().equals("youtube")){
+                VIDEO_MODE = ATTACH_VIDEO;
+            }else {
+                VIDEO_MODE = UPLOAD_VIDEO;
+            }
 
             for(EquipmentItem item : array_equip){
                 for(String id : car.getCar_equipments()){
@@ -369,10 +434,21 @@ public class FragmentPostAds extends Fragment {
                 }
             }
 
-            for(String image : car.getCar_imageList()){
-                String url = Constant.SERVER_URL + "images/car_image/" + image;
-                uriImageArrayList.add(Uri.parse(url));
+            if(car.getCar_imageList().isEmpty()){
+                IMAGE_MODE = ATTACH_IMAGE;
+                pickImageAdapter.setType(true);
+                for(String image : car.getCar_imagelist_link()){
+                    ImageArrayList.add(image);
+                }
+            }else {
+                IMAGE_MODE = UPLOAD_IMAGE;
+                pickImageAdapter.setType(false);
+                for(String image : car.getCar_imageList()){
+                    String url = Constant.SERVER_URL + "images/car_image/" + image;
+                    ImageArrayList.add(url);
+                }
             }
+
 
             binding.tvManu.setText(manu.getManu_name());
             binding.tvManu.setTextColor(getResources().getColor(R.color.selected_color));
@@ -380,7 +456,7 @@ public class FragmentPostAds extends Fragment {
             binding.tvModel.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvCarName.setText(SELECTED_CARNAME);
             binding.tvCarName.setTextColor(getResources().getColor(R.color.selected_color));
-            binding.tvImages.setText(uriImageArrayList.size() + " images is selected");
+            binding.tvImages.setText(ImageArrayList.size() + " images is selected");
             binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvPrice.setText("$ " + String.format("%1$,d",SELECTED_PRICE));
             binding.tvPrice.setTextColor(getResources().getColor(R.color.selected_color));
@@ -414,6 +490,8 @@ public class FragmentPostAds extends Fragment {
             binding.tvEquipment.setTextColor(getResources().getColor(R.color.selected_color));
             binding.tvPreuser.setText(String.valueOf(SELECTED_PREUSER));
             binding.tvPreuser.setTextColor(getResources().getColor(R.color.selected_color));
+            binding.tvVideo.setText(SELECTED_VIDEO);
+            binding.tvVideo.setTextColor(getResources().getColor(R.color.selected_color));
             if(SELECTED_GEARS != NOT_SET){
                 binding.tvGears.setText(String.valueOf(SELECTED_GEARS));
                 binding.tvGears.setTextColor(getResources().getColor(R.color.selected_color));
@@ -438,6 +516,7 @@ public class FragmentPostAds extends Fragment {
                 binding.tvDescription.setText(SELECTED_DESCRIPTION);
                 binding.tvDescription.setTextColor(getResources().getColor(R.color.selected_color));
             }
+
         }
     }
 
@@ -485,7 +564,7 @@ public class FragmentPostAds extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null, null));
             loadSearch.execute();
         }else{
             errorMsg = getString(R.string.internet_not_connect);
@@ -567,7 +646,7 @@ public class FragmentPostAds extends Fragment {
                 numberPicker.setMaxValue(12);
 
                 if(SELECTED_SEAT != NOT_SET){
-                    numberPicker.setValue(SELECTED_YEAR);
+                    numberPicker.setValue(SELECTED_SEAT);
                 }
 
                 break;
@@ -767,7 +846,7 @@ public class FragmentPostAds extends Fragment {
         dialog.show();
     }
 
-    private void openDialogList(String type){
+    private void openDialogList(String type) {
         Dialog dialog = new Dialog(this.getContext());
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -778,20 +857,19 @@ public class FragmentPostAds extends Fragment {
         TextView tv_dialog_list = dialog.findViewById(R.id.tv_dialog_list);
 
 
-
         ArrayAdapter lv_Adapter;
 
-        switch (type){
+        switch (type) {
             case Constant.TEXT_MANU_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_manu){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_manu) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -817,13 +895,13 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_MODEL_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -832,9 +910,9 @@ public class FragmentPostAds extends Fragment {
                 };
                 ArrayList<ModelItem> arrayList = new ArrayList<>();
 
-                if(SELECTED_MANU_ID != NOT_SET){
-                    for (ModelItem item : array_model){
-                        if(item.getManu_id() == SELECTED_MANU_ID){
+                if (SELECTED_MANU_ID != NOT_SET) {
+                    for (ModelItem item : array_model) {
+                        if (item.getManu_id() == SELECTED_MANU_ID) {
                             arrayList.add(item);
                         }
                     }
@@ -846,9 +924,9 @@ public class FragmentPostAds extends Fragment {
                             binding.tvModel.setText(arrayList.get(position).getModel_name());
                             SELECTED_MODEL_ID = arrayList.get(position).getModel_id();
 
-                            if(SELECTED_MODEL_ID == NOT_SET){
+                            if (SELECTED_MODEL_ID == NOT_SET) {
                                 binding.tvModel.setTextColor(getResources().getColor(R.color.default_text));
-                            }else{
+                            } else {
                                 binding.tvModel.setTextColor(getResources().getColor(R.color.selected_color));
                             }
                             dialog.dismiss();
@@ -859,13 +937,13 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_BODY_TYPE_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_bodytype){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_bodytype) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -888,13 +966,13 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_FUEL_TYPE_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_fueltype){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_fueltype) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -917,13 +995,13 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_CITY_LIST:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_city){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_city) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -950,13 +1028,13 @@ public class FragmentPostAds extends Fragment {
                 list.add(getString(R.string.used));
                 list.add(getString(R.string.news));
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, list){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, list) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -969,10 +1047,10 @@ public class FragmentPostAds extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         binding.tvCondition.setText(list.get(position));
 
-                        if(list.get(position).equals(getString(R.string.used))){
+                        if (list.get(position).equals(getString(R.string.used))) {
                             SELECTED_CONDITION = CONDITION_USED;
                             binding.tvCondition.setTextColor(getResources().getColor(R.color.selected_color));
-                        }else{
+                        } else {
                             SELECTED_CONDITION = CONDITION_NEW;
                             binding.tvCondition.setTextColor(getResources().getColor(R.color.selected_color));
                         }
@@ -983,13 +1061,13 @@ public class FragmentPostAds extends Fragment {
             case Constant.TEXT_TRANS:
                 tv_dialog_list.setText(type);
 
-                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_trans){
+                lv_Adapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, array_trans) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        View view =super.getView(position, convertView, parent);
+                        View view = super.getView(position, convertView, parent);
 
-                        TextView textView=(TextView) view.findViewById(android.R.id.text1);
+                        TextView textView = (TextView) view.findViewById(android.R.id.text1);
 
                         textView.setTextColor(getResources().getColor(R.color.text_color));
 
@@ -1141,6 +1219,9 @@ public class FragmentPostAds extends Fragment {
                 }
                 btn_not_set.setVisibility(View.VISIBLE);
                 break;
+            case Constant.TEXT_VIDEO:
+                edt_dialog.setText(SELECTED_VIDEO);
+                break;
         }
 
 
@@ -1170,6 +1251,16 @@ public class FragmentPostAds extends Fragment {
                             binding.tvFuelconsump.setTextColor(getResources().getColor(R.color.selected_color));
                         }
                         break;
+                    case Constant.TEXT_VIDEO:
+                        if(methods.isYoutubeUrl(edt_dialog.getText().toString())){
+                            SELECTED_VIDEO = edt_dialog.getText().toString();
+                            binding.tvVideo.setText(SELECTED_VIDEO);
+                            binding.tvVideo.setTextColor(getResources().getColor(R.color.selected_color));
+                        }else {
+                            Toast.makeText(getContext(), "Invalid youtube video link!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        break;
                 }
                 dialog.dismiss();
             }
@@ -1178,41 +1269,408 @@ public class FragmentPostAds extends Fragment {
         dialog.show();
     }
 
+    private void openDialogPickVideo() throws URISyntaxException {
+        Dialog dialog = new Dialog(this.getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_pick_video);
+
+        TextView tv_dialog = dialog.findViewById(R.id.tv_dialog);
+        tv_dialog.setText("Video");
+
+        Button btn_attach = dialog.findViewById(R.id.btn_attach);
+        Button btn_upload = dialog.findViewById(R.id.btn_upload);
+        Button btn_pick = dialog.findViewById(R.id.btn_pick);
+        Button btn_more_option = dialog.findViewById(R.id.btn_option);
+
+        LinearLayout ll_edt_url = dialog.findViewById(R.id.ll_edt_url);
+        EditText edt_url = dialog.findViewById(R.id.edt_url);
+
+        LinearLayout ll_default = dialog.findViewById(R.id.ll_default);
+        LinearLayout ll_upload = dialog.findViewById(R.id.ll_upload);
+
+        youTubePlayerView = dialog.findViewById(R.id.youtube_player_view);
+
+        playerView = dialog.findViewById(R.id.video_view);
+
+        player = new SimpleExoPlayer.Builder(getContext()).build();
+
+        playerView.setPlayer(player);
+
+
+        switch (VIDEO_MODE){
+            case 0:
+                ll_default.setVisibility(View.VISIBLE);
+                ll_upload.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.GONE);
+                break;
+            case ATTACH_VIDEO:
+
+                if(!SELECTED_VIDEO.equals("")){
+
+                    youTubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
+                        @Override
+                        public void onYouTubePlayer(@NotNull YouTubePlayer youTubePlayer) {
+                            String videoId = methods.getVideoId(SELECTED_VIDEO);
+                            youTubePlayer.cueVideo(videoId, 0);
+                        }
+                    });
+
+                    youTubePlayerView.setVisibility(View.VISIBLE);
+                    playerView.setVisibility(View.GONE);
+
+                    edt_url.setText(SELECTED_VIDEO);
+                }
+
+
+                ll_default.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.VISIBLE);
+                ll_upload.setVisibility(View.VISIBLE);
+                btn_pick.setText("ADD YOUTUBE URL");
+                break;
+            case UPLOAD_VIDEO:
+
+                if(!SELECTED_VIDEO.equals("")){
+
+                    Uri uri;
+
+                    if(methods.isFilePath(PathUtil.getPath(getContext(), Uri.parse(SELECTED_VIDEO)))){
+                        uri = Uri.parse(SELECTED_VIDEO);
+                    }else {
+                        uri = Uri.parse(Constant.SERVER_URL + "videos/car_video/" + SELECTED_VIDEO);
+                    }
+
+                    MediaItem mediaItem = MediaItem.fromUri(uri);
+
+                    player.setMediaItem(mediaItem);
+
+                    player.prepare();
+
+                    player.play();
+
+                    youTubePlayerView.setVisibility(View.GONE);
+                    playerView.setVisibility(View.VISIBLE);
+
+                }
+
+                ll_default.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.GONE);
+                ll_upload.setVisibility(View.VISIBLE);
+                btn_pick.setText("OPEN GALLERY");
+                break;
+        }
+
+        btn_attach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(VIDEO_MODE == UPLOAD_VIDEO){
+                    new AlertDialog.Builder(getContext())
+                    .setTitle("Message")
+                    .setMessage("Switch to this option will clear your current selected video. Are you sure?")
+
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            SELECTED_VIDEO = "";
+                            binding.tvVideo.setText("");
+                            binding.tvVideo.setTextColor(getResources().getColor(R.color.text_color_sub));
+
+                            VIDEO_MODE = ATTACH_VIDEO;
+
+                            youTubePlayerView.setVisibility(View.VISIBLE);
+                            playerView.setVisibility(View.GONE);
+                            ll_upload.setVisibility(View.VISIBLE);
+                            ll_edt_url.setVisibility(View.VISIBLE);
+                            ll_default.setVisibility(View.GONE);
+                            btn_pick.setText("ADD YOUTUBE URL");
+
+                        }
+                    })
+
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+                }else {
+                    VIDEO_MODE = ATTACH_VIDEO;
+                    ll_default.setVisibility(View.GONE);
+                    ll_edt_url.setVisibility(View.VISIBLE);
+                    ll_upload.setVisibility(View.VISIBLE);
+                    btn_pick.setText("ADD YOUTUBE URL");
+                }
+
+            }
+        });
+
+        btn_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(VIDEO_MODE == ATTACH_VIDEO){
+                    new AlertDialog.Builder(getContext())
+                    .setTitle("Message")
+                    .setMessage("Switch to this option will clear your current selected video. Are you sure?")
+
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            SELECTED_VIDEO = "";
+                            binding.tvVideo.setText("");
+                            binding.tvVideo.setTextColor(getResources().getColor(R.color.text_color_sub));
+
+                            VIDEO_MODE = UPLOAD_VIDEO;
+
+                            youTubePlayerView.setVisibility(View.GONE);
+                            playerView.setVisibility(View.VISIBLE);
+                            ll_default.setVisibility(View.GONE);
+                            ll_edt_url.setVisibility(View.GONE);
+                            ll_upload.setVisibility(View.VISIBLE);
+                            btn_pick.setText("OPEN GALLERY");
+
+                        }
+                    })
+
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+                }else {
+                    VIDEO_MODE = UPLOAD_VIDEO;
+                    ll_default.setVisibility(View.GONE);
+                    ll_edt_url.setVisibility(View.GONE);
+                    ll_upload.setVisibility(View.VISIBLE);
+                    btn_pick.setText("OPEN GALLERY");
+                }
+
+            }
+        });
+
+        btn_more_option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_upload.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.GONE);
+                ll_default.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btn_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (VIDEO_MODE){
+                    case ATTACH_VIDEO:
+                        if(edt_url.getText().toString().isEmpty()){
+                            edt_url.setError("URL is empty");
+                            return;
+                        }
+
+                        if(!methods.isYoutubeUrl(edt_url.getText().toString())){
+                            edt_url.setError("Youtube video URL is invalid");
+                            return;
+                        }
+
+                        SELECTED_VIDEO = edt_url.getText().toString();
+
+                        youTubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
+                            @Override
+                            public void onYouTubePlayer(@NotNull YouTubePlayer youTubePlayer) {
+                                String videoId = methods.getVideoId(SELECTED_VIDEO);
+                                youTubePlayer.cueVideo(videoId, 0);
+                            }
+                        });
+
+
+                        youTubePlayerView.setVisibility(View.VISIBLE);
+                        playerView.setVisibility(View.GONE);
+
+                        binding.tvVideo.setText("Video selected");
+                        binding.tvVideo.setTextColor(getResources().getColor(R.color.selected_color));
+
+                        break;
+                    case UPLOAD_VIDEO:
+                        Intent intent = new Intent();
+                        intent.setType("video/*");
+                        intent.setAction(Intent.ACTION_PICK);
+                        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO_CODE);
+                        break;
+                }
+            }
+        });
+
+        dialog.show();
+
+    }
+
     private void openDialogPickImage(){
         Dialog dialog = new Dialog(this.getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_dialog_pick_image);
-        dialog.setCancelable(false);
 
         TextView tv_dialog = dialog.findViewById(R.id.tv_dialog);
         tv_dialog.setText("Images");
-        Button btn_ok = dialog.findViewById(R.id.btn_ok);
-        Button btn_choose_img = dialog.findViewById(R.id.btn_choose_img);
-        RecyclerView rv_dialog_image = dialog.findViewById(R.id.rv_dialog);
-        rv_dialog_image.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
-        rv_dialog_image.setAdapter(pickImageAdapter);
+        Button btn_attach = dialog.findViewById(R.id.btn_attach);
+        Button btn_upload = dialog.findViewById(R.id.btn_upload);
+        Button btn_pick = dialog.findViewById(R.id.btn_pick);
+        Button btn_more_option = dialog.findViewById(R.id.btn_option);
 
-        btn_choose_img.setOnClickListener(new View.OnClickListener() {
+        LinearLayout ll_edt_url = dialog.findViewById(R.id.ll_edt_url);
+        EditText edt_url = dialog.findViewById(R.id.edt_url);
+
+        LinearLayout ll_default = dialog.findViewById(R.id.ll_default);
+        LinearLayout ll_upload = dialog.findViewById(R.id.ll_upload);
+
+        ViewPager viewPager = dialog.findViewById(R.id.view_pager);
+
+        CircleIndicator indicator = dialog.findViewById(R.id.indicator);
+
+
+        viewPager.setAdapter(pickImageAdapter);
+        indicator.setViewPager(viewPager);
+        pickImageAdapter.registerDataSetObserver(indicator.getDataSetObserver());
+
+        btn_attach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setData(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGE_CODE);
+
+                if(IMAGE_MODE == UPLOAD_IMAGE){
+                    new AlertDialog.Builder(getContext())
+                    .setTitle("Message")
+                    .setMessage("Switch to this option will clear your current selected images. Are you sure?")
+
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ImageArrayList.clear();
+                            binding.tvImages.setText("");
+                            binding.tvImages.setTextColor(getResources().getColor(R.color.text_color_sub));
+
+                            IMAGE_MODE = ATTACH_IMAGE;
+                            pickImageAdapter.setType(true);
+
+                            ll_upload.setVisibility(View.VISIBLE);
+                            ll_edt_url.setVisibility(View.VISIBLE);
+                            ll_default.setVisibility(View.GONE);
+                            btn_pick.setText("ADD URL");
+
+                            pickImageAdapter.notifyDataSetChanged();
+                        }
+                    })
+
+                    .setNegativeButton(android.R.string.no, null)
+                    //.setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+                }else {
+                    IMAGE_MODE = ATTACH_IMAGE;
+                    pickImageAdapter.setType(true);
+                    ll_upload.setVisibility(View.VISIBLE);
+                    ll_default.setVisibility(View.GONE);
+                    ll_edt_url.setVisibility(View.VISIBLE);
+                    btn_pick.setText("ADD URL");
+                }
+
+
             }
         });
 
-        btn_ok.setOnClickListener(new View.OnClickListener() {
+        btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.tvImages.setText(uriImageArrayList.size() + " images is selected");
-                binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
-                dialog.dismiss();
+
+                if(IMAGE_MODE == ATTACH_IMAGE){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Message")
+                            .setMessage("Switch to this option will clear your current selected images. Are you sure?")
+
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ImageArrayList.clear();
+                                    binding.tvImages.setText("");
+                                    binding.tvImages.setTextColor(getResources().getColor(R.color.text_color_sub));
+
+                                    IMAGE_MODE = UPLOAD_IMAGE;
+                                    pickImageAdapter.setType(false);
+                                    ll_upload.setVisibility(View.VISIBLE);
+                                    ll_edt_url.setVisibility(View.GONE);
+                                    ll_default.setVisibility(View.GONE);
+                                    btn_pick.setText("OPEN GALLERY");
+
+                                    pickImageAdapter.notifyDataSetChanged();
+                                }
+                            })
+
+                            .setNegativeButton(android.R.string.no, null)
+                            //.setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else {
+                    IMAGE_MODE = UPLOAD_IMAGE;
+                    pickImageAdapter.setType(false);
+                    ll_upload.setVisibility(View.VISIBLE);
+                    ll_edt_url.setVisibility(View.GONE);
+                    ll_default.setVisibility(View.GONE);
+                    btn_pick.setText("OPEN GALLERY");
+                }
+
+
             }
         });
+
+        btn_more_option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_upload.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.GONE);
+                ll_default.setVisibility(View.VISIBLE);
+            }
+        });
+
+        switch (IMAGE_MODE) {
+            case 0:
+                ll_default.setVisibility(View.VISIBLE);
+                ll_upload.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.GONE);
+                break;
+            case ATTACH_IMAGE:
+                ll_default.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.VISIBLE);
+                ll_upload.setVisibility(View.VISIBLE);
+                btn_pick.setText("ADD URL");
+                break;
+            case UPLOAD_IMAGE:
+                ll_default.setVisibility(View.GONE);
+                ll_edt_url.setVisibility(View.GONE);
+                ll_upload.setVisibility(View.VISIBLE);
+                btn_pick.setText("OPEN GALLERY");
+                break;
+        }
+
+        btn_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (IMAGE_MODE){
+                    case ATTACH_IMAGE:
+                        if(edt_url.getText().toString().isEmpty()){
+                            edt_url.setError("URL is empty");
+                            return;
+                        }
+
+                        if(!Patterns.WEB_URL.matcher(edt_url.getText().toString()).matches()){
+                            edt_url.setError("URL is invalid");
+                            return;
+                        }
+
+                        ImageArrayList.add(edt_url.getText().toString());
+                        pickImageAdapter.notifyDataSetChanged();
+                        edt_url.setText("");
+                        binding.tvImages.setText(ImageArrayList.size() + " images is selected");
+                        binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
+
+                        break;
+                    case UPLOAD_IMAGE:
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        intent.setAction(Intent.ACTION_PICK);
+                        startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGE_CODE);
+                        break;
+                }
+            }
+        });
+
+
 
         dialog.show();
     }
@@ -1222,19 +1680,54 @@ public class FragmentPostAds extends Fragment {
         if(requestCode == PICK_IMAGE_CODE){
             if(resultCode == Activity.RESULT_OK){
                 isChangeImage = true;
-                uriImageArrayList.clear();
+                ImageArrayList.clear();
                 if(data.getClipData() != null){
                     int count = data.getClipData().getItemCount();
                     for(int i = 0; i < count; i++){
                         Uri uri = data.getClipData().getItemAt(i).getUri();
-                        uriImageArrayList.add(uri);
+                        ImageArrayList.add(uri.toString());
                         pickImageAdapter.notifyDataSetChanged();
                     }
                 }else {
                     Uri uri = data.getData();
-                    uriImageArrayList.add(uri);
+                    ImageArrayList.add(uri.toString());
                     pickImageAdapter.notifyDataSetChanged();
                 }
+                binding.tvImages.setText(ImageArrayList.size() + " images is selected");
+                binding.tvImages.setTextColor(getResources().getColor(R.color.selected_color));
+            }
+        }else if(requestCode == PICK_VIDEO_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                isChangeVideo = true;
+
+                Uri uri = data.getData();
+
+                try {
+                     File file = new File(PathUtil.getPath(getContext(), uri));
+                     int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                     int file_in_mb = file_size/1024;
+                     if(file_in_mb > 25){
+                         openMessageDialog("The file you have selected is too large. The maximum size is 25MB.");
+                         return;
+                     }
+                }catch (Exception e){
+                    openMessageDialog("Can't use this video!");
+                }
+
+                SELECTED_VIDEO = uri.toString();
+                playerView.setVisibility(View.VISIBLE);
+                youTubePlayerView.setVisibility(View.GONE);
+
+                MediaItem mediaItem = MediaItem.fromUri(uri);
+
+                player.setMediaItem(mediaItem);
+
+                player.prepare();
+
+                player.play();
+
+                binding.tvVideo.setText("Video selected");
+                binding.tvVideo.setTextColor(getResources().getColor(R.color.selected_color));
             }
         }
     }
@@ -1263,11 +1756,17 @@ public class FragmentPostAds extends Fragment {
             binding.tvCarName.setText(getString(R.string.car_name) + " is not set");
             binding.tvCarName.setTextColor(getResources().getColor(R.color.red));
         }
-        if(uriImageArrayList.isEmpty()){
+        if(ImageArrayList.isEmpty()){
             cancel = true;
             focusView = binding.cvImages;
             binding.tvImages.setText(getString(R.string.tv_images) + " is not set");
             binding.tvImages.setTextColor(getResources().getColor(R.color.red));
+        }
+        if(SELECTED_VIDEO.isEmpty()){
+            cancel = true;
+            focusView = binding.cvVideo;
+            binding.tvVideo.setText(getString(R.string.tv_video) + " is not set");
+            binding.tvVideo.setTextColor(getResources().getColor(R.color.red));
         }
         if(SELECTED_PRICE == NOT_SET){
             cancel = true;
@@ -1369,49 +1868,7 @@ public class FragmentPostAds extends Fragment {
         if(cancel){
             scrollToView(binding.scrollView, focusView);
         }else {
-            Bundle bundle = new Bundle();
-            bundle.putInt(Constant.TAG_MANU_ID, SELECTED_MANU_ID);
-            bundle.putInt(Constant.TAG_MODEL_ID, SELECTED_MODEL_ID);
-            bundle.putString(Constant.TAG_CAR_NAME, SELECTED_CARNAME);
-            bundle.putInt(Constant.TAG_ADS_PRICE, SELECTED_PRICE);
-            bundle.putInt(Constant.TAG_CITY_ID, SELECTED_CITY_ID);
-            bundle.putString(Constant.TAG_ADS_LOCATION, SELECTED_ADDRESS);
-            bundle.putInt(Constant.TAG_CAR_POWER, SELECTED_POWER);
-            bundle.putInt(Constant.TAG_CAR_ENGINESIZE, SELECTED_ENGINESIZE);
-            bundle.putInt(Constant.TAG_ADS_MILEAGE, SELECTED_MILEAGE);
-            bundle.putInt(Constant.TAG_BODY_TYPE_ID, SELECTED_BODY_TYPE_ID);
-            bundle.putInt(Constant.TAG_FUEL_TYPE_ID, SELECTED_FUEL_TYPE_ID);
-            bundle.putInt(Constant.TAG_CAR_CONDITION, SELECTED_CONDITION);
-            bundle.putInt(Constant.TAG_CAR_YEAR, SELECTED_YEAR);
-            bundle.putInt(Constant.TAG_TRANS_ID, SELECTED_TRANS_ID);
-            bundle.putInt(Constant.TAG_COLOR_ID, SELECTED_COLOR_ID);
-            bundle.putInt(Constant.TAG_CAR_SEATS, SELECTED_SEAT);
-            bundle.putInt(Constant.TAG_CAR_DOORS, SELECTED_DOOR);
-            bundle.putInt(Constant.TAG_CAR_PREOWNER, SELECTED_PREUSER);
-            bundle.putInt(Constant.TAG_CAR_GEARS, SELECTED_GEARS);
-            bundle.putInt(Constant.TAG_CAR_CYLINDER, SELECTED_CYLINDER);
-            bundle.putInt(Constant.TAG_CAR_KERBWEIGHT, SELECTED_WEIGHT);
-            bundle.putDouble(Constant.TAG_CAR_FUELCONSUMP, SELECTED_FUELCONSUMP);
-            bundle.putInt(Constant.TAG_CAR_CO2EMISSION, SELECTED_CO2EMISSION);
-            bundle.putString(Constant.TAG_ADS_DESCRIPTION, SELECTED_DESCRIPTION);
-            bundle.putSerializable(Constant.TAG_EQUIP, SELECTED_EQUIP_LIST);
-
-            ArrayList<File> arrayList_file = new ArrayList<>();
-            for(Uri uri : uriImageArrayList){
-                String filePath = methods.getPathImage(uri);
-                File file = new File(filePath);
-                arrayList_file.add(file);
-            }
-            if(MODE == POST_MODE){
-                AdsAction(bundle, Constant.METHOD_POST_ADS ,arrayList_file);
-            }else {
-                bundle.putBoolean("is_change_image", isChangeImage);
-                bundle.putInt(Constant.TAG_ADS_ID, EDIT_ADS.getAds_id());
-                bundle.putInt(Constant.TAG_CAR_ID, EDIT_ADS.getCar_id());
-                AdsAction(bundle, Constant.METHOD_EDIT_SELLING, arrayList_file);
-            }
-
-
+            openConfirmDialog();
         }
     }
 
@@ -1433,7 +1890,7 @@ public class FragmentPostAds extends Fragment {
         getDeepChildOffset(mainParent, parentGroup.getParent(), parentGroup, accumulatedOffset);
     }
 
-    private void AdsAction(Bundle bundle, String method , ArrayList<File> arrayList_file){
+    private void AdsAction(Bundle bundle, String method , ArrayList<File> arrayList_file, File video){
         PostAdsAsync postAdsAsync = new PostAdsAsync(new PostAdsListener() {
             @Override
             public void onStart() {
@@ -1452,9 +1909,128 @@ public class FragmentPostAds extends Fragment {
                 binding.rlScrollView.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.GONE);
             }
-        }, methods.getAPIRequest(method, bundle, arrayList_file));
+        }, methods.getAPIRequest(method, bundle, arrayList_file, video));
 
         postAdsAsync.execute();
     }
+
+    private void openConfirmDialog() {
+        AlertDialog.Builder alert;
+        alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Message");
+        alert.setMessage("Confirm");
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    UpdateAds();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alert.show();
+    }
+
+    private void UpdateAds() throws URISyntaxException {
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.TAG_MANU_ID, SELECTED_MANU_ID);
+        bundle.putInt(Constant.TAG_MODEL_ID, SELECTED_MODEL_ID);
+        bundle.putString(Constant.TAG_CAR_NAME, SELECTED_CARNAME);
+        bundle.putInt(Constant.TAG_ADS_PRICE, SELECTED_PRICE);
+        bundle.putInt(Constant.TAG_CITY_ID, SELECTED_CITY_ID);
+        bundle.putString(Constant.TAG_ADS_LOCATION, SELECTED_ADDRESS);
+        bundle.putInt(Constant.TAG_CAR_POWER, SELECTED_POWER);
+        bundle.putInt(Constant.TAG_CAR_ENGINESIZE, SELECTED_ENGINESIZE);
+        bundle.putInt(Constant.TAG_ADS_MILEAGE, SELECTED_MILEAGE);
+        bundle.putInt(Constant.TAG_BODY_TYPE_ID, SELECTED_BODY_TYPE_ID);
+        bundle.putInt(Constant.TAG_FUEL_TYPE_ID, SELECTED_FUEL_TYPE_ID);
+        bundle.putInt(Constant.TAG_CAR_CONDITION, SELECTED_CONDITION);
+        bundle.putInt(Constant.TAG_CAR_YEAR, SELECTED_YEAR);
+        bundle.putInt(Constant.TAG_TRANS_ID, SELECTED_TRANS_ID);
+        bundle.putInt(Constant.TAG_COLOR_ID, SELECTED_COLOR_ID);
+        bundle.putInt(Constant.TAG_CAR_SEATS, SELECTED_SEAT);
+        bundle.putInt(Constant.TAG_CAR_DOORS, SELECTED_DOOR);
+        bundle.putInt(Constant.TAG_CAR_PREOWNER, SELECTED_PREUSER);
+        bundle.putInt(Constant.TAG_CAR_GEARS, SELECTED_GEARS);
+        bundle.putInt(Constant.TAG_CAR_CYLINDER, SELECTED_CYLINDER);
+        bundle.putInt(Constant.TAG_CAR_KERBWEIGHT, SELECTED_WEIGHT);
+        bundle.putDouble(Constant.TAG_CAR_FUELCONSUMP, SELECTED_FUELCONSUMP);
+        bundle.putInt(Constant.TAG_CAR_CO2EMISSION, SELECTED_CO2EMISSION);
+        bundle.putString(Constant.TAG_ADS_DESCRIPTION, SELECTED_DESCRIPTION);
+        bundle.putSerializable(Constant.TAG_EQUIP, SELECTED_EQUIP_LIST);
+
+        bundle.putString(Constant.TAG_VIDEO_TYPE, (VIDEO_MODE == ATTACH_VIDEO)? "youtube" : "upload");
+
+        File file_video = null;
+
+        if (VIDEO_MODE == ATTACH_VIDEO) {
+            isChangeVideo = true;
+            bundle.putString(Constant.TAG_CAR_VIDEO, SELECTED_VIDEO);
+        } else {
+            bundle.putString(Constant.TAG_CAR_VIDEO, SELECTED_VIDEO);
+            if(isChangeVideo){
+                Uri uri = Uri.parse(SELECTED_VIDEO);
+                String filePath = PathUtil.getPath(getContext(), uri);
+                file_video = new File(filePath);
+            }
+        }
+
+        ArrayList<File> arrayList_file = new ArrayList<>();
+
+        switch (IMAGE_MODE){
+            case ATTACH_IMAGE:
+                bundle.putString(Constant.TAG_CAR_IMAGELIST_LINK, new Gson().toJson(ImageArrayList));
+                isChangeImage = true;
+                break;
+            case UPLOAD_IMAGE:
+                bundle.putString(Constant.TAG_CAR_IMAGELIST_LINK, "[]");
+                if(isChangeImage){
+                    for(String img : ImageArrayList){
+                        String filePath = PathUtil.getPath(getContext(), Uri.parse(img));
+                        File file = new File(filePath);
+                        arrayList_file.add(file);
+                    }
+                }
+                break;
+        }
+
+
+        if(MODE == POST_MODE){
+            AdsAction(bundle, Constant.METHOD_POST_ADS ,arrayList_file, file_video);
+        }else {
+            bundle.putBoolean("is_change_image", isChangeImage);
+            bundle.putBoolean("is_change_video", isChangeVideo);
+            bundle.putInt(Constant.TAG_ADS_ID, EDIT_ADS.getAds_id());
+            bundle.putInt(Constant.TAG_CAR_ID, EDIT_ADS.getCar_id());
+            AdsAction(bundle, Constant.METHOD_EDIT_SELLING, arrayList_file, file_video);
+        }
+    }
+
+    private void openMessageDialog(String message){
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+        builder1.setMessage(message);
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+
+    }
+
 
 }

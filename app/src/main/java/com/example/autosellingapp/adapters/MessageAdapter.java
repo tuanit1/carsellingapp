@@ -18,7 +18,11 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
 
@@ -69,11 +73,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 
         }
 
-        if(holder.iv_user != null){
-            Picasso.get()
-                    .load(Constant.SERVER_URL + "images/user_image" + image)
-                    .placeholder(R.drawable.user_ic)
-                    .into(holder.iv_user);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatter1= new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        try {
+            if(position > 0){
+                Date date = formatter.parse(chat.getTime());
+                Date date_previous = formatter.parse(arrayList_chat.get(position - 1).getTime());
+                long diffInTime = date.getTime() - date_previous.getTime();
+                long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diffInTime);
+
+                if(diffInMinutes > 5){
+                    holder.tv_time.setText(formatter1.format(date));
+                    holder.tv_time.setVisibility(View.VISIBLE);
+                }
+            }else {
+                Date date = formatter1.parse(chat.getTime());
+                holder.tv_time.setText(formatter1.format(date));
+                holder.tv_time.setVisibility(View.VISIBLE);
+            }
+
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
         }
 
         if(holder.getAdapterPosition() == arrayList_chat.size()-1){
@@ -103,15 +123,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tv_message, tv_seen;
-        ImageView iv_user, iv_msg_image;
+        TextView tv_message, tv_seen, tv_time;
+        ImageView iv_msg_image;
 
         public MyViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
             tv_message = itemView.findViewById(R.id.tv_message);
 
-            iv_user = itemView.findViewById(R.id.iv_user);
+            tv_time = itemView.findViewById(R.id.tv_time);
 
             iv_msg_image = itemView.findViewById(R.id.iv_msg_image);
 

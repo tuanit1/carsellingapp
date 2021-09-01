@@ -1,6 +1,8 @@
 package com.example.autosellingapp.items;
 
-public class EquipmentItem {
+import java.io.Serializable;
+
+public class EquipmentItem implements Serializable {
    private int equip_id;
    private String equip_name;
    private boolean isChecked;

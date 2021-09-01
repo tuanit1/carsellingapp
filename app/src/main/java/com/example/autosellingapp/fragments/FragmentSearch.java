@@ -71,10 +71,10 @@ public class FragmentSearch extends Fragment {
     private ListView lv_dialog_list;
     private CardView cv_manu, cv_model, cv_price, cv_power, cv_mileage,
                     cv_bodyType, cv_fuelType, cv_condition, cv_year, cv_transmission, cv_bodyColor, cv_seatNumber, cv_doorNumber,
-                    cv_equipment, cv_previousUser, cv_city;
+                    cv_equipment, cv_previousUser, cv_city, cv_edition;
     private TextView tv_manu, tv_model, tv_price, tv_power, tv_mileage,
             tv_bodyType, tv_fuelType, tv_condition, tv_year, tv_transmission, tv_bodyColor, tv_seatNumber, tv_doorNumber,
-            tv_equipment, tv_previousUser, tv_city;
+            tv_equipment, tv_previousUser, tv_city, tv_edition;
     private Button btn_search;
 
     private int NOT_SET = -1;
@@ -100,6 +100,8 @@ public class FragmentSearch extends Fragment {
     private int SELECTED_POWER_MAX = NOT_SET;
     private int SELECTED_MILEAGE_MIN = NOT_SET;
     private int SELECTED_MILEAGE_MAX = NOT_SET;
+
+    private String SELECTED_SEARCHTEXT = "";
 
     private ArrayList<EquipmentItem> SELECTED_EQUIP_LIST;
 
@@ -246,6 +248,13 @@ public class FragmentSearch extends Fragment {
                 openDialogList(Constant.TEXT_CITY_LIST);
             }
         });
+        cv_edition = rootView.findViewById(R.id.cv_search_edition);
+        cv_edition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialogText();
+            }
+        });
 
         tv_manu = rootView.findViewById(R.id.tv_search_manu);
         tv_model = rootView.findViewById(R.id.tv_search_model);
@@ -263,6 +272,7 @@ public class FragmentSearch extends Fragment {
         tv_equipment = rootView.findViewById(R.id.tv_search_equipment);
         tv_previousUser = rootView.findViewById(R.id.tv_search_preuser);
         tv_city = rootView.findViewById(R.id.tv_search_city);
+        tv_edition = rootView.findViewById(R.id.tv_search_edition);
 
         btn_search = rootView.findViewById(R.id.btn_search);
         btn_search.setOnClickListener(new View.OnClickListener() {
@@ -272,6 +282,8 @@ public class FragmentSearch extends Fragment {
             }
         });
     }
+
+
 
     private void LoadSearch(){
         if(methods.isNetworkAvailable()){
@@ -323,7 +335,7 @@ public class FragmentSearch extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_SEARCH, null, null, null));
             loadSearch.execute();
         }else{
             errorMsg = getString(R.string.internet_not_connect);
@@ -349,6 +361,47 @@ public class FragmentSearch extends Fragment {
         }
     }
 
+
+    private void openDialogText() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setContentView(R.layout.layout_dialog_text);
+
+        TextView tv_dialog = dialog.findViewById(R.id.tv_dialog);
+        tv_dialog.setText(getString(R.string.car_edition));
+        Button btn_ok = dialog.findViewById(R.id.btn_ok);
+        Button btn_not_set = dialog.findViewById(R.id.btn_not_set);
+        btn_not_set.setVisibility(View.VISIBLE);
+        EditText edt_dialog = dialog.findViewById(R.id.edt_dialog);
+        edt_dialog.setText(SELECTED_SEARCHTEXT);
+        btn_not_set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SELECTED_SEARCHTEXT = "";
+                tv_edition.setText("Not set");
+                tv_edition.setTextColor(getResources().getColor(R.color.text_color_sub));
+                dialog.dismiss();
+            }
+        });
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SELECTED_SEARCHTEXT = edt_dialog.getText().toString();
+
+                if(SELECTED_SEARCHTEXT.equals("")){
+                    tv_edition.setText("Not set");
+                    tv_edition.setTextColor(getResources().getColor(R.color.text_color_sub));
+                }else {
+                    tv_edition.setText(SELECTED_SEARCHTEXT);
+                    tv_edition.setTextColor(getResources().getColor(R.color.selected_color));
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     private void openDialogList(String type){
         Dialog dialog = new Dialog(this.getContext());
 
@@ -359,8 +412,6 @@ public class FragmentSearch extends Fragment {
 
         lv_dialog_list = dialog.findViewById(R.id.lv_dialog_list);
         tv_dialog_list = dialog.findViewById(R.id.tv_dialog_list);
-
-
 
         ArrayAdapter lv_Adapter;
 
@@ -390,7 +441,8 @@ public class FragmentSearch extends Fragment {
 
                         if(SELECTED_MANU_ID == NOT_SET){
                             cv_model.setEnabled(false);
-                            tv_manu.setTextColor(getResources().getColor(R.color.default_text));
+                            tv_manu.setTextColor(getResources().getColor(R.color.text_color_sub));
+                            tv_model.setTextColor(getResources().getColor(R.color.text_color_sub));
                         }else {
                             cv_model.setEnabled(true);
                             tv_manu.setTextColor(getResources().getColor(R.color.selected_color));
@@ -435,7 +487,7 @@ public class FragmentSearch extends Fragment {
                             SELECTED_MODEL_ID = arrayList.get(position).getModel_id();
 
                             if(SELECTED_MODEL_ID == NOT_SET){
-                                tv_model.setTextColor(getResources().getColor(R.color.default_text));
+                                tv_model.setTextColor(getResources().getColor(R.color.text_color_sub));
                             }else{
                                 tv_model.setTextColor(getResources().getColor(R.color.selected_color));
                             }
@@ -469,7 +521,7 @@ public class FragmentSearch extends Fragment {
                         SELECTED_BODY_TYPE_ID = array_bodytype.get(position).getId();
 
                         if(SELECTED_BODY_TYPE_ID == NOT_SET){
-                            tv_bodyType.setTextColor(getResources().getColor(R.color.default_text));
+                            tv_bodyType.setTextColor(getResources().getColor(R.color.text_color_sub));
                         }else{
                             tv_bodyType.setTextColor(getResources().getColor(R.color.selected_color));
                         }
@@ -502,7 +554,7 @@ public class FragmentSearch extends Fragment {
                         SELECTED_FUEL_TYPE_ID = array_fueltype.get(position).getId();
 
                         if(SELECTED_FUEL_TYPE_ID == NOT_SET){
-                            tv_fuelType.setTextColor(getResources().getColor(R.color.default_text));
+                            tv_fuelType.setTextColor(getResources().getColor(R.color.text_color_sub));
                         }else{
                             tv_fuelType.setTextColor(getResources().getColor(R.color.selected_color));
                         }
@@ -535,7 +587,7 @@ public class FragmentSearch extends Fragment {
                         SELECTED_CITY_ID = array_city.get(position).getId();
 
                         if(SELECTED_CITY_ID == NOT_SET){
-                            tv_city.setTextColor(getResources().getColor(R.color.default_text));
+                            tv_city.setTextColor(getResources().getColor(R.color.text_color_sub));
                         }else{
                             tv_city.setTextColor(getResources().getColor(R.color.selected_color));
                         }
@@ -573,7 +625,7 @@ public class FragmentSearch extends Fragment {
 
                         if(list.get(position).equals(getString(R.string.not_set))){
                             SELECTED_CONDITION = NOT_SET;
-                            tv_condition.setTextColor(getResources().getColor(R.color.default_text));
+                            tv_condition.setTextColor(getResources().getColor(R.color.text_color_sub));
                         }else if(list.get(position).equals(getString(R.string.used))){
                             SELECTED_CONDITION = CONDITION_USED;
                             tv_condition.setTextColor(getResources().getColor(R.color.selected_color));
@@ -609,7 +661,7 @@ public class FragmentSearch extends Fragment {
                         SELECTED_TRANS_ID = array_trans.get(position).getId();
 
                         if(SELECTED_TRANS_ID == NOT_SET){
-                            tv_transmission.setTextColor(getResources().getColor(R.color.default_text));
+                            tv_transmission.setTextColor(getResources().getColor(R.color.text_color_sub));
                         }else{
                             tv_transmission.setTextColor(getResources().getColor(R.color.selected_color));
                         }
@@ -639,7 +691,7 @@ public class FragmentSearch extends Fragment {
                 tv_bodyColor.setText(color_name);
                 SELECTED_COLOR = color_id;
                 if(SELECTED_COLOR == NOT_SET){
-                    tv_bodyColor.setTextColor(getResources().getColor(R.color.default_text));
+                    tv_bodyColor.setTextColor(getResources().getColor(R.color.text_color_sub));
                 }else{
                     tv_bodyColor.setTextColor(getResources().getColor(R.color.selected_color));
                 }
@@ -694,22 +746,22 @@ public class FragmentSearch extends Fragment {
                     case Constant.TEXT_YEAR:
                         SELECTED_YEAR = NOT_SET;
                         tv_year.setText(getString(R.string.not_set));
-                        tv_year.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_year.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
                     case Constant.TEXT_SEAT:
                         SELECTED_SEAT = NOT_SET;
                         tv_seatNumber.setText(getString(R.string.not_set));
-                        tv_seatNumber.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_seatNumber.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
                     case Constant.TEXT_DOOR:
                         SELECTED_DOOR = NOT_SET;
                         tv_doorNumber.setText(getString(R.string.not_set));
-                        tv_doorNumber.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_doorNumber.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
                     case Constant.TEXT_PREUSER:
                         SELECTED_PREUSER = NOT_SET;
                         tv_previousUser.setText(getString(R.string.not_set));
-                        tv_previousUser.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_previousUser.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
 
                 }
@@ -816,19 +868,19 @@ public class FragmentSearch extends Fragment {
                         SELECTED_PRICE_MIN = NOT_SET;
                         SELECTED_PRICE_MAX = NOT_SET;
                         tv_price.setText(getString(R.string.not_set));
-                        tv_price.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_price.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
                     case Constant.TEXT_POWER:
                         SELECTED_POWER_MIN = NOT_SET;
                         SELECTED_POWER_MAX = NOT_SET;
                         tv_power.setText(getString(R.string.not_set));
-                        tv_power.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_power.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
                     case Constant.TEXT_MILEAGE:
                         SELECTED_MILEAGE_MIN = NOT_SET;
                         SELECTED_MILEAGE_MAX = NOT_SET;
                         tv_mileage.setText(getString(R.string.not_set));
-                        tv_mileage.setTextColor(getResources().getColor(R.color.default_text));
+                        tv_mileage.setTextColor(getResources().getColor(R.color.text_color_sub));
                         break;
                 }
                 dialog.dismiss();
@@ -933,7 +985,7 @@ public class FragmentSearch extends Fragment {
                 }
                 if(SELECTED_EQUIP_LIST.size() == 0){
                     tv_equipment.setText(getString(R.string.not_set));
-                    tv_equipment.setTextColor(getResources().getColor(R.color.default_text));
+                    tv_equipment.setTextColor(getResources().getColor(R.color.text_color_sub));
                 }else{
                     tv_equipment.setText(SELECTED_EQUIP_LIST.size() +" equipments is selected");
                     tv_equipment.setTextColor(getResources().getColor(R.color.selected_color));
@@ -951,7 +1003,7 @@ public class FragmentSearch extends Fragment {
                     item.setChecked(false);
                 }
                 tv_equipment.setText(getString(R.string.not_set));
-                tv_equipment.setTextColor(getResources().getColor(R.color.default_text));
+                tv_equipment.setTextColor(getResources().getColor(R.color.text_color_sub));
                 dialog.dismiss();
             }
         });
@@ -963,6 +1015,7 @@ public class FragmentSearch extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.manufacturers), SELECTED_MANU_ID);
         bundle.putInt(getString(R.string.model), SELECTED_MODEL_ID);
+        bundle.putString(getString(R.string.search_text), SELECTED_SEARCHTEXT);
         bundle.putInt(getString(R.string.price_min), SELECTED_PRICE_MIN);
         bundle.putInt(getString(R.string.price_max), SELECTED_PRICE_MAX);
         bundle.putInt(getString(R.string.power_min), SELECTED_POWER_MIN);

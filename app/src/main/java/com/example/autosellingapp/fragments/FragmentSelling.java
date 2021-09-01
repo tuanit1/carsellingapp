@@ -1,8 +1,12 @@
 package com.example.autosellingapp.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -117,7 +121,7 @@ public class FragmentSelling extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_SELLING, bundle, null));
+            }, methods.getAPIRequest(Constant.METHOD_SELLING, bundle, null, null));
             loadSelling.execute();
         }else {
             errorMsg = getString(R.string.internet_not_connect);
@@ -161,10 +165,7 @@ public class FragmentSelling extends Fragment {
 
                         @Override
                         public void onDelete(AdsItem ads) {
-                            Bundle bundle = new Bundle();
-                            bundle.putInt(Constant.TAG_ADS_ID, ads.getAds_id());
-                            bundle.putInt(Constant.TAG_CAR_ID, ads.getCar_id());
-                            SellingAction(Constant.METHOD_DELETE_SELLING, bundle);
+                            openConfirmDeleteDialog(ads);
                         }
 
                         @Override
@@ -230,7 +231,7 @@ public class FragmentSelling extends Fragment {
             @Override
             public void onEnd(String success) {
                 if(success.equals(Constant.SUCCESS)){
-                    Toast.makeText(getContext(), Constant.SUCCESS, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "You deleted an ads!", Toast.LENGTH_SHORT).show();
                     LoadData();
                 }else{
                     Toast.makeText(getContext(), Constant.ERROR_CON_SERVER, Toast.LENGTH_SHORT).show();
@@ -238,8 +239,33 @@ public class FragmentSelling extends Fragment {
                 binding.rlScrollView.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.GONE);
             }
-        }, methods.getAPIRequest(type, bundle, null));
+        }, methods.getAPIRequest(type, bundle, null, null));
 
         postAdsAsync.execute();
     }
+
+    private void openConfirmDeleteDialog(AdsItem ads) {
+        AlertDialog.Builder alert;
+        alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Message");
+        alert.setMessage("Confirm");
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.TAG_ADS_ID, ads.getAds_id());
+                bundle.putInt(Constant.TAG_CAR_ID, ads.getCar_id());
+                SellingAction(Constant.METHOD_DELETE_SELLING, bundle);
+            }
+        });
+        alert.show();
+    }
+
 }

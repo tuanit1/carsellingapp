@@ -94,10 +94,18 @@ public class MySellingAdapter extends RecyclerView.Adapter<MySellingAdapter.MyVi
         holder.tv_likes.setText(String.valueOf(arrayList_ads.get(position).getAds_likes()));
         holder.tv_condition.setText((car.isNew())?"New":"Used");
 
-        Picasso.get()
-                .load(Constant.SERVER_URL + "images/car_image/" + car.getCar_imageList().get(0))
-                .placeholder(R.drawable.placeholder_rec)
-                .into(holder.iv_car_pic);
+        if(car.getCar_imageList().isEmpty()){
+            Picasso.get()
+                    .load(car.getCar_imagelist_link().get(0))
+                    .placeholder(R.drawable.placeholder_rec)
+                    .into(holder.iv_car_pic);
+        }else {
+            Picasso.get()
+                    .load(Constant.SERVER_URL + "images/car_image/" + car.getCar_imageList().get(0))
+                    .placeholder(R.drawable.placeholder_rec)
+                    .into(holder.iv_car_pic);
+        }
+
 
         holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override

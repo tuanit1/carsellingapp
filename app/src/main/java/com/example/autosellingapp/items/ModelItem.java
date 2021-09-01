@@ -1,6 +1,8 @@
 package com.example.autosellingapp.items;
 
-public class ModelItem {
+import java.io.Serializable;
+
+public class ModelItem implements Serializable {
     private int model_id;
     private int manu_id;
     private String model_name;

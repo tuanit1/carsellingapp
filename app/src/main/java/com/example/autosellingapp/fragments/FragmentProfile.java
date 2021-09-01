@@ -374,7 +374,7 @@ public class FragmentProfile extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.error_connect_server), Toast.LENGTH_SHORT).show();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_UPDATEFOLLOW, bundle, null));
+        }, methods.getAPIRequest(Constant.METHOD_UPDATEFOLLOW, bundle, null, null));
         updateFavouriteAsync.execute();
 
     }
@@ -422,7 +422,7 @@ public class FragmentProfile extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_PROFILE, bundle, null));
+            }, methods.getAPIRequest(Constant.METHOD_PROFILE, bundle, null, null));
             loadProfile.execute();
         }else {
             errorMsg = getString(R.string.internet_not_connect);

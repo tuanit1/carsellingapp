@@ -60,7 +60,6 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view;
-
         if(item_type.equals("grid")){
             view = inflater.inflate(R.layout.layout_ads_item_grid, parent, false);
         }else {
@@ -122,10 +121,19 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
                 .placeholder(R.drawable.user_ic)
                 .into(holder.iv_seller_pic);
 
-        Picasso.get()
-                .load(Constant.SERVER_URL + "images/car_image/" + car.getCar_imageList().get(0))
-                .placeholder(R.drawable.placeholder_rec)
-                .into(holder.iv_car_pic);
+        if(car.getCar_imageList().isEmpty()){
+            Picasso.get()
+                    .load(car.getCar_imagelist_link().get(0))
+                    .placeholder(R.drawable.placeholder_rec)
+                    .into(holder.iv_car_pic);
+        }else {
+            String url_img = Constant.SERVER_URL + "images/car_image/" + car.getCar_imageList().get(0);
+            Picasso.get()
+                    .load(url_img)
+                    .placeholder(R.drawable.placeholder_rec)
+                    .into(holder.iv_car_pic);
+        }
+
 
 
         if (methods.isFavourite(arrayList_user, arrayList_ads.get(position).getAds_id())) {

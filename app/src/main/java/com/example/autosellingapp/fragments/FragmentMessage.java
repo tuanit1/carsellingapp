@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,35 +14,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.activity.ActivityLogin;
-import com.example.autosellingapp.adapters.MessageAdapter;
 import com.example.autosellingapp.adapters.UserAdapter;
-import com.example.autosellingapp.asynctasks.LoadSelling;
 import com.example.autosellingapp.asynctasks.LoadUser;
 import com.example.autosellingapp.databinding.FragmentMessageBinding;
-import com.example.autosellingapp.interfaces.LoadSellingListener;
 import com.example.autosellingapp.interfaces.LoadUserListener;
 import com.example.autosellingapp.interfaces.UserListener;
-import com.example.autosellingapp.items.AdsItem;
-import com.example.autosellingapp.items.CarItem;
-import com.example.autosellingapp.items.ChatItem;
 import com.example.autosellingapp.items.UserFirebase;
 import com.example.autosellingapp.items.UserItem;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FragmentMessage extends Fragment {
 
@@ -52,6 +51,7 @@ public class FragmentMessage extends Fragment {
     private Methods methods;
     private FragmentTransaction ft;
     private String errorMsg;
+    private String token;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,8 +79,41 @@ public class FragmentMessage extends Fragment {
         }
 
 
+
         return binding.getRoot();
     }
+
+    @Override
+    public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful()) {
+                            token = task.getResult();
+                            SaveToken(token);
+                        }
+                    }
+                });
+    }
+
+    private void SaveToken(String token){
+
+        String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("token", token);
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("Tokens").document(userid).set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+
+            }
+        });
+    }
+
 
     private void LoadUser(){
         if(methods.isNetworkAvailable()){
@@ -104,11 +137,10 @@ public class FragmentMessage extends Fragment {
                         }else{
                             errorMsg = getString(R.string.error_connect_server);
                         }
-                        binding.progressBar.setVisibility(View.GONE);
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_USER, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_USER, null, null, null));
             loadUser.execute();
         }else{
             errorMsg = getString(R.string.internet_not_connect);
@@ -126,6 +158,7 @@ public class FragmentMessage extends Fragment {
                 }
             });
             binding.llEmpty.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.GONE);
         }else{
             ArrayList<UserItem> arrayList = new ArrayList<>();
 
@@ -145,6 +178,7 @@ public class FragmentMessage extends Fragment {
                     }
                 });
                 binding.llEmpty.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
             }else{
 
                 ArrayList<UserFirebase> arrayList_ufb = new ArrayList<>();
@@ -171,6 +205,7 @@ public class FragmentMessage extends Fragment {
                             public void onClick(UserItem user) {
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(Constant.TAG_USER, user);
+                                bundle.putSerializable("MY_USER", methods.getUserItemByUsername(arrayList_user, Constant.UID));
                                 FragmentChat f = new FragmentChat();
                                 f.setArguments(bundle);
                                 ReplaceFragment(f, getString(R.string. frag_chat));
@@ -195,6 +230,7 @@ public class FragmentMessage extends Fragment {
                     }
                 });
                 binding.rlScrollView.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
             }
         }
     }

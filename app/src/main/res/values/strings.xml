@@ -101,4 +101,13 @@
     <string name="frag_setting">Settings</string>
     <string name="intro">Connect with our community</string>
     <string name="your_location">Your location</string>
+    <string name="car_edition">Car Edition</string>
+    <string name="search_text">Search Text</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="submit">Submit</string>
+    <string name="message">Message</string>
+    <string name="frag_contact">Contact Us</string>
+    <string name="sent_contact_success">Your message has been sent!</string>
+    <string name="unauthorized_access">Unauthorized Access</string>
+    <string name="tv_video">Car video</string>
 </resources>

@@ -112,7 +112,7 @@ public class FragmentFavourite extends Fragment {
                         setEmpty();
                     }
                 }
-            }, methods.getAPIRequest(Constant.METHOD_USER_FAVOURITE, null, null));
+            }, methods.getAPIRequest(Constant.METHOD_USER_FAVOURITE, null, null, null));
             loadCategory.execute();
         }else {
             errorMsg = getString(R.string.internet_not_connect);
