@@ -1,6 +1,7 @@
 package com.example.autosellingapp.asynctasks;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import com.example.autosellingapp.interfaces.LoadSearchListener;
 import com.example.autosellingapp.items.ColorItem;
@@ -16,7 +17,10 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 
@@ -163,11 +167,41 @@ public class LoadSearch extends AsyncTask<Void, String, String> {
                     JSONObject obj = data_user.getJSONObject(i);
 
                     String uid = obj.getString(Constant.TAG_UID);
-                    String address = obj.getString(Constant.TAG_ADDRESS);
-                    String phoneNumber = obj.getString(Constant.TAG_PHONE);
-                    String fullName = obj.getString(Constant.TAG_FULLNAME);
-                    String email = obj.getString(Constant.TAG_EMAIL);
-                    String image = obj.getString(Constant.TAG_USER_IMAGE);
+                    String address;
+                    String phoneNumber;
+                    String fullName;
+                    String email;
+                    if(checkForEncode(obj.getString(Constant.TAG_ADDRESS))) {
+                        address = Base64Decode(obj.getString(Constant.TAG_ADDRESS));
+                    }else{
+                        address = obj.getString(Constant.TAG_ADDRESS);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_PHONE))) {
+                        phoneNumber = Base64Decode(obj.getString(Constant.TAG_PHONE));
+                    }else{
+                        phoneNumber = obj.getString(Constant.TAG_PHONE);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_FULLNAME))) {
+                        fullName = Base64Decode(obj.getString(Constant.TAG_FULLNAME));
+                    }else{
+                        fullName = obj.getString(Constant.TAG_FULLNAME);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_EMAIL))) {
+                        email = Base64Decode(obj.getString(Constant.TAG_EMAIL));
+                    }else{
+                        email = obj.getString(Constant.TAG_EMAIL);
+                    }
+
+                    String image = Base64Decode(obj.getString(Constant.TAG_USER_IMAGE));
+
+//                    if(checkForEncode(obj.getString(Constant.TAG_USER_IMAGE))){
+//                        image = Base64Decode(obj.getString(Constant.TAG_USER_IMAGE));
+//                    }else {
+//                        image = obj.getString(Constant.TAG_USER_IMAGE);
+//                    }
                     ArrayList<String> favourite_ads = new ArrayList<>();
                     if(!obj.getString(Constant.TAG_FAVLIST).equals("")){
                         favourite_ads = gson.fromJson(obj.getString(Constant.TAG_FAVLIST), ArrayList.class);
@@ -180,7 +214,6 @@ public class LoadSearch extends AsyncTask<Void, String, String> {
                     if(!obj.getString(Constant.TAG_FOLLOWLIST).equals("")){
                         followlist = gson.fromJson(obj.getString(Constant.TAG_FOLLOWLIST), ArrayList.class);
                     }
-
 
                     UserItem objItem = new UserItem(uid, address, phoneNumber, fullName, email, image, chatlist, followlist, favourite_ads);
                     arrayList_user.add(objItem);
@@ -200,5 +233,16 @@ public class LoadSearch extends AsyncTask<Void, String, String> {
     protected void onPostExecute(String s) {
         listener.onEnd(s, arrayList_manu, arrayList_model, arrayList_city, arrayList_bodytype, arrayList_fueltype, arrayList_trans, arrayList_color, arrayList_equip, arrayList_user);
         super.onPostExecute(s);
+    }
+
+    public String Base64Decode(String input) throws UnsupportedEncodingException {
+        byte[] encodeValue = Base64.decode(input, Base64.DEFAULT);
+        return new String(encodeValue, "UTF-8");
+    }
+    public boolean checkForEncode(String string) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(string);
+        return m.find();
     }
 }

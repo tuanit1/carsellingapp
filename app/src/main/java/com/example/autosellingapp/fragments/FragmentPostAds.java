@@ -94,8 +94,8 @@ public class FragmentPostAds extends Fragment {
     private static final int POST_MODE = 699;
     private static final int UPLOAD_IMAGE = 394;
     private static final int ATTACH_IMAGE = 356;
-    private int IMAGE_MODE = 0;
-    private int VIDEO_MODE = 0;
+    private int IMAGE_MODE = ATTACH_IMAGE;
+    private int VIDEO_MODE = ATTACH_VIDEO;
     private static final int UPLOAD_VIDEO = 699;
     private static final int ATTACH_VIDEO = 812;
     private PlayerView playerView;
@@ -419,11 +419,11 @@ public class FragmentPostAds extends Fragment {
             SELECTED_MILEAGE = EDIT_ADS.getAds_mileage();
             SELECTED_VIDEO = car.getCar_video();
 
-            if(car.getVideo_type().equals("youtube")){
-                VIDEO_MODE = ATTACH_VIDEO;
-            }else {
-                VIDEO_MODE = UPLOAD_VIDEO;
-            }
+//            if(car.getVideo_type().equals("youtube")){
+//                VIDEO_MODE = ATTACH_VIDEO;
+//            }else {
+//                VIDEO_MODE = UPLOAD_VIDEO;
+//            }
 
             for(EquipmentItem item : array_equip){
                 for(String id : car.getCar_equipments()){
@@ -1292,8 +1292,8 @@ public class FragmentPostAds extends Fragment {
 
         playerView = dialog.findViewById(R.id.video_view);
 
-        player = new SimpleExoPlayer.Builder(getContext()).build();
-
+//        player = new SimpleExoPlayer.Builder(getContext()).build();
+//
         playerView.setPlayer(player);
 
 
@@ -1321,41 +1321,41 @@ public class FragmentPostAds extends Fragment {
                     edt_url.setText(SELECTED_VIDEO);
                 }
 
-
                 ll_default.setVisibility(View.GONE);
                 ll_edt_url.setVisibility(View.VISIBLE);
                 ll_upload.setVisibility(View.VISIBLE);
                 btn_pick.setText("ADD YOUTUBE URL");
+
                 break;
             case UPLOAD_VIDEO:
 
-                if(!SELECTED_VIDEO.equals("")){
-
-                    Uri uri;
-
-                    if(methods.isFilePath(PathUtil.getPath(getContext(), Uri.parse(SELECTED_VIDEO)))){
-                        uri = Uri.parse(SELECTED_VIDEO);
-                    }else {
-                        uri = Uri.parse(Constant.SERVER_URL + "videos/car_video/" + SELECTED_VIDEO);
-                    }
-
-                    MediaItem mediaItem = MediaItem.fromUri(uri);
-
-                    player.setMediaItem(mediaItem);
-
-                    player.prepare();
-
-                    player.play();
-
-                    youTubePlayerView.setVisibility(View.GONE);
-                    playerView.setVisibility(View.VISIBLE);
-
-                }
-
-                ll_default.setVisibility(View.GONE);
-                ll_edt_url.setVisibility(View.GONE);
-                ll_upload.setVisibility(View.VISIBLE);
-                btn_pick.setText("OPEN GALLERY");
+//                if(!SELECTED_VIDEO.equals("")){
+//
+//                    Uri uri;
+//
+//                    if(methods.isFilePath(PathUtil.getPath(getContext(), Uri.parse(SELECTED_VIDEO)))){
+//                        uri = Uri.parse(SELECTED_VIDEO);
+//                    }else {
+//                        uri = Uri.parse(Constant.SERVER_URL + "videos/car_video/" + SELECTED_VIDEO);
+//                    }
+//
+//                    MediaItem mediaItem = MediaItem.fromUri(uri);
+//
+//                    player.setMediaItem(mediaItem);
+//
+//                    player.prepare();
+//
+//                    player.play();
+//
+//                    youTubePlayerView.setVisibility(View.GONE);
+//                    playerView.setVisibility(View.VISIBLE);
+//
+//                }
+//
+//                ll_default.setVisibility(View.GONE);
+//                ll_edt_url.setVisibility(View.GONE);
+//                ll_upload.setVisibility(View.VISIBLE);
+//                btn_pick.setText("OPEN GALLERY");
                 break;
         }
 
@@ -1439,14 +1439,14 @@ public class FragmentPostAds extends Fragment {
             }
         });
 
-        btn_more_option.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ll_upload.setVisibility(View.GONE);
-                ll_edt_url.setVisibility(View.GONE);
-                ll_default.setVisibility(View.VISIBLE);
-            }
-        });
+//        btn_more_option.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ll_upload.setVisibility(View.GONE);
+//                ll_edt_url.setVisibility(View.GONE);
+//                ll_default.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         btn_pick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1482,10 +1482,10 @@ public class FragmentPostAds extends Fragment {
 
                         break;
                     case UPLOAD_VIDEO:
-                        Intent intent = new Intent();
-                        intent.setType("video/*");
-                        intent.setAction(Intent.ACTION_PICK);
-                        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO_CODE);
+//                        Intent intent = new Intent();
+//                        intent.setType("video/*");
+//                        intent.setAction(Intent.ACTION_PICK);
+//                        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO_CODE);
                         break;
                 }
             }
@@ -1704,12 +1704,12 @@ public class FragmentPostAds extends Fragment {
 
                 try {
                      File file = new File(PathUtil.getPath(getContext(), uri));
-                     int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
-                     int file_in_mb = file_size/1024;
-                     if(file_in_mb > 25){
-                         openMessageDialog("The file you have selected is too large. The maximum size is 25MB.");
-                         return;
-                     }
+//                     int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+//                     int file_in_mb = file_size/1024;
+//                     if(file_in_mb > 25){
+//                         openMessageDialog("The file you have selected is too large. The maximum size is 25MB.");
+//                         return;
+//                     }
                 }catch (Exception e){
                     openMessageDialog("Can't use this video!");
                 }

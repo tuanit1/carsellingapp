@@ -75,7 +75,7 @@ public class FragmentViewMore extends Fragment {
                 binding.recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
                 binding.recyclerView.setHasFixedSize(true);
 
-                AdsAdapter adsAdapter = new AdsAdapter("grid", methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                AdsAdapter adsAdapter = new AdsAdapter("grid", getContext(), arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                     @Override
                     public void onClick(AdsItem adsItem, CarItem carItem) {
                         FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {
@@ -130,7 +130,7 @@ public class FragmentViewMore extends Fragment {
 
                 sortManu(arrayList_manu);
 
-                ManufacturerAdapter manufacturerAdapter = new ManufacturerAdapter("view_more", arrayList_manu, new ManuListener() {
+                ManufacturerAdapter manufacturerAdapter = new ManufacturerAdapter(getContext(),"view_more", arrayList_manu, new ManuListener() {
                     @Override
                     public void onClick(int manu_id) {
                         openCatFragment(manu_id);

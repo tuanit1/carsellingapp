@@ -136,7 +136,7 @@ public class FragmentFavourite extends Fragment {
             binding.llEmpty.setVisibility(View.VISIBLE);
         }else{
 
-            adsAdapter = new AdsAdapter("grid", methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+            adsAdapter = new AdsAdapter("grid", getContext(), arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                 @Override
                 public void onClick(AdsItem adsItem, CarItem carItem) {
                     FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {

@@ -1,5 +1,6 @@
 package com.example.autosellingapp.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -11,11 +12,15 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.autosellingapp.R;
+import com.example.autosellingapp.activity.MainActivity;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
 import com.example.autosellingapp.items.ColorItem;
@@ -24,10 +29,21 @@ import com.example.autosellingapp.items.ManufacturerItem;
 import com.example.autosellingapp.items.ModelItem;
 import com.example.autosellingapp.items.MyItem;
 import com.example.autosellingapp.items.UserItem;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnPaidEventListener;
+import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -43,11 +59,87 @@ import okhttp3.RequestBody;
 
 public class Methods {
     private Context context;
+    private InterAdListener interAdListener;
     private boolean IS_CHANGE_IMAGE = false;
     private boolean IS_CHANGE_VIDEO = false;
+    private InterstitialAd mInterstitialAd;
 
     public Methods(Context context) {
         this.context = context;
+    }
+
+    public Methods(Context context, InterAdListener interAdListener) {
+        this.context = context;
+        this.interAdListener = interAdListener;
+    }
+
+    public void showInter(final int pos){
+
+        if(Constant.isInterAd){
+            Constant.adCount++;
+            if(Constant.adCount % Constant.adShow == 0){
+                AdRequest adRequest = new AdRequest.Builder().build();
+
+                InterstitialAd.load(context,"ca-app-pub-3940256099942544/1033173712", adRequest,
+                        new InterstitialAdLoadCallback() {
+                            @Override
+                            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                                // The mInterstitialAd reference will be null until
+                                // an ad is loaded.
+                                mInterstitialAd = interstitialAd;
+
+                                if(mInterstitialAd != null){
+
+                                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                        @Override
+                                        public void onAdDismissedFullScreenContent() {
+                                            // Called when fullscreen content is dismissed.
+                                            interAdListener.onClick(pos);
+                                            Log.d("TAG", "The ad was dismissed.");
+                                        }
+
+                                        @Override
+                                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                            // Called when fullscreen content failed to show.
+                                            interAdListener.onClick(pos);
+                                            Log.d("TAG", "The ad failed to show.");
+                                        }
+
+                                        @Override
+                                        public void onAdShowedFullScreenContent() {
+                                            // Called when fullscreen content is shown.
+                                            // Make sure to set your reference to null so you don't
+                                            // show it a second time.
+                                            mInterstitialAd = null;
+                                            Log.d("TAG", "The ad was shown.");
+                                        }
+                                    });
+
+                                    mInterstitialAd.show((MainActivity)context);
+                                }else {
+                                    interAdListener.onClick(pos);
+                                }
+                                Log.i("TAG", "onAdLoaded");
+
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                // Handle the error
+                                Log.i("TAG", loadAdError.getMessage());
+
+                                interAdListener.onClick(pos);
+
+                                mInterstitialAd = null;
+                            }
+                        });
+            }else {
+                interAdListener.onClick(pos);
+            }
+        }else {
+            interAdListener.onClick(pos);
+        }
+
     }
 
     public boolean isNetworkAvailable() {
@@ -331,20 +423,21 @@ public class Methods {
 
         if(method.equals(Constant.METHOD_CONTACT)){
             jsObj.addProperty(Constant.TAG_UID, Constant.UID);
-            jsObj.addProperty(Constant.TAG_FEEDBACK_MESSAGE, bundle.getString(Constant.TAG_FEEDBACK_MESSAGE));
+            jsObj.addProperty(Constant.TAG_FEEDBACK_MESSAGE, Base64Encode(bundle.getString(Constant.TAG_FEEDBACK_MESSAGE)));
         }
 
         if(method.equals(Constant.METHOD_SELLING)){
             String uid = bundle.getString(Constant.TAG_UID);
             jsObj.addProperty(Constant.TAG_UID, uid);
         }
+
         if(method.equals(Constant.METHOD_POST_ADS)){
             int SELECTED_MANU_ID = bundle.getInt(Constant.TAG_MANU_ID);
             int SELECTED_MODEL_ID = bundle.getInt(Constant.TAG_MODEL_ID);
-            String SELECTED_CARNAME = bundle.getString(Constant.TAG_CAR_NAME);
+            String SELECTED_CARNAME = Base64Encode(bundle.getString(Constant.TAG_CAR_NAME));
             int SELECTED_PRICE = bundle.getInt(Constant.TAG_ADS_PRICE);
             int SELECTED_CITY_ID = bundle.getInt(Constant.TAG_CITY_ID);
-            String SELECTED_ADDRESS = bundle.getString(Constant.TAG_ADS_LOCATION);
+            String SELECTED_ADDRESS = Base64Encode(bundle.getString(Constant.TAG_ADS_LOCATION));
             int SELECTED_POWER = bundle.getInt(Constant.TAG_CAR_POWER);
             int SELECTED_ENGINESIZE = bundle.getInt(Constant.TAG_CAR_ENGINESIZE);
             int SELECTED_MILEAGE = bundle.getInt(Constant.TAG_ADS_MILEAGE);
@@ -364,7 +457,7 @@ public class Methods {
             double SELECTED_FUELCONSUMP = bundle.getDouble(Constant.TAG_CAR_FUELCONSUMP);
             int SELECTED_CO2EMISSION = bundle.getInt(Constant.TAG_CAR_CO2EMISSION);
             String CAR_IMAGE_LINK = bundle.getString(Constant.TAG_CAR_IMAGELIST_LINK);
-            String SELECTED_DESCRIPTION = bundle.getString(Constant.TAG_ADS_DESCRIPTION);
+            String SELECTED_DESCRIPTION = Base64Encode(bundle.getString(Constant.TAG_ADS_DESCRIPTION));
             String SELECTED_VIDEO = bundle.getString(Constant.TAG_CAR_VIDEO);
             ArrayList<EquipmentItem> arrayList_equip = (ArrayList<EquipmentItem>) bundle.getSerializable(Constant.TAG_EQUIP);
             ArrayList<String> arrayList_equip_id = new ArrayList<>();
@@ -414,10 +507,10 @@ public class Methods {
             int SELECTED_CAR_ID = bundle.getInt(Constant.TAG_CAR_ID);
             int SELECTED_MANU_ID = bundle.getInt(Constant.TAG_MANU_ID);
             int SELECTED_MODEL_ID = bundle.getInt(Constant.TAG_MODEL_ID);
-            String SELECTED_CARNAME = bundle.getString(Constant.TAG_CAR_NAME);
+            String SELECTED_CARNAME = Base64Encode(bundle.getString(Constant.TAG_CAR_NAME));
             int SELECTED_PRICE = bundle.getInt(Constant.TAG_ADS_PRICE);
             int SELECTED_CITY_ID = bundle.getInt(Constant.TAG_CITY_ID);
-            String SELECTED_ADDRESS = bundle.getString(Constant.TAG_ADS_LOCATION);
+            String SELECTED_ADDRESS = Base64Encode(bundle.getString(Constant.TAG_ADS_LOCATION));
             int SELECTED_POWER = bundle.getInt(Constant.TAG_CAR_POWER);
             int SELECTED_ENGINESIZE = bundle.getInt(Constant.TAG_CAR_ENGINESIZE);
             int SELECTED_MILEAGE = bundle.getInt(Constant.TAG_ADS_MILEAGE);
@@ -438,7 +531,7 @@ public class Methods {
             double SELECTED_FUELCONSUMP = bundle.getDouble(Constant.TAG_CAR_FUELCONSUMP);
             int SELECTED_CO2EMISSION = bundle.getInt(Constant.TAG_CAR_CO2EMISSION);
             String CAR_IMAGE_LINK = bundle.getString(Constant.TAG_CAR_IMAGELIST_LINK);
-            String SELECTED_DESCRIPTION = bundle.getString(Constant.TAG_ADS_DESCRIPTION);
+            String SELECTED_DESCRIPTION = Base64Encode(bundle.getString(Constant.TAG_ADS_DESCRIPTION));
             ArrayList<EquipmentItem> arrayList_equip = (ArrayList<EquipmentItem>) bundle.getSerializable(Constant.TAG_EQUIP);
             ArrayList<String> arrayList_equip_id = new ArrayList<>();
             for (EquipmentItem item : arrayList_equip){
@@ -504,10 +597,10 @@ public class Methods {
 
         if(method.equals(Constant.MEDTHOD_SIGNUP)){
             jsObj.addProperty(Constant.TAG_UID, bundle.getString(Constant.TAG_UID));
-            jsObj.addProperty(Constant.TAG_EMAIL, bundle.getString(Constant.TAG_EMAIL));
-            jsObj.addProperty(Constant.TAG_PHONE, bundle.getString(Constant.TAG_PHONE));
-            jsObj.addProperty(Constant.TAG_ADDRESS, bundle.getString(Constant.TAG_ADDRESS));
-            jsObj.addProperty(Constant.TAG_FULLNAME, bundle.getString(Constant.TAG_FULLNAME));
+            jsObj.addProperty(Constant.TAG_EMAIL, Base64Encode(bundle.getString(Constant.TAG_EMAIL)));
+            jsObj.addProperty(Constant.TAG_PHONE, Base64Encode(bundle.getString(Constant.TAG_PHONE)));
+            jsObj.addProperty(Constant.TAG_ADDRESS, Base64Encode(bundle.getString(Constant.TAG_ADDRESS)));
+            jsObj.addProperty(Constant.TAG_FULLNAME, Base64Encode(bundle.getString(Constant.TAG_FULLNAME)));
         }
 
         if(method.equals(Constant.METHOD_UPDATE_CHATLIST)){
@@ -520,12 +613,13 @@ public class Methods {
         }
 
         if(method.equals(Constant.METHOD_UPDATE_USER)){
-            IS_CHANGE_IMAGE = bundle.getBoolean("is_change_image");
-            jsObj.addProperty("is_change_image", IS_CHANGE_IMAGE?"true":"false");
+            //IS_CHANGE_IMAGE = bundle.getBoolean("is_change_image");
+            //jsObj.addProperty("is_change_image", IS_CHANGE_IMAGE?"true":"false");
             jsObj.addProperty(Constant.TAG_UID, Constant.UID);
-            jsObj.addProperty(Constant.TAG_FULLNAME, bundle.getString(Constant.TAG_FULLNAME));
-            jsObj.addProperty(Constant.TAG_PHONE, bundle.getString(Constant.TAG_PHONE));
-            jsObj.addProperty(Constant.TAG_ADDRESS, bundle.getString(Constant.TAG_ADDRESS));
+            jsObj.addProperty(Constant.TAG_FULLNAME, Base64Encode(bundle.getString(Constant.TAG_FULLNAME)));
+            jsObj.addProperty(Constant.TAG_PHONE, Base64Encode(bundle.getString(Constant.TAG_PHONE)));
+            jsObj.addProperty(Constant.TAG_ADDRESS, Base64Encode(bundle.getString(Constant.TAG_ADDRESS)));
+            jsObj.addProperty(Constant.TAG_USER_IMAGE, Base64Encode(bundle.getString(Constant.TAG_USER_IMAGE)));
         }
 
         if(method.equals(Constant.METHOD_RECENT)){
@@ -534,7 +628,7 @@ public class Methods {
 
         if(method.equals(Constant.METHOD_REPORTADS)){
             jsObj.addProperty(Constant.TAG_ADS_ID, bundle.getInt(Constant.TAG_ADS_ID));
-            jsObj.addProperty(Constant.TAG_REPORTADS_DESC, bundle.getString(Constant.TAG_REPORTADS_DESC));
+            jsObj.addProperty(Constant.TAG_REPORTADS_DESC, Base64Encode(bundle.getString(Constant.TAG_REPORTADS_DESC)));
         }
 
         if(method.equals(Constant.METHOD_POST_ADS)){
@@ -588,7 +682,7 @@ public class Methods {
                 return builder.build();
 
             }
-        }else if(method.equals(Constant.METHOD_UPDATE_USER)){
+        }else if(false){
             if(IS_CHANGE_IMAGE){
                 final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
 
@@ -613,9 +707,14 @@ public class Methods {
                     .build();
         }
     }
-    public String ToBase64(String input){
+    public String Base64Encode(String input){
         byte[] encodeValue = Base64.encode(input.getBytes(), Base64.DEFAULT);
         return new String(encodeValue);
+    }
+
+    public String Base64Decode(String input) throws UnsupportedEncodingException {
+        byte[] encodeValue = Base64.decode(input.getBytes(), Base64.DEFAULT);
+        return new String(encodeValue, "UTF-8");
     }
 
     public ColorItem getColorItemByID(ArrayList<ColorItem> array_color, int color_id) {

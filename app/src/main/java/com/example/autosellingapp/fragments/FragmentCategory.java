@@ -249,7 +249,7 @@ public class FragmentCategory extends Fragment {
                             filteredAdsArray = getFilteredAdsArray(arrayList_ads);
                             if(filteredAdsArray.size() != 0){
 
-                                adsAdapter = new AdsAdapter("grid", methods, filteredAdsArray, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                                adsAdapter = new AdsAdapter("grid", getContext(), filteredAdsArray, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                                     @Override
                                     public void onClick(AdsItem adsItem, CarItem carItem) {
 
@@ -336,82 +336,7 @@ public class FragmentCategory extends Fragment {
 
         for(AdsItem ads : arrayList_ads){
             CarItem car = methods.getCarItemByID(arrayList_car, ads.getCar_id());
-//            ModelItem model = methods.getModelItemByID(arrayList_model, car.getModel_id());
-//            if(SELECTED_MANU_ID != NOT_SET){
-//                if(model.getManu_id() != SELECTED_MANU_ID){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_MODEL_ID != NOT_SET){
-//                if(car.getModel_id() != SELECTED_MODEL_ID){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_PRICE_MIN != NOT_SET && SELECTED_PRICE_MAX != NOT_SET){
-//                if(!(SELECTED_PRICE_MIN <= ads.getAds_price() && ads.getAds_price() <= SELECTED_PRICE_MAX)){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_POWER_MIN != NOT_SET && SELECTED_POWER_MAX != NOT_SET){
-//                if(!(SELECTED_POWER_MIN <= car.getCar_power() && car.getCar_power() <= SELECTED_POWER_MAX)){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_MILEAGE_MIN != NOT_SET && SELECTED_MILEAGE_MAX != NOT_SET){
-//                if(!(SELECTED_MILEAGE_MIN <= ads.getAds_price() && ads.getAds_mileage() <= SELECTED_MILEAGE_MAX)){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_BODY_TYPE_ID != NOT_SET){
-//                if(car.getBodyType_id() != SELECTED_BODY_TYPE_ID){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_FUEL_TYPE_ID != NOT_SET){
-//                if(car.getFuelType_id() != SELECTED_FUEL_TYPE_ID){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_YEAR != NOT_SET){
-//                if(car.getCar_year() != SELECTED_YEAR){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_TRANS_ID != NOT_SET){
-//                if(car.getTrans_id() != SELECTED_TRANS_ID){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_CONDITION != NOT_SET){
-//                if(car.isNew() != (SELECTED_CONDITION == 0)?false:true){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_COLOR != NOT_SET){
-//                if(car.getColor_id() != SELECTED_COLOR){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_CITY_ID != NOT_SET){
-//                if(ads.getCity_id() != SELECTED_CITY_ID){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_SEAT != NOT_SET){
-//                if(car.getCar_seats() != SELECTED_SEAT){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_DOOR != NOT_SET){
-//                if(car.getCar_doors() != SELECTED_DOOR){
-//                    continue;
-//                }
-//            }
-//            if(SELECTED_PREUSER != NOT_SET){
-//                if(car.getCar_previousOwner() >= SELECTED_PREUSER){
-//                    continue;
-//                }
-//            }
+
             if(SELECTED_EQUIP_LIST.size() != 0){
                 int index = 0;
                 for(EquipmentItem equipmentItem : SELECTED_EQUIP_LIST){

@@ -92,9 +92,13 @@ public class FragmentChat extends Fragment {
         if(bundle != null){
             RECEIVER_USER = (UserItem) bundle.getSerializable(Constant.TAG_USER);
             MY_USER = (UserItem) bundle.getSerializable("MY_USER");
-            Picasso.get().load(Constant.SERVER_URL + "images/user_image/" + RECEIVER_USER.getImage())
-                    .placeholder(R.drawable.user_ic)
-                    .into(binding.ivUser);
+
+            if(!RECEIVER_USER.getImage().isEmpty()){
+                Picasso.get().load(RECEIVER_USER.getImage())
+                        .placeholder(R.drawable.user_ic)
+                        .into(binding.ivUser);
+            }
+
 
             binding.tvName.setText(RECEIVER_USER.getFullName());
         }
@@ -270,29 +274,31 @@ public class FragmentChat extends Fragment {
             @Override
             public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
 
-                assert value != null;
-                Token objecttoken = value.toObject(Token.class);
-                token = objecttoken.getToken();
+                if(value != null){
+                    Token objecttoken = value.toObject(Token.class);
+                    token = objecttoken.getToken();
 
-                Data data = new Data(useridfortoken, R.mipmap.ic_launcher, message, "New Message From "+ sender_name, receiver_uid);
+                    Data data = new Data(useridfortoken, R.mipmap.ic_launcher, message, "New Message From "+ sender_name, receiver_uid);
 
-                Sender sender = new Sender(data, token);
+                    Sender sender = new Sender(data, token);
 
-                apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-                    @Override
-                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                        if(response.code() == 200){
-                            if(response.body().success != 1){
-                                Toast.makeText(getContext(), "Failed to Send Notification", Toast.LENGTH_SHORT).show();
+                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                            if(response.code() == 200){
+                                if(response.body().success != 1){
+                                    Toast.makeText(getContext(), "Failed to Send Notification", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<MyResponse> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
         });
 

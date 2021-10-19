@@ -940,7 +940,7 @@
         android:weightSum="10"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/btn_like"

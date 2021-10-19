@@ -33,6 +33,7 @@
                     <ImageView
                         android:id="@+id/iv_seller_pic"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/user_ic"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </androidx.cardview.widget.CardView>

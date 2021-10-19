@@ -102,6 +102,12 @@ public class ActivityLogin extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+        super.onBackPressed();
+    }
+
     private void LoadLogin(){
 
         String email = edt_email.getText().toString();

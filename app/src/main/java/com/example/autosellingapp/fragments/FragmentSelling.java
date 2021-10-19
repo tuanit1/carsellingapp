@@ -25,6 +25,7 @@ import com.example.autosellingapp.asynctasks.LoadSelling;
 import com.example.autosellingapp.asynctasks.PostAdsAsync;
 import com.example.autosellingapp.databinding.FragmentSellingBinding;
 import com.example.autosellingapp.interfaces.EditDeleteSellingListener;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.interfaces.LoadSellingListener;
 import com.example.autosellingapp.interfaces.PostAdsListener;
 import com.example.autosellingapp.interfaces.ReloadFragmentListener;
@@ -66,7 +67,13 @@ public class FragmentSelling extends Fragment {
         binding.btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReplaceFragment(new FragmentPostAds(reload_listener), getString(R.string.frag_postads));
+
+                new Methods(getContext(), new InterAdListener() {
+                    @Override
+                    public void onClick(int position) {
+                        ReplaceFragment(new FragmentPostAds(reload_listener), getString(R.string.frag_postads));
+                    }
+                }).showInter(0);
             }
         });
 

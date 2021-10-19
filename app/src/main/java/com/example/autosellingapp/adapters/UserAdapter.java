@@ -61,10 +61,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                 listener.onClick(arrayList_user.get(position));
             }
         });
-        Picasso.get()
-                .load(Constant.SERVER_URL + "images/user_image/" + arrayList_user.get(position).getImage())
-                .placeholder(R.drawable.user_ic)
-                .into(holder.iv_user);
+
+        String image = arrayList_user.get(position).getImage();
+
+        if(!image.isEmpty()){
+            Picasso.get()
+                    .load(image)
+                    .placeholder(R.drawable.user_ic)
+                    .into(holder.iv_user);
+        }
+
         if(arrayList_user.get(position).getStatus().equals("online")){
             holder.iv_on.setVisibility(View.VISIBLE);
             holder.iv_off.setVisibility(View.GONE);

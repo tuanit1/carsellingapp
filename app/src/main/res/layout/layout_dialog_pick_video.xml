@@ -114,6 +114,7 @@
                     android:text="Choose video"/>
                 <Button
                     android:id="@+id/btn_option"
+                    android:visibility="gone"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/steel_blue"

@@ -30,9 +30,13 @@ import com.example.autosellingapp.fragments.FragmentProfile;
 import com.example.autosellingapp.fragments.FragmentSearch;
 import com.example.autosellingapp.fragments.FragmentSelling;
 import com.example.autosellingapp.fragments.FragmentSetting;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.utils.Constant;
 import com.example.autosellingapp.utils.Methods;
 import com.example.autosellingapp.utils.SharedPref;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SharedPref sharedPref;
     private boolean mToolbarNavigationListenerIsRegistered = false;
     private ActionBarDrawerToggle toggle;
+    private AdView adView;
 
     public static final int FRAGMENT_HOME = 1;
     public static final int FRAGMENT_SEARCH = 2;
@@ -67,6 +72,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public int currentFragment = FRAGMENT_HOME;
 
+    private InterAdListener interAdListener = new InterAdListener() {
+        @Override
+        public void onClick(int position) {
+            MainActivity.super.onBackPressed();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -78,10 +90,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        methods = new Methods(this);
+        methods = new Methods(this, interAdListener);
         sharedPref = new SharedPref(this);
 
         Hook();
+        ShowBannerAds();
         NavigationDrawerMenu();
         displayHomeUpOrHamburger();
 
@@ -91,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void Hook(){
         toolbar = findViewById(R.id.tool_bar);
+        adView = findViewById(R.id.adView);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -103,37 +117,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (id){
                     case R.id.bottom_nav_home:
                         if(currentFragment != FRAGMENT_HOME){
-                            ReplaceFragment(new FragmentHome(), getString(R.string.Home));
-                            currentFragment = FRAGMENT_HOME;
-                            navigationView.setCheckedItem(R.id.nav_home);
+                            InterAdListener interAdListener = new InterAdListener() {
+                                @Override
+                                public void onClick(int position) {
+                                    ReplaceFragment(new FragmentHome(), getString(R.string.Home));
+                                    currentFragment = FRAGMENT_HOME;
+                                    navigationView.setCheckedItem(R.id.nav_home);
+                                }
+                            };
+
+                            new Methods(MainActivity.this, interAdListener).showInter(0);
+
                         }
                         break;
                     case R.id.bottom_nav_search:
                         if(currentFragment != FRAGMENT_SEARCH){
-                            ReplaceFragment(new FragmentSearch(), getString(R.string.search));
-                            currentFragment = FRAGMENT_SEARCH;
-                            navigationView.setCheckedItem(R.id.nav_search);
+
+                            InterAdListener interAdListener = new InterAdListener() {
+                                @Override
+                                public void onClick(int position) {
+                                    ReplaceFragment(new FragmentSearch(), getString(R.string.search));
+                                    currentFragment = FRAGMENT_SEARCH;
+                                    navigationView.setCheckedItem(R.id.nav_search);
+                                }
+                            };
+
+
+                            new Methods(MainActivity.this, interAdListener).showInter(0);
                         }
                         break;
                     case R.id.bottom_nav_favourite:
                         if(currentFragment != FRAGMENT_FAVOURITE){
-                            ReplaceFragment(new FragmentFavourite(), getString(R.string.frag_favourite));
-                            currentFragment = FRAGMENT_FAVOURITE;
-                            navigationView.setCheckedItem(R.id.nav_favourite);
+
+                            InterAdListener interAdListener = new InterAdListener() {
+                                @Override
+                                public void onClick(int position) {
+                                    ReplaceFragment(new FragmentFavourite(), getString(R.string.frag_favourite));
+                                    currentFragment = FRAGMENT_FAVOURITE;
+                                    navigationView.setCheckedItem(R.id.nav_favourite);
+                                }
+                            };
+
+
+
+                            new Methods(MainActivity.this, interAdListener).showInter(0);
                         }
                         break;
                     case R.id.bottom_nav_message:
                         if(currentFragment != FRAGMENT_MESSAGE){
-                            ReplaceFragment(new FragmentMessage(), getString(R.string.frag_mesage));
-                            currentFragment = FRAGMENT_MESSAGE;
-                            navigationView.setCheckedItem(R.id.nav_message);
+
+                            InterAdListener interAdListener = new InterAdListener() {
+                                @Override
+                                public void onClick(int position) {
+                                    ReplaceFragment(new FragmentMessage(), getString(R.string.frag_mesage));
+                                    currentFragment = FRAGMENT_MESSAGE;
+                                    navigationView.setCheckedItem(R.id.nav_message);
+                                }
+                            };
+
+
+                            new Methods(MainActivity.this, interAdListener).showInter(0);
                         }
                         break;
                     case R.id.bottom_nav_selling:
                         if(currentFragment != FRAGMENT_SELLING){
-                            ReplaceFragment(new FragmentSelling(), getString(R.string.selling));
-                            currentFragment = FRAGMENT_SELLING;
-                            navigationView.setCheckedItem(R.id.nav_selling);
+
+                            InterAdListener interAdListener = new InterAdListener() {
+                                @Override
+                                public void onClick(int position) {
+                                    ReplaceFragment(new FragmentSelling(), getString(R.string.selling));
+                                    currentFragment = FRAGMENT_SELLING;
+                                    navigationView.setCheckedItem(R.id.nav_selling);
+                                }
+                            };
+
+                            new Methods(MainActivity.this, interAdListener).showInter(0);
                         }
                         break;
                 }
@@ -155,6 +213,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void ShowBannerAds(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -162,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else{
             if(getSupportFragmentManager().getBackStackEntryCount() != 0){
                 getSupportActionBar().setTitle(getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount() - 1).getTag());
-                super.onBackPressed();
+                methods.showInter(0);
             }else{
                 if(methods.isLogged()){
                     openQuitDialog();

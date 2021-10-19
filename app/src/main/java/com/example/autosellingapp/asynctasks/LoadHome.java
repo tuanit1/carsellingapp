@@ -1,6 +1,7 @@
 package com.example.autosellingapp.asynctasks;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import com.example.autosellingapp.interfaces.LoadManuListener;
 import com.example.autosellingapp.items.ManufacturerItem;
@@ -10,7 +11,10 @@ import com.example.autosellingapp.utils.JsonUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 
@@ -64,5 +68,16 @@ public class LoadHome extends AsyncTask<Void, String, String> {
     protected void onPostExecute(String s) {
         listener.onEnd(s, arrayList);
         super.onPostExecute(s);
+    }
+
+    public String Base64Decode(String input) throws UnsupportedEncodingException {
+        byte[] encodeValue = Base64.decode(input, Base64.DEFAULT);
+        return new String(encodeValue, "UTF-8");
+    }
+    public boolean checkForEncode(String string) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(string);
+        return m.find();
     }
 }

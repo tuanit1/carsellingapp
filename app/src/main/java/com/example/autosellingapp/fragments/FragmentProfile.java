@@ -156,10 +156,13 @@ public class FragmentProfile extends Fragment {
 
                 binding.tvFollowerCount.setText("Followers (" + FOLLOWERS_COUNT +")");
 
-                Picasso.get()
-                        .load(Constant.SERVER_URL + "images/user_image/" +my_user.getImage())
-                        .placeholder(R.drawable.user_ic)
-                        .into(binding.ivUser);
+                if(!my_user.getImage().isEmpty()){
+                    Picasso.get()
+                            .load(my_user.getImage())
+                            .placeholder(R.drawable.user_ic)
+                            .into(binding.ivUser);
+                }
+
 
                 binding.cvFollow.setVisibility(View.GONE);
                 binding.btnEdit.setVisibility(View.VISIBLE);
@@ -232,10 +235,13 @@ public class FragmentProfile extends Fragment {
 
                 binding.tvFollowerCount.setText("Followers (" + FOLLOWERS_COUNT +")");
 
-                Picasso.get()
-                        .load(Constant.SERVER_URL + "images/user_image/" +user.getImage())
-                        .placeholder(R.drawable.user_ic)
-                        .into(binding.ivUser);
+                if(!user.getImage().equals("")){
+                    Picasso.get()
+                            .load(user.getImage())
+                            .placeholder(R.drawable.user_ic)
+                            .into(binding.ivUser);
+                }
+
 
                 binding.cvFollow.setVisibility(View.VISIBLE);
                 binding.btnEdit.setVisibility(View.GONE);
@@ -448,7 +454,7 @@ public class FragmentProfile extends Fragment {
                 binding.rvAds.setLayoutManager(new GridLayoutManager(getContext(),2));
                 binding.rvAds.setHasFixedSize(true);
 
-                adsAdapter = new AdsAdapter("grid", methods, arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                adsAdapter = new AdsAdapter("grid", getContext(), arrayList_ads, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                     @Override
                     public void onClick(AdsItem adsItem, CarItem carItem) {
                         FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.interfaces.AdsDetailListener;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.items.AdsItem;
 import com.example.autosellingapp.items.CarItem;
 import com.example.autosellingapp.items.MyItem;
@@ -42,8 +43,10 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
     private AdsDetailListener listener;
     private String item_type;
 
-    public AdsAdapter(String item_type, Methods methods, ArrayList<AdsItem> arrayList_ads, ArrayList<CarItem> arrayList_car, ArrayList<UserItem> arrayList_user, ArrayList<MyItem> arrayList_city, AdsDetailListener listener) {
-        this.methods = methods;
+
+
+    public AdsAdapter(String item_type, Context context, ArrayList<AdsItem> arrayList_ads, ArrayList<CarItem> arrayList_car, ArrayList<UserItem> arrayList_user, ArrayList<MyItem> arrayList_city, AdsDetailListener listener) {
+        this.methods = new Methods(context, interAdListener);
         this.arrayList_ads = arrayList_ads;
         this.arrayList_car = arrayList_car;
         this.arrayList_user = arrayList_user;
@@ -51,6 +54,14 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
         this.listener = listener;
         this.item_type = item_type;
     }
+
+    private InterAdListener interAdListener = new InterAdListener() {
+        @Override
+        public void onClick(int position) {
+            CarItem car = methods.getCarItemByID(arrayList_car, arrayList_ads.get(position).getCar_id());
+            listener.onClick(arrayList_ads.get(position), car);
+        }
+    };
 
     @NonNull
     @NotNull
@@ -116,10 +127,13 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
         holder.tv_city.setText(city.getName());
         holder.tv_likes.setText(String.valueOf(arrayList_ads.get(position).getAds_likes()));
 
-        Picasso.get()
-                .load(Constant.SERVER_URL + "images/user_image/" + user.getImage())
-                .placeholder(R.drawable.user_ic)
-                .into(holder.iv_seller_pic);
+        if(!user.getImage().equals("")){
+            Picasso.get()
+                    .load(user.getImage())
+                    .placeholder(R.drawable.user_ic)
+                    .into(holder.iv_seller_pic);
+        }
+
 
         if(car.getCar_imageList().isEmpty()){
             Picasso.get()
@@ -147,7 +161,7 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
         holder.cv_item_ads.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onClick(arrayList_ads.get(position), car);
+                methods.showInter(position);
             }
         });
 

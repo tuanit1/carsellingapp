@@ -9,12 +9,15 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,8 +25,10 @@ import android.widget.Toast;
 
 import com.example.autosellingapp.R;
 import com.example.autosellingapp.activity.ForgotPasswordActivity;
+import com.example.autosellingapp.adapters.ColorListAdapter;
 import com.example.autosellingapp.asynctasks.UpdateFavouriteAsync;
 import com.example.autosellingapp.databinding.FragmentEditUserBinding;
+import com.example.autosellingapp.interfaces.ColorListener;
 import com.example.autosellingapp.interfaces.ReloadFragmentListener;
 import com.example.autosellingapp.interfaces.UpdateFavListener;
 import com.example.autosellingapp.items.UserItem;
@@ -46,8 +51,8 @@ public class FragmentEditUser extends Fragment {
     private String FULL_NAME = "";
     private String PHONE = "";
     private String ADDRESS = "";
-    private boolean isChangeImage = false;
-    private Uri IMAGE_PICK_URI;
+    //private boolean isChangeImage = false;
+    //private Uri IMAGE_PICK_URI;
     ReloadFragmentListener listener;
 
     public FragmentEditUser(ReloadFragmentListener listener){
@@ -71,10 +76,13 @@ public class FragmentEditUser extends Fragment {
             ADDRESS = USER.getAddress();
         }
 
-        Picasso.get()
-                .load(Constant.SERVER_URL + "images/user_image/" + IMAGE)
-                .placeholder(R.drawable.user_ic)
-                .into(binding.ivUser);
+        if(!IMAGE.isEmpty()){
+            Picasso.get()
+                    .load(IMAGE)
+                    .placeholder(R.drawable.user_ic)
+                    .into(binding.ivUser);
+        }
+
 
         methods = new Methods(getContext());
 
@@ -139,11 +147,12 @@ public class FragmentEditUser extends Fragment {
         binding.btnEditImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setData(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGE_CODE);
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_PICK);
+//                startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGE_CODE);
+
+                openDialogColor();
             }
         });
 
@@ -160,19 +169,19 @@ public class FragmentEditUser extends Fragment {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        if(requestCode == PICK_IMAGE_CODE){
-            if(resultCode == Activity.RESULT_OK){
-                isChangeImage = true;
-                IMAGE_PICK_URI = data.getData();
-
-                Picasso.get()
-                        .load(IMAGE_PICK_URI)
-                        .into(binding.ivUser);
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+//        if(requestCode == PICK_IMAGE_CODE){
+//            if(resultCode == Activity.RESULT_OK){
+//                isChangeImage = true;
+//                IMAGE_PICK_URI = data.getData();
+//
+//                Picasso.get()
+//                        .load(IMAGE_PICK_URI)
+//                        .into(binding.ivUser);
+//            }
+//        }
+//    }
 
     private void openDialogText(String type){
         Dialog dialog = new Dialog(getContext());
@@ -234,15 +243,16 @@ public class FragmentEditUser extends Fragment {
     private void UpdateUser(){
         Bundle bundle = new Bundle();
 
-        ArrayList<File> arrayList_file = new ArrayList<>();
+//        ArrayList<File> arrayList_file = new ArrayList<>();
 
-        if(isChangeImage){
-            String filePath = methods.getPathImage(IMAGE_PICK_URI);
-            File file = new File(filePath);
-            arrayList_file.add(file);
-        }
+//        if(isChangeImage){
+//            String filePath = methods.getPathImage(IMAGE_PICK_URI);
+//            File file = new File(filePath);
+//            arrayList_file.add(file);
+//        }
 
-        bundle.putBoolean("is_change_image", isChangeImage);
+        //bundle.putBoolean("is_change_image", isChangeImage);
+        bundle.putString(Constant.TAG_USER_IMAGE, IMAGE);
         bundle.putString(Constant.TAG_FULLNAME, FULL_NAME);
         bundle.putString(Constant.TAG_PHONE, PHONE);
         bundle.putString(Constant.TAG_ADDRESS, ADDRESS);
@@ -257,7 +267,55 @@ public class FragmentEditUser extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.error_connect_server), Toast.LENGTH_SHORT).show();
                 }
             }
-        }, methods.getAPIRequest(Constant.METHOD_UPDATE_USER, bundle, arrayList_file, null));
+        }, methods.getAPIRequest(Constant.METHOD_UPDATE_USER, bundle, null, null));
         updateFavouriteAsync.execute();
+    }
+
+    private void openDialogColor(){
+        Dialog dialog1 = new Dialog(this.getContext());
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setContentView(R.layout.layout_dialog_inputtext);
+
+        TextView tv_dialog = dialog1.findViewById(R.id.tv_dialog);
+        EditText edt_dialog = dialog1.findViewById(R.id.edt_dialog);
+
+
+        tv_dialog.setText("Attach an image link");
+
+        Button btn_cancel = dialog1.findViewById(R.id.btn_cancel);
+        Button btn_ok = dialog1.findViewById(R.id.btn_ok);
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.dismiss();
+            }
+        });
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!edt_dialog.getText().toString().isEmpty()){
+                    if(URLUtil.isValidUrl(edt_dialog.getText().toString())){
+                        IMAGE = edt_dialog.getText().toString();
+
+                        Picasso.get()
+                                .load(IMAGE)
+                                .placeholder(R.drawable.user_ic)
+                                .into(binding.ivUser);
+
+                        dialog1.dismiss();
+                    }else {
+                        edt_dialog.setError("Invalid url link!");
+                    }
+
+                }else {
+                    edt_dialog.setError("This field cant be empty!");
+                }
+
+            }
+        });
+
+        dialog1.show();
     }
 }

@@ -36,6 +36,7 @@ import com.example.autosellingapp.adapters.EquipmentAdapter;
 import com.example.autosellingapp.asynctasks.LoadSearch;
 import com.example.autosellingapp.interfaces.ColorListener;
 import com.example.autosellingapp.interfaces.EquipmentListener;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.interfaces.LoadSearchListener;
 import com.example.autosellingapp.items.ColorItem;
 import com.example.autosellingapp.items.EquipmentItem;
@@ -278,7 +279,14 @@ public class FragmentSearch extends Fragment {
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openCatFragment();
+
+                new Methods(getContext(), new InterAdListener() {
+                    @Override
+                    public void onClick(int position) {
+                        openCatFragment();
+                    }
+                }).showInter(0);
+
             }
         });
     }

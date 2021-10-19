@@ -39,7 +39,9 @@ import com.example.autosellingapp.adapters.AdsAdapter;
 import com.example.autosellingapp.adapters.ManufacturerAdapter;
 import com.example.autosellingapp.asynctasks.LoadHome;
 import com.example.autosellingapp.asynctasks.LoadRecent;
+import com.example.autosellingapp.databinding.FragmentContactBinding;
 import com.example.autosellingapp.interfaces.AdsDetailListener;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.interfaces.LoadCategoryListener;
 import com.example.autosellingapp.interfaces.LoadManuListener;
 import com.example.autosellingapp.interfaces.ManuListener;
@@ -159,7 +161,14 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!edt_search.getText().toString().isEmpty()){
-                    SearchCategory();
+
+                    new Methods(getContext(), new InterAdListener() {
+                        @Override
+                        public void onClick(int position) {
+                            SearchCategory();
+                        }
+                    }).showInter(0);
+
                 }
             }
         });
@@ -222,7 +231,7 @@ public class FragmentHome extends Fragment {
                                 arrayList_manu1.addAll(arrayList_manu);
                             }
 
-                            manufacturerAdapter = new ManufacturerAdapter("home" ,arrayList_manu1, new ManuListener() {
+                            manufacturerAdapter = new ManufacturerAdapter(getContext(),"home" ,arrayList_manu1, new ManuListener() {
                                 @Override
                                 public void onClick(int manu_id) {
                                     openCatFragment(manu_id);
@@ -300,7 +309,7 @@ public class FragmentHome extends Fragment {
                                 arrayList_ads1.addAll(arrayList_ads);
                             }
 
-                            AdsAdapter adsAdapter = new AdsAdapter("horizontal", methods, arrayList_ads1, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
+                            AdsAdapter adsAdapter = new AdsAdapter("horizontal", getContext(), arrayList_ads1, arrayList_car, arrayList_user, arrayList_city, new AdsDetailListener() {
                                 @Override
                                 public void onClick(AdsItem adsItem, CarItem carItem) {
                                     FragmentAdsDetail fragment = new FragmentAdsDetail(new ReloadFragmentListener() {

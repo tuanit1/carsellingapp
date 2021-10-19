@@ -54,10 +54,16 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.My
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
         holder.tv_name.setText(arrayList_user.get(position).getFullName());
-        Picasso.get()
-                .load(Constant.SERVER_URL + "images/user_image/" + arrayList_user.get(position).getImage())
-                .placeholder(R.drawable.user_ic)
-                .into(holder.iv_user);
+
+        String image = arrayList_user.get(position).getImage();
+
+        if(!image.isEmpty()){
+            Picasso.get()
+                    .load(image)
+                    .placeholder(R.drawable.user_ic)
+                    .into(holder.iv_user);
+        }
+
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Ratings").child(arrayList_user.get(position).getUid());
         ArrayList<RateItem> arrayList_rating = new ArrayList<>();

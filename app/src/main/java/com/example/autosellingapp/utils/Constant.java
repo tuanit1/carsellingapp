@@ -9,6 +9,11 @@ import androidx.core.app.ActivityCompat;
 import com.example.autosellingapp.items.UserItem;
 
 public class Constant {
+    public static final String OPENAPP_ADS_ID = "ca-app-pub-3940256099942544/3419835294";
+    public static boolean isInterAd = true;
+    public static int adCount = 0;
+    public static int adShow = 5;
+
     public static final String METHOD_UPDATELIKE = "method_updatelike";
     public static final String METHOD_LOGIN = "method_login";
     public static final String ERROR_CON_SERVER = "Error Connecting Server";
@@ -68,7 +73,7 @@ public class Constant {
     public static final String API_KEY = "dothanhtuan";
     public static final String TAG_ROOT = "ADS_CAR";
     //public static final String SERVER_URL = "http://192.168.1.9/autobuy/";
-    public static final String SERVER_URL = "https://dothanhtuanhost.000webhostapp.com/admotors/";
+    public static final String SERVER_URL = "http://radiofree247.com/appcar/";
     public static final String TAG_MANU_ID = "manu_id";
     public static final String TAG_MANU_NAME = "manu_name";
     public static final String TAG_MANU_THUMB = "manu_thumb";

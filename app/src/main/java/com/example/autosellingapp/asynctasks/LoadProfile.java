@@ -1,6 +1,7 @@
 package com.example.autosellingapp.asynctasks;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.autosellingapp.interfaces.LoadCategoryListener;
@@ -16,9 +17,12 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 
@@ -70,11 +74,25 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
                     int ads_id = obj.getInt(Constant.TAG_ADS_ID);
                     int car_id = obj.getInt(Constant.TAG_CAR_ID);
                     String username = obj.getString(Constant.TAG_UID);
-                    double ads_price = obj.getInt(Constant.TAG_ADS_PRICE);
+                    double ads_price = obj.getDouble(Constant.TAG_ADS_PRICE);
                     int ads_mileage = obj.getInt(Constant.TAG_ADS_MILEAGE);
                     int city_id = obj.getInt(Constant.TAG_CITY_ID);
-                    String ads_location = obj.getString(Constant.TAG_ADS_LOCATION);
-                    String ads_description = obj.getString(Constant.TAG_ADS_DESCRIPTION);
+
+                    String ads_location;
+                    String ads_description;
+
+                    if(checkForEncode(obj.getString(Constant.TAG_ADS_LOCATION))){
+                        ads_location = Base64Decode(obj.getString(Constant.TAG_ADS_LOCATION));
+                    }else {
+                        ads_location = obj.getString(Constant.TAG_ADS_LOCATION);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_ADS_DESCRIPTION))){
+                        ads_description = Base64Decode(obj.getString(Constant.TAG_ADS_DESCRIPTION));
+                    }else {
+                        ads_description = obj.getString(Constant.TAG_ADS_DESCRIPTION);
+                    }
+
                     String ads_posttime_str = obj.getString(Constant.TAG_ADS_POST_TIME);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date ads_posttime = sdf.parse(ads_posttime_str);
@@ -88,7 +106,12 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
                 for (int i = 0; i < data_car.length(); i++) {
                     JSONObject obj = data_car.getJSONObject(i);
                     int car_id = obj.getInt(Constant.TAG_CAR_ID);
-                    String car_name = obj.getString(Constant.TAG_CAR_NAME);
+                    String car_name;
+                    if(checkForEncode(obj.getString(Constant.TAG_CAR_NAME))){
+                        car_name = Base64Decode(obj.getString(Constant.TAG_CAR_NAME));
+                    }else {
+                        car_name = obj.getString(Constant.TAG_CAR_NAME);
+                    }
                     int model_id = obj.getInt(Constant.TAG_MODEL_ID);
                     int bodyType_id = obj.getInt(Constant.TAG_BODY_TYPE_ID);
                     int fuelType_id = obj.getInt(Constant.TAG_FUEL_TYPE_ID);
@@ -148,11 +171,41 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
                     JSONObject obj = data_user.getJSONObject(i);
 
                     String uid = obj.getString(Constant.TAG_UID);
-                    String address = obj.getString(Constant.TAG_ADDRESS);
-                    String phoneNumber = obj.getString(Constant.TAG_PHONE);
-                    String fullName = obj.getString(Constant.TAG_FULLNAME);
-                    String email = obj.getString(Constant.TAG_EMAIL);
-                    String image = obj.getString(Constant.TAG_USER_IMAGE);
+                    String address;
+                    String phoneNumber;
+                    String fullName;
+                    String email;
+                    if(checkForEncode(obj.getString(Constant.TAG_ADDRESS))) {
+                        address = Base64Decode(obj.getString(Constant.TAG_ADDRESS));
+                    }else{
+                        address = obj.getString(Constant.TAG_ADDRESS);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_PHONE))) {
+                        phoneNumber = Base64Decode(obj.getString(Constant.TAG_PHONE));
+                    }else{
+                        phoneNumber = obj.getString(Constant.TAG_PHONE);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_FULLNAME))) {
+                        fullName = Base64Decode(obj.getString(Constant.TAG_FULLNAME));
+                    }else{
+                        fullName = obj.getString(Constant.TAG_FULLNAME);
+                    }
+
+                    if(checkForEncode(obj.getString(Constant.TAG_EMAIL))) {
+                        email = Base64Decode(obj.getString(Constant.TAG_EMAIL));
+                    }else{
+                        email = obj.getString(Constant.TAG_EMAIL);
+                    }
+
+                    String image = Base64Decode(obj.getString(Constant.TAG_USER_IMAGE));
+
+//                    if(checkForEncode(obj.getString(Constant.TAG_USER_IMAGE))){
+//                        image = Base64Decode(obj.getString(Constant.TAG_USER_IMAGE));
+//                    }else {
+//                        image = obj.getString(Constant.TAG_USER_IMAGE);
+//                    }
                     ArrayList<String> favourite_ads = new ArrayList<>();
                     if(!obj.getString(Constant.TAG_FAVLIST).equals("")){
                         favourite_ads = gson.fromJson(obj.getString(Constant.TAG_FAVLIST), ArrayList.class);
@@ -185,5 +238,17 @@ public class LoadProfile extends AsyncTask<Void, String, String> {
     protected void onPostExecute(String s) {
         listener.onEnd(s, arrayList_car, arrayList_ads, arrayList_city, arrayList_user, arrayList_model);
         super.onPostExecute(s);
+    }
+
+    public String Base64Decode(String input) throws UnsupportedEncodingException {
+        byte[] encodeValue = Base64.decode(input, Base64.DEFAULT);
+        return new String(encodeValue, "UTF-8");
+    }
+
+    public boolean checkForEncode(String string) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(string);
+        return m.find();
     }
 }

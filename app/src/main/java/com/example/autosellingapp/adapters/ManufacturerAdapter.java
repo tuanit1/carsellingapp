@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.autosellingapp.R;
+import com.example.autosellingapp.interfaces.InterAdListener;
 import com.example.autosellingapp.interfaces.ManuListener;
 import com.example.autosellingapp.items.EquipmentItem;
 import com.example.autosellingapp.items.ManufacturerItem;
 import com.example.autosellingapp.utils.Constant;
+import com.example.autosellingapp.utils.Methods;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,18 +30,27 @@ public class ManufacturerAdapter extends RecyclerView.Adapter<ManufacturerAdapte
     private ArrayList<ManufacturerItem> arrayList;
     private ManuListener listener;
     private String type;
+    private Methods methods;
 
-    public ManufacturerAdapter(String type, ArrayList<ManufacturerItem> arrayList ,ManuListener listener){
+    public ManufacturerAdapter(Context context, String type, ArrayList<ManufacturerItem> arrayList ,ManuListener listener){
         this.arrayList = arrayList;
+        this.context = context;
         this.listener = listener;
         this.type = type;
+        this.methods = new Methods(context, interAdListener);
     }
+
+    private InterAdListener interAdListener = new InterAdListener() {
+        @Override
+        public void onClick(int position) {
+            listener.onClick(arrayList.get(position).getManu_id());
+        }
+    };
 
     @NonNull
     @NotNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
         if(type.equals("home")){
@@ -60,7 +71,7 @@ public class ManufacturerAdapter extends RecyclerView.Adapter<ManufacturerAdapte
         holder.ll_item_manu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onClick(arrayList.get(position).getManu_id());
+                methods.showInter(position);
             }
         });
     }

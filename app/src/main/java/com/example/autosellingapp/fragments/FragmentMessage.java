@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
@@ -86,16 +88,19 @@ public class FragmentMessage extends Fragment {
     @Override
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (task.isSuccessful()) {
-                            token = task.getResult();
-                            SaveToken(token);
+        if(methods.isLogged()){
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (task.isSuccessful()) {
+                                token = task.getResult();
+                                SaveToken(token);
+                            }
                         }
-                    }
-                });
+                    });
+        }
+
     }
 
     private void SaveToken(String token){
@@ -109,7 +114,7 @@ public class FragmentMessage extends Fragment {
         firestore.collection("Tokens").document(userid).set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
-
+                Log.e("AAA", "Save token successfully");
             }
         });
     }
@@ -165,7 +170,13 @@ public class FragmentMessage extends Fragment {
             UserItem USER = methods.getUserItemByUsername(arrayList_user, Constant.UID);
 
             for(String uid : USER.getChatlist()){
-                arrayList.add(methods.getUserItemByUsername(arrayList_user, uid));
+
+                UserItem uc = methods.getUserItemByUsername(arrayList_user, uid);
+
+                if(uc != null){
+                    arrayList.add(uc);
+                }
+
             }
 
             if(arrayList.isEmpty()){
